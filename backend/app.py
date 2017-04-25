@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_mysqldb import MySQL
+from flask_socketio import SocketIO, send
 
 class CustomFlask(Flask):
     jinja_options = Flask.jinja_options.copy()
@@ -23,6 +24,9 @@ app.config['MYSQL_PASSWORD'] = 'vlgFFX7C1v'
 app.config['MYSQL_DB'] = 'sql11166771'
 mysql = MySQL(app)
 
+app.config['SECRET_KEY'] = 'mysecret'
+socketio = SocketIO(app)
+
 
 @app.route('/api/dbtest')
 def dbtest():
@@ -31,6 +35,12 @@ def dbtest():
     rv = cur.fetchall()
     return str(rv[1])
 
+@socketio.on('message')
+def handleMessage(msg):
+	print('Message: ' + msg)
+	send(msg, broadcast=True)
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app)
+    #app.run(debug=True)
