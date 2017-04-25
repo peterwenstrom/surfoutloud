@@ -1,7 +1,15 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
+    <img src="./assets/logo.png"/>
+    <div class="container">
+      <ul class="nav navbar-nav inner">
+        <router-link tag="button" class="btn" to="/Hello">Hello</router-link>
+        <router-link tag="button" class="btn" to="/Bye">Good Bye</router-link>
+      </ul>
+    </div>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -19,5 +27,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.inner {
+  float: none;
 }
 </style>
