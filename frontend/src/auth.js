@@ -11,15 +11,15 @@ export default {
     authenticated: false
   },
 
-  login(creds, redirect) {
-    axios.post(LOGIN_URL, creds, (data) => {
+  login(credentials, redirect) {
+    axios.post(LOGIN_URL, credentials, (data) => {
       localStorage.setItem('id_token', data.id_token)
 
       this.user.authenticated = true
 
-      if(redirect) {
+/*      if(redirect) {
         router.go(redirect)
-      }
+      }*/
 
     }).error((err) => {
       console.log("error in login post")
@@ -27,15 +27,15 @@ export default {
     })
   },
 
-  signup(creds, redirect) {
-    axios.post(SIGNUP_URL, creds, (data) => {
+  signup(credentials, redirect) {
+    axios.post(SIGNUP_URL, credentials, (data) => {
       localStorage.setItem('id_token', data.id_token)
 
       this.user.authenticated = true
 
-      if(redirect) {
+/*      if(redirect) {
         router.go(redirect)
-      }
+      }*/
 
     }).error((err) => {
       console.log("error in signup post")

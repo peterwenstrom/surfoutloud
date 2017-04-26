@@ -3,6 +3,7 @@
     <img src="./assets/logosurfin.png"/>
     <div class="container">
       <ul class="nav navbar-nav inner">
+        <router-link tag="button" class="btn" to="/login">Login</router-link>
         <router-link tag="button" class="btn" to="/Hello">Hello</router-link>
         <router-link tag="button" class="btn" to="/Bye">Good Bye</router-link>
         <router-link tag="button" class="btn" to="/Chat">Go to chat</router-link>
