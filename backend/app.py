@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO, send
 from flask_cors import CORS
-from flask_jwt import JWT, jwt_required, current_identity
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 
 class CustomFlask(Flask):
@@ -17,27 +17,6 @@ class CustomFlask(Flask):
     ))
 
 
-class User(object):
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
-
-    def __str__(self):
-        return "User(id='%s')" % self.id
-
-
-user = User(1, 'user', 'password')
-
-
-def authenticate(username, password):
-    if username == user.username and password == user.password:
-        return user
-
-
-def identity(payload):
-    return user
-
 app = CustomFlask(__name__)
 CORS(app)
 
@@ -50,19 +29,32 @@ app.config['MYSQL_PASSWORD'] = 'vlgFFX7C1v'
 app.config['MYSQL_DB'] = 'sql11166771'
 mysql = MySQL(app)
 
-app.config['SECRET_KEY'] = 'mysecret'
+app.config['SECRET_KEY'] = 'asupersecretsecret'
 socketio = SocketIO(app)
 
-jwt = JWT(app, authenticate, identity)
+jwt = JWTManager(app)
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
+    if username != 'test' or password != 'test':
+        return jsonify({"msg": "Bad username or password"}), 401
+
+    # Identity can be any data that is json serializable
+    response = {'access_token': create_access_token(identity=username)}
+    return jsonify(response), 200
 
 
 @app.route('/')
-@jwt_required()
+@jwt_required
 def dbtest():
     cur = mysql.connection.cursor()
     cur.execute('''SELECT * FROM Person''')
     rv = cur.fetchall()
     return str(rv[1])
+    # return get_jwt_identity()
 
 
 @socketio.on('message')

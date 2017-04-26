@@ -2,7 +2,7 @@ import router from './router'
 import axios from 'axios'
 
 const API_URL = 'http://localhost:5000/'
-const LOGIN_URL = API_URL + 'auth'
+const LOGIN_URL = API_URL + 'login'
 const REGISTER_URL = API_URL + ''
 
 export default {
