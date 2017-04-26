@@ -9,6 +9,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.16.1",
     "bootstrap-vue": "^0.14.0",
     "vue": "^2.2.2",
     "vue-router": "^2.2.0"
