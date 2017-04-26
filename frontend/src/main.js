@@ -6,6 +6,9 @@ import router from './router'
 import axios from 'axios'
 import auth from './auth'
 
+// Sends jwt token in header by default, think it's quite handy
+axios.defaults.headers.common['Authorization'] = 'JWT ' + localStorage.getItem('id_token');
+
 // Check the user's auth status when the app starts
 auth.checkAuth()
 

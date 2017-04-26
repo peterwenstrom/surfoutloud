@@ -57,6 +57,7 @@ jwt = JWT(app, authenticate, identity)
 
 
 @app.route('/')
+@jwt_required()
 def dbtest():
     cur = mysql.connection.cursor()
     cur.execute('''SELECT * FROM Person''')

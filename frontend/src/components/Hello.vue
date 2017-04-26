@@ -17,7 +17,8 @@ export default {
   },
   methods: {
     getServerData () {
-        axios.get('http://localhost:5000').then( response => {this.msg = response.data})
+        axios.get('http://localhost:5000')
+          .then( response => {this.msg = response.data})
     }
   }
 }

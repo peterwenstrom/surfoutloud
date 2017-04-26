@@ -9,6 +9,7 @@
         <router-link tag="button" class="btn" v-if="user.authenticated" to="/Bye">Good Bye</router-link>
         <router-link tag="button" class="btn" v-if="user.authenticated" to="/Chat">Go to chat</router-link>
         <router-link tag="button" class="btn" v-if="user.authenticated" to="/ProjectView">Go to projectview</router-link>
+        <button class="btn" v-if="user.authenticated" v-on:click="logout">Logout</button>
       </ul>
     </div>
     <div class="container">

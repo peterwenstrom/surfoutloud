@@ -2,7 +2,7 @@ import router from './router'
 import axios from 'axios'
 
 const API_URL = 'http://localhost:5000/'
-const LOGIN_URL = API_URL + ''
+const LOGIN_URL = API_URL + 'auth'
 const REGISTER_URL = API_URL + ''
 
 export default {
@@ -12,24 +12,24 @@ export default {
   },
 
   login(credentials, redirect) {
-    axios.post(LOGIN_URL, credentials, (data) => {
-      localStorage.setItem('id_token', data.id_token)
-
+    axios.post(LOGIN_URL, credentials).then( response => {
+      localStorage.setItem('id_token', response.data.access_token)
+      console.log(response.data.access_token)
       this.user.authenticated = true
 
 /*      if(redirect) {
         router.go(redirect)
       }*/
 
-    }).error((err) => {
+    }).catch( err => {
       console.log("error in login post")
       console.log(err)
     })
   },
 
   register(credentials, redirect) {
-    axios.post(REGISTER_URL, credentials, (data) => {
-      localStorage.setItem('id_token', data.id_token)
+    axios.post(REGISTER_URL, credentials).then( response => {
+      localStorage.setItem('id_token', response.data.id_token)
 
       this.user.authenticated = true
 
@@ -37,7 +37,7 @@ export default {
         router.go(redirect)
       }*/
 
-    }).error((err) => {
+    }).catch( err => {
       console.log("error in signup post")
       console.log(err)
     })
@@ -59,8 +59,6 @@ export default {
 
 
   getAuthHeader() {
-    return {
-      'Authorization': 'Bearer ' + localStorage.getItem('id_token')
-    }
+    return 'JTW ' + localStorage.getItem('id_token')
   }
 }
