@@ -4,6 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
+import auth from './auth'
+
+// Check the user's auth status when the app starts
+auth.checkAuth()
 
 Vue.config.productionTip = false
 

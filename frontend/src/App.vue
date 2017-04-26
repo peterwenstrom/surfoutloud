@@ -3,12 +3,12 @@
     <img src="./assets/logosurfin.png"/>
     <div class="container">
       <ul class="nav navbar-nav inner">
-        <router-link tag="button" class="btn" to="/login">Log in</router-link>
-        <router-link tag="button" class="btn" to="/register">Register</router-link>
-        <router-link tag="button" class="btn" to="/Hello">Hello</router-link>
-        <router-link tag="button" class="btn" to="/Bye">Good Bye</router-link>
-        <router-link tag="button" class="btn" to="/Chat">Go to chat</router-link>
-        <router-link tag="button" class="btn" to="/ProjectView">Go to projectview</router-link>
+        <router-link tag="button" class="btn" v-if="!user.authenticated" to="/login">Log in</router-link>
+        <router-link tag="button" class="btn" v-if="!user.authenticated" to="/register">Register</router-link>
+        <router-link tag="button" class="btn" v-if="user.authenticated" to="/Hello">Hello</router-link>
+        <router-link tag="button" class="btn" v-if="user.authenticated" to="/Bye">Good Bye</router-link>
+        <router-link tag="button" class="btn" v-if="user.authenticated" to="/Chat">Go to chat</router-link>
+        <router-link tag="button" class="btn" v-if="user.authenticated" to="/ProjectView">Go to projectview</router-link>
       </ul>
     </div>
     <div class="container">
@@ -18,8 +18,18 @@
 </template>
 
 <script>
+  import auth from './auth'
 export default {
-  name: 'app'
+    data() {
+      return {
+        user: auth.user
+      }
+    },
+    methods: {
+      logout() {
+        auth.logout()
+      }
+    }
 }
 </script>
 
