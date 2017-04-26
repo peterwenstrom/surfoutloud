@@ -3,7 +3,9 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Chat from '@/components/Chat'
 import Bye from '@/components/Bye'
+import BootstrapVue from 'bootstrap-vue';
 
+Vue.use(BootstrapVue);
 
 Vue.use(Router)
 
