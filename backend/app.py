@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO, send
+from flask_cors import CORS
 
 class CustomFlask(Flask):
     jinja_options = Flask.jinja_options.copy()
@@ -14,6 +15,7 @@ class CustomFlask(Flask):
     ))
 
 app = CustomFlask(__name__)
+CORS(app)
 
 mysql = MySQL()
 
@@ -28,19 +30,19 @@ app.config['SECRET_KEY'] = 'mysecret'
 socketio = SocketIO(app)
 
 
-@app.route('/api/dbtest')
+@app.route('/')
 def dbtest():
     cur = mysql.connection.cursor()
     cur.execute('''SELECT * FROM Person''')
     rv = cur.fetchall()
     return str(rv[1])
 
-@socketio.on('message')
-def handleMessage(msg):
-	print('Message: ' + msg)
-	send(msg, broadcast=True)
 
+@socketio.on('message')
+def handle_message(msg):
+    print('Message: ' + msg)
+    send(msg, broadcast=True)
 
 if __name__ == "__main__":
     socketio.run(app)
-    #app.run(debug=True)
+    # app.run(debug=True)
