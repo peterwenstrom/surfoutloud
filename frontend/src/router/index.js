@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Chat from '@/components/Chat'
 import Bye from '@/components/Bye'
+import ProjectView from '@/components/ProjectView'
 import BootstrapVue from 'bootstrap-vue';
 
 Vue.use(BootstrapVue);
@@ -27,6 +28,11 @@ export default new Router({
       path: '/chat',
       name: 'Chat',
       component: Chat
+    },
+    {
+      path: '/projectview',
+      name: 'ProjectView',
+      component: ProjectView
     }
 
   ]

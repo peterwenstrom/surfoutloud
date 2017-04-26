@@ -7,6 +7,7 @@
         <router-link tag="button" class="btn" to="/Hello">Hello</router-link>
         <router-link tag="button" class="btn" to="/Bye">Good Bye</router-link>
         <router-link tag="button" class="btn" to="/Chat">Go to chat</router-link>
+        <router-link tag="button" class="btn" to="/ProjectView">Go to projectview</router-link>
       </ul>
     </div>
     <div class="container">
