@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png"/>
+    <h2>Surfing Out Loud</h2>
     <div class="container">
       <ul class="nav navbar-nav inner">
         <router-link tag="button" class="btn" to="/Hello">Hello</router-link>
