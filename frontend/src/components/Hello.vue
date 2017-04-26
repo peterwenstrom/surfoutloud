@@ -1,15 +1,23 @@
 <template>
   <div class="hello">
-    <h3>{{ msg }}</h3>
+    <h2>{{ msg }}</h2>
+    <button v-on:click="getServerData">Skicka</button>
   </div>
 </template>
 
 <script>
+  import axios from 'axios'
+
 export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Hello!'
+      msg: []
+    }
+  },
+  methods: {
+    getServerData () {
+        axios.get('http://localhost:5000').then( response => {this.msg = response.data})
     }
   }
 }
