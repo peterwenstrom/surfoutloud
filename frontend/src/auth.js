@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:5000/'
 const LOGIN_URL = API_URL + 'login'
-const REGISTER_URL = API_URL + ''
+const REGISTER_URL = API_URL + 'register'
 
 export default {
 

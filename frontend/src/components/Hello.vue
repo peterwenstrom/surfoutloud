@@ -17,7 +17,8 @@ export default {
   },
   methods: {
     getServerData () {
-        axios.get('http://localhost:5000')
+        axios.get('http://localhost:5000/test_token',
+          {headers: {'Authorization': 'Bearer ' + localStorage.getItem('id_token')}})
           .then( response => {this.msg = response.data})
     }
   }

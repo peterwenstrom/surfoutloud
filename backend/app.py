@@ -20,7 +20,6 @@ class CustomFlask(Flask):
 app = CustomFlask(__name__)
 CORS(app)
 
-# mysql = MySQL()
 
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
@@ -39,7 +38,8 @@ jwt = JWTManager(app)
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    if username != 'test' or password != 'test':
+    # check credentials against DB
+    if username != 'tester' or password != 'tester':
         return jsonify({"msg": "Bad username or password"}), 401
 
     # Identity can be any data that is json serializable
@@ -47,14 +47,32 @@ def login():
     return jsonify(response), 200
 
 
-@app.route('/')
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.json.get('username', None)
+    # check DB
+    if username != 'tester':
+        return jsonify({"msg": "Username already exists"}), 401
+
+    password = request.json.get('password', None)
+    # create new user in DB
+
+    response = {'access_token': create_access_token(identity=username)}
+    return jsonify(response), 200
+
+
+@app.route('/test_token')
 @jwt_required
-def dbtest():
+def test_token():
+    return get_jwt_identity()
+
+
+@app.route('/')
+def db_test():
     cur = mysql.connection.cursor()
     cur.execute('''SELECT * FROM Person''')
     rv = cur.fetchall()
     return str(rv[1])
-    # return get_jwt_identity()
 
 
 @socketio.on('message')
