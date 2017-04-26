@@ -1,7 +1,9 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
 from flask_socketio import SocketIO, send
 from flask_cors import CORS
+from flask_jwt import JWT, jwt_required, current_identity
+
 
 class CustomFlask(Flask):
     jinja_options = Flask.jinja_options.copy()
@@ -14,10 +16,32 @@ class CustomFlask(Flask):
     comment_end_string='#$',
     ))
 
+
+class User(object):
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
+
+    def __str__(self):
+        return "User(id='%s')" % self.id
+
+
+user = User(1, 'user', 'password')
+
+
+def authenticate(username, password):
+    if username == user.username and password == user.password:
+        return user
+
+
+def identity(payload):
+    return user
+
 app = CustomFlask(__name__)
 CORS(app)
 
-mysql = MySQL()
+# mysql = MySQL()
 
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
@@ -28,6 +52,8 @@ mysql = MySQL(app)
 
 app.config['SECRET_KEY'] = 'mysecret'
 socketio = SocketIO(app)
+
+jwt = JWT(app, authenticate, identity)
 
 
 @app.route('/')
