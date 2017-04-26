@@ -1,7 +1,7 @@
 <template>
     <div class="col-sm-4 col-sm-offset-4">
-      <h2>Log in</h2>
-      <p>Log in if you already have an account</p>
+      <h2>Register</h2>
+      <p>Register here if you don't have an account</p>
       <div class="alert alert-danger" v-if="error">
         <p>{{ error }}</p>
       </div>
@@ -15,13 +15,14 @@
       </div>
       <div class="form-group">
         <input
+          id="password"
           type="password"
           class="form-control"
           placeholder="Enter your password"
           v-model="credentials.password"
         >
       </div>
-      <button class="btn btn-primary" v-on:click="submit">Log in</button>
+      <button class="btn btn-primary" v-on:click="submit">Register</button>
     </div>
   </template>
 
@@ -44,7 +45,7 @@
           password: this.credentials.password
         }
 
-        auth.login(credentials, 'hello')
+        auth.register(credentials, 'hello')
       }
     }
 

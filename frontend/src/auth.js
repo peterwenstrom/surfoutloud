@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:5000/'
 const LOGIN_URL = API_URL + ''
-const SIGNUP_URL = API_URL + ''
+const REGISTER_URL = API_URL + ''
 
 export default {
 
@@ -27,8 +27,8 @@ export default {
     })
   },
 
-  signup(credentials, redirect) {
-    axios.post(SIGNUP_URL, credentials, (data) => {
+  register(credentials, redirect) {
+    axios.post(REGISTER_URL, credentials, (data) => {
       localStorage.setItem('id_token', data.id_token)
 
       this.user.authenticated = true

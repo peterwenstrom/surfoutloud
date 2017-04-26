@@ -7,6 +7,7 @@ import Chat from '@/components/Chat'
 import Bye from '@/components/Bye'
 import ProjectView from '@/components/ProjectView'
 import Login from '@/components/Login'
+import Register from '@/components/Register'
 
 Vue.use(BootstrapVue);
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
     }
 
   ]
