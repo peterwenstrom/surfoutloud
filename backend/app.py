@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from flask_socketio import SocketIO, send
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_bcrypt import Bcrypt
 
 
 class CustomFlask(Flask):
@@ -18,7 +19,6 @@ class CustomFlask(Flask):
 
 
 app = CustomFlask(__name__)
-CORS(app)
 
 
 # MySQL configurations
@@ -29,8 +29,10 @@ app.config['MYSQL_DB'] = 'sql11166771'
 mysql = MySQL(app)
 
 app.config['SECRET_KEY'] = 'asupersecretsecret'
-socketio = SocketIO(app)
 
+socketio = SocketIO(app)
+CORS(app)
+bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 
@@ -38,11 +40,15 @@ jwt = JWTManager(app)
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT password FROM User where username = %s''', [username])
+    row = cursor.fetchall()
+    db_password = row[0][0]
     # check credentials against DB
-    if username != 'tester' or password != 'tester':
+    if not row or not bcrypt.check_password_hash(db_password, password):
         return jsonify({"msg": "Bad username or password"}), 401
 
-    # Identity can be any data that is json serializable
     response = {'access_token': create_access_token(identity=username)}
     return jsonify(response), 200
 
@@ -50,15 +56,28 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     username = request.json.get('username', None)
+    password = request.json.get('password', None)
+
     # check DB
-    if username != 'tester':
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT * FROM User where username = %s''', [username])
+    row = cursor.fetchall()
+    if row:
         return jsonify({"msg": "Username already exists"}), 401
 
-    password = request.json.get('password', None)
+    password_hash = bcrypt.generate_password_hash(password)
+
     # create new user in DB
 
-    response = {'access_token': create_access_token(identity=username)}
-    return jsonify(response), 200
+    try:
+        cursor.execute('''INSERT INTO User VALUES (0, %s, %s)''', (username, password_hash))
+        mysql.connection.commit()
+        response = {'access_token': create_access_token(identity=username)}
+        return jsonify(response), 200
+    except:
+        mysql.connection.rollback()
+        response = {'error': 'Something went wrong, please try again.'}
+        return jsonify(response), 400
 
 
 @app.route('/test_token')
