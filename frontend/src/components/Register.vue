@@ -24,7 +24,7 @@
         v-on:keyup.enter="submit"
       >
     </div>
-    <button class="btn btn-primary" v-on:click="submit">Register</button>
+    <button class="register-btn btn" v-on:click="submit">Register</button>
   </div>
 </template>
 
@@ -53,3 +53,10 @@
 
   }
 </script>
+
+<style scoped>
+  .register-btn {
+    background-color: #35495E;
+    color: #fff;
+  }
+</style>
