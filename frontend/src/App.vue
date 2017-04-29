@@ -26,6 +26,7 @@
     methods: {
       logout() {
         auth.logout()
+        this.$router.push('login')
       }
     },
     mounted() {

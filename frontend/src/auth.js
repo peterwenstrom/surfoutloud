@@ -17,9 +17,7 @@ export default {
 
       this.user.authenticated = true
 
-/*      if(redirect) {
-        router.go(redirect)
-      }*/
+      router.push(redirect)
 
     }).catch( err => {
       console.log("error in login post")
@@ -33,9 +31,7 @@ export default {
 
       this.user.authenticated = true
 
-/*      if(redirect) {
-        router.go(redirect)
-      }*/
+      router.push(redirect)
 
     }).catch( err => {
       console.log("error in signup post")

@@ -44,7 +44,7 @@
           password: this.credentials.password
         }
 
-        auth.login(credentials, 'hello')
+        auth.login(credentials, 'dashboard')
       }
     }
 
