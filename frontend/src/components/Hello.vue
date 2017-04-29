@@ -7,6 +7,7 @@
 
 <script>
   import axios from 'axios'
+  import auth from '../auth'
 
 export default {
   name: 'hello',
@@ -17,8 +18,7 @@ export default {
   },
   methods: {
     getServerData () {
-        axios.get('http://localhost:5000/test_token',
-          {headers: {'Authorization': 'Bearer ' + localStorage.getItem('id_token')}})
+        axios.get('http://localhost:5000/test_token', auth.getAuthHeader())
           .then( response => {this.msg = response.data})
     }
   }

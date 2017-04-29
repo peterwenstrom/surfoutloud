@@ -57,8 +57,7 @@ export default {
     }
   },
 
-
   getAuthHeader() {
-    return 'JTW ' + localStorage.getItem('id_token')
+    return {headers: {'Authorization': 'Bearer ' + localStorage.getItem('id_token')}}
   }
 }
