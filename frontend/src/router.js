@@ -4,7 +4,6 @@ import BootstrapVue from 'bootstrap-vue';
 
 import Hello from '@/components/Hello'
 import Chat from '@/components/Chat'
-import Bye from '@/components/Bye'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
@@ -20,12 +19,6 @@ export default new Router({
       path: '/hello',
       name: 'Hello',
       component: Hello
-    },
-    {
-      path: '/bye',
-      name: 'Bye',
-      component: Bye
-
     },
     {
       path: '/chat',

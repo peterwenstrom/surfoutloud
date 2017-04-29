@@ -1,79 +1,79 @@
 <template>
 
-<div class="row">
-                <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <h2>Project overview</h2>
-                    <hr class="small">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Create new project</p>
-                                <a href="#">
-                                  <span class="glyphicon glyphicon-plus"></span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 1</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-2.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 2</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-3.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 3</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 4</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 5</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 6</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="portfolio-item">
-                              <p>Project 7</p>
-                                <a href="#">
-                                    <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.row (nested) -->
-                </div>
-                <!-- /.col-lg-10 -->
-            </div>
+  <div class="row">
+    <div class="col-lg-10 col-lg-offset-1 text-center">
+      <h2>Project overview</h2>
+      <hr class="small">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Create new project</p>
+            <a href="#">
+              <span class="glyphicon glyphicon-plus"></span>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 1</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-2.jpg">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 2</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-3.jpg">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 3</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 4</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 5</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 6</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="portfolio-item">
+            <p>Project 7</p>
+            <a href="#">
+              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.col-lg-10 -->
+  </div>
 
 </template>
 
@@ -82,7 +82,7 @@
   export default {
     name: 'Dashboard',
     data() {
-    return {
+      return {
         msg: ""
       }
     },
@@ -105,6 +105,6 @@
   }
   .glyphicon.glyphicon-plus {
     font-size: 100px;
-}
+  }
 
 </style>
