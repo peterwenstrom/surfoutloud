@@ -80,7 +80,7 @@
 <script>
 
   export default {
-    name: 'ProjectView',
+    name: 'Dashboard',
     data() {
     return {
         msg: ""

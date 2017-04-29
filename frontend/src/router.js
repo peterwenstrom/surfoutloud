@@ -5,11 +5,11 @@ import BootstrapVue from 'bootstrap-vue';
 import Hello from '@/components/Hello'
 import Chat from '@/components/Chat'
 import Bye from '@/components/Bye'
-import ProjectView from '@/components/ProjectView'
+import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
 
 Vue.use(Router)
 
@@ -33,9 +33,9 @@ export default new Router({
       component: Chat
     },
     {
-      path: '/projectview',
-      name: 'ProjectView',
-      component: ProjectView
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     },
     {
       path: '/login',

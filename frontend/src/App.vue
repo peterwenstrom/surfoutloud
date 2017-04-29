@@ -5,10 +5,7 @@
       <ul class="nav navbar-nav inner">
         <router-link tag="button" class="btn" v-if="!user.authenticated" to="/login">Log in</router-link>
         <router-link tag="button" class="btn" v-if="!user.authenticated" to="/register">Register</router-link>
-        <router-link tag="button" class="btn" v-if="user.authenticated" to="/Hello">Hello</router-link>
-        <router-link tag="button" class="btn" v-if="user.authenticated" to="/Bye">Good Bye</router-link>
-        <router-link tag="button" class="btn" v-if="user.authenticated" to="/Chat">Go to chat</router-link>
-        <router-link tag="button" class="btn" v-if="user.authenticated" to="/ProjectView">Go to projectview</router-link>
+        <router-link tag="button" class="btn" v-if="user.authenticated" to="/dashboard">Dashboard</router-link>
         <button class="btn" v-if="user.authenticated" v-on:click="logout">Logout</button>
       </ul>
     </div>
@@ -20,7 +17,7 @@
 
 <script>
   import auth from './auth'
-export default {
+  export default {
     data() {
       return {
         user: auth.user
@@ -30,8 +27,15 @@ export default {
       logout() {
         auth.logout()
       }
+    },
+    mounted() {
+        if (auth.user.authenticated) {
+            this.$router.push('dashboard')
+        } else {
+            this.$router.push('login')
+        }
     }
-}
+  }
 </script>
 
 <style>
