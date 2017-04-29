@@ -40,7 +40,7 @@
     },
     methods: {
       submit() {
-        var credentials = {
+        let credentials = {
           username: this.credentials.username,
           password: this.credentials.password
         }

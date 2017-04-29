@@ -14,7 +14,7 @@ export default {
   login(credentials, redirect) {
     axios.post(LOGIN_URL, credentials).then( response => {
       localStorage.setItem('id_token', response.data.access_token)
-      console.log(response.data.access_token)
+
       this.user.authenticated = true
 
 /*      if(redirect) {
@@ -29,7 +29,7 @@ export default {
 
   register(credentials, redirect) {
     axios.post(REGISTER_URL, credentials).then( response => {
-      localStorage.setItem('id_token', response.data.id_token)
+      localStorage.setItem('id_token', response.data.access_token)
 
       this.user.authenticated = true
 
