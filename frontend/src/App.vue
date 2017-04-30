@@ -67,7 +67,6 @@
   .navbar-sol {
     background-color: #c6c6c6;
     border-bottom: thick solid #878787;
-    margin-bottom: 20px;
   }
   .ml-auto > li {
     margin: 0px 15px 0px 15px;
