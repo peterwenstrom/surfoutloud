@@ -26,12 +26,15 @@
         >
       </div>
       <button class="login-btn btn" v-on:click="submit">Log in</button>
+      <grid-loader v-if="loading" :loading="loading" :color="color" :size="size"></grid-loader>
     </div>
   </div>
 </template>
 
 <script>
   import auth from '../auth'
+  import GridLoader from 'vue-spinner/src/GridLoader.vue'
+
   export default {
     data() {
       return {
@@ -39,7 +42,8 @@
           username: '',
           password: ''
         },
-        error: ''
+        error: '',
+        loading: false
       }
     },
     methods: {
@@ -48,9 +52,12 @@
           username: this.credentials.username,
           password: this.credentials.password
         };
-
+        this.loading = true;
         auth.login(credentials, 'dashboard');
       }
+    },
+    components: {
+        GridLoader
     }
 
   }
