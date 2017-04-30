@@ -1,9 +1,9 @@
 import router from './router'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:5000/'
-const LOGIN_URL = API_URL + 'login'
-const REGISTER_URL = API_URL + 'register'
+const API_URL = 'http://localhost:5000/';
+const LOGIN_URL = API_URL + 'login';
+const REGISTER_URL = API_URL + 'register';
 
 export default {
 
@@ -13,43 +13,44 @@ export default {
 
   login(credentials, redirect) {
     axios.post(LOGIN_URL, credentials).then( response => {
-      localStorage.setItem('id_token', response.data.access_token)
+      localStorage.setItem('id_token', response.data.access_token);
 
-      this.user.authenticated = true
+      this.user.authenticated = true;
 
-      router.push(redirect)
+      router.push(redirect);
 
     }).catch( err => {
-      console.log("error in login post")
-      console.log(err)
+      console.log("error in login post");
+      console.log(err);
     })
   },
 
   register(credentials, redirect) {
     axios.post(REGISTER_URL, credentials).then( response => {
-      localStorage.setItem('id_token', response.data.access_token)
+      localStorage.setItem('id_token', response.data.access_token);
 
-      this.user.authenticated = true
+      this.user.authenticated = true;
 
-      router.push(redirect)
+      router.push(redirect);
 
     }).catch( err => {
-      console.log("error in signup post")
-      console.log(err)
+      console.log("error in signup post");
+      console.log(err);
     })
   },
 
-  logout() {
-    localStorage.removeItem('id_token')
-    this.user.authenticated = false
+  logout(redirect) {
+    localStorage.removeItem('id_token');
+    this.user.authenticated = false;
+    router.push(redirect);
   },
 
   checkAuth() {
-    let jwt = localStorage.getItem('id_token')
+    let jwt = localStorage.getItem('id_token');
     if(jwt) {
-      this.user.authenticated = true
+      this.user.authenticated = true;
     } else {
-      this.user.authenticated = false
+      this.user.authenticated = false;
     }
   },
 

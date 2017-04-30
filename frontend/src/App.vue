@@ -39,8 +39,7 @@
     },
     methods: {
       logout() {
-        auth.logout();
-        this.$router.push('login')
+        auth.logout('login');
       }
     },
     mounted() {
