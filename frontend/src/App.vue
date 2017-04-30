@@ -1,20 +1,28 @@
 <template>
   <div id="app">
-    <div class="navbar navbar-default navbar-fixed-top">
+    <b-navbar class="navbar-fixed-top navbar-sol" toggleable>
       <div class="container">
-        <div class="navbar-header">
+        <b-nav-toggle target="nav_collapse"></b-nav-toggle>
+        <div>
           <img class="logo" src="./assets/logosurfin.png"/>
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-            <li><router-link class="btn" v-if="!user.authenticated" to="/login">Log in</router-link></li>
-            <li><router-link class="btn" v-if="!user.authenticated" to="/register">Register</router-link></li>
-            <li><router-link class="btn" v-if="user.authenticated" to="/dashboard">Dashboard</router-link></li>
-            <li><a v-if="user.authenticated" v-on:click="logout">Logout</a></li>
-          </ul>
-        </div>
+        <b-collapse is-nav id="nav_collapse">
+          <b-nav is-nav-bar class="ml-auto">
+            <router-link tag="b-nav-item" v-if="!user.authenticated" to="/login">Log in</router-link>
+            <router-link tag="b-nav-item" v-if="!user.authenticated" to="/register">Register</router-link>
+            <router-link tag="b-nav-item" v-if="user.authenticated" to="/dashboard">Dashboard</router-link>
+            <b-nav-item-dropdown v-if="user.authenticated" right-alignment>
+              <template slot="text">
+                <span style="font-weight: bold;">User</span>
+              </template>
+              <b-dropdown-item to="#">Profile</b-dropdown-item>
+              <b-dropdown-item v-if="user.authenticated" v-on:click="logout">Logout</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-nav>
+        </b-collapse>
       </div>
-    </div>
+    </b-navbar>
+
     <div class="container">
       <router-view></router-view>
     </div>
@@ -31,7 +39,7 @@
     },
     methods: {
       logout() {
-        auth.logout()
+        auth.logout();
         this.$router.push('login')
       }
     },
@@ -52,13 +60,17 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
   .logo {
     height: 45px;
     padding-top: 5px;
   }
-  a {
-    cursor: pointer;
+  .navbar-sol {
+    background-color: #c6c6c6;
+    border-bottom: thick solid #878787;
+    margin-bottom: 20px;
+  }
+  .ml-auto > li {
+    margin: 0px 15px 0px 15px;
   }
 </style>

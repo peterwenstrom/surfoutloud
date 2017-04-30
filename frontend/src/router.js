@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import BootstrapVue from 'bootstrap-vue';
 
 import Hello from '@/components/Hello'
 import Chat from '@/components/Chat'
@@ -8,9 +7,7 @@ import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 
-Vue.use(BootstrapVue)
-
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
 /*  mode: 'history',*/ //Uncomment to remove the hashtag, transition is not smooth though...
