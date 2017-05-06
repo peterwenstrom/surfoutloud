@@ -27,17 +27,18 @@ export default {
     })
   },
 
-  register(credentials, redirect) {
+  register(credentials, redirect, callback) {
     axios.post(REGISTER_URL, credentials).then( response => {
       localStorage.setItem('id_token', response.data.access_token);
 
       this.user.authenticated = true;
 
       router.push(redirect);
-
+      callback(true);
     }).catch( err => {
       console.log("error in signup post");
       console.log(err);
+      callback(false);
     })
   },
 
