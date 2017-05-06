@@ -59,7 +59,9 @@
           password: this.credentials.password
         };
         this.loading = true;
-        auth.login(credentials, 'dashboard');
+        auth.login(credentials, 'dashboard', function(success) {
+            this.loading = success;
+        }.bind(this));
       }
     },
     components: {
