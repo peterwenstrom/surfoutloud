@@ -47,9 +47,10 @@ def login():
     db_password = row[0][0]
     # check credentials against DB
     if not row or not bcrypt.check_password_hash(db_password, password):
-        return jsonify({"msg": "Bad username or password"}), 401
+        return jsonify({'message': 'Bad username or password'}), 401
 
-    response = {'access_token': create_access_token(identity=username)}
+    response = {'access_token': create_access_token(identity=username),
+                'username': username}
     return jsonify(response), 200
 
 
@@ -63,7 +64,7 @@ def register():
     cursor.execute('''SELECT * FROM User where username = %s''', [username])
     row = cursor.fetchall()
     if row:
-        return jsonify({"msg": "Username already exists"}), 401
+        return jsonify({'message': 'Username already exists'}), 401
 
     password_hash = bcrypt.generate_password_hash(password)
 
@@ -72,11 +73,12 @@ def register():
     try:
         cursor.execute('''INSERT INTO User VALUES (0, %s, %s)''', (username, password_hash))
         mysql.connection.commit()
-        response = {'access_token': create_access_token(identity=username)}
+        response = {'access_token': create_access_token(identity=username),
+                    'username': username}
         return jsonify(response), 200
     except:
         mysql.connection.rollback()
-        response = {'error': 'Something went wrong, please try again.'}
+        response = {'message': 'Something went wrong, please try again.'}
         return jsonify(response), 400
 
 

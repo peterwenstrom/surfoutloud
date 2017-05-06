@@ -35,8 +35,11 @@
 </template>
 
 <script>
-  import auth from '../auth'
+  import axios from 'axios'
   import GridLoader from 'vue-spinner/src/GridLoader.vue'
+
+  const API_URL = 'http://localhost:5000/';
+  const REGISTER_URL = API_URL + 'register';
 
   export default {
     data() {
@@ -60,12 +63,14 @@
           password: this.credentials.password
         };
         this.loading = true;
-        auth.register(credentials, 'dashboard', function(success, error) {
-          this.loading = success;
-          if (!success) {
-              this.error = error;
-          }
-        }.bind(this));
+        axios.post(REGISTER_URL, credentials).then(response => {
+          localStorage.setItem('authUser', JSON.stringify(response.data));
+          this.$store.dispatch('setUserObject', response.data);
+          this.$router.push('dashboard');
+        }).catch(err => {
+          this.error = err.response.data.message;
+          this.loading = false;
+        });
       }
     },
     components: {

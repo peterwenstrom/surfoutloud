@@ -6,12 +6,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-import auth from './auth'
+
+import store from './store'
 
 Vue.use(BootstrapVue);
-
-// Check the user's auth status when the app starts
-auth.checkAuth();
 
 Vue.config.productionTip = false;
 
@@ -20,6 +18,7 @@ new Vue({
   el: '#app',
   router,
   axios,
+  store,
   template: '<App/>',
   components: { App }
 });
