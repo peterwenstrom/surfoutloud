@@ -11,17 +11,19 @@ export default {
     authenticated: false
   },
 
-  login(credentials, redirect) {
+  login(credentials, redirect, callback) {
     axios.post(LOGIN_URL, credentials).then( response => {
       localStorage.setItem('id_token', response.data.access_token);
 
       this.user.authenticated = true;
 
       router.push(redirect);
+      callback(true);
 
     }).catch( err => {
       console.log("error in login post");
       console.log(err);
+      callback(false);
     })
   },
 
