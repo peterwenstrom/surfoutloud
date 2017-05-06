@@ -36,9 +36,7 @@ export default {
       router.push(redirect);
       callback(true);
     }).catch( err => {
-      console.log("error in signup post");
-      console.log(err);
-      callback(false);
+      callback(false, err.response.data.msg);
     })
   },
 

@@ -60,10 +60,10 @@
           password: this.credentials.password
         };
         this.loading = true;
-        auth.register(credentials, 'dashboard', function(success) {
+        auth.register(credentials, 'dashboard', function(success, error) {
           this.loading = success;
           if (!success) {
-              this.error = 'Oops... Something went wrong!'
+              this.error = error;
           }
         }.bind(this));
       }
