@@ -17,7 +17,7 @@
           <div class="portfolio-item">
             <p>Project 1</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-2.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-2.jpg">
             </a>
           </div>
         </div>
@@ -25,7 +25,7 @@
           <div class="portfolio-item">
             <p>Project 2</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-3.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-3.jpg">
             </a>
           </div>
         </div>
@@ -33,7 +33,7 @@
           <div class="portfolio-item">
             <p>Project 3</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -41,7 +41,7 @@
           <div class="portfolio-item">
             <p>Project 4</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -49,7 +49,7 @@
           <div class="portfolio-item">
             <p>Project 5</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -57,7 +57,7 @@
           <div class="portfolio-item">
             <p>Project 6</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -65,7 +65,7 @@
           <div class="portfolio-item">
             <p>Project 7</p>
             <a href="#">
-              <img class="img-portfolio img-responsive" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -103,8 +103,10 @@
     color: #2c3e50;
     margin-top: 60px;
   }
-  .glyphicon.glyphicon-plus {
-    font-size: 100px;
+
+  .project {
+    width: 80%;
+    height: 80%;
   }
 
 </style>
