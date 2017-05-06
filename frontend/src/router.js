@@ -6,6 +6,7 @@ import Chat from '@/components/Chat'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import Project from '@/components/Project'
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/project',
+      name: 'Project',
+      component: Project
     }
 
   ]
