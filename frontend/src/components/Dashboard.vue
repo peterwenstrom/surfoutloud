@@ -15,16 +15,15 @@
         </div>
         <div class="col-md-3">
           <div class="portfolio-item">
-            <p>Project 1</p>
-            <a href="#">
+            <router-link to="/project">Project 1
               <img class="img-portfolio img-responsive project" src="static/img/portfolio-2.jpg">
-            </a>
+            </router-link>
           </div>
         </div>
         <div class="col-md-3">
           <div class="portfolio-item">
             <p>Project 2</p>
-            <a href="#">
+            <a href="/project">
               <img class="img-portfolio img-responsive project" src="static/img/portfolio-3.jpg">
             </a>
           </div>
@@ -73,7 +72,10 @@
       <!-- /.row (nested) -->
     </div>
     <!-- /.col-lg-10 -->
+
   </div>
+
+
 
 </template>
 
@@ -83,11 +85,10 @@
     name: 'Dashboard',
     data() {
       return {
-        msg: ""
+
       }
     },
     methods: {
-
     }
   };
 
