@@ -9,8 +9,8 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: './src/main.js',
-    flasksocketio: './src/flask-socketio.js'
+    app: './src/main.js'
+    //flasksocketio: './src/flask-socketio.js'
   },
   output: {
     path: config.build.assetsRoot,

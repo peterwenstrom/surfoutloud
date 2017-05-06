@@ -7,7 +7,7 @@
 </template>
 
 <script>
-
+  import '../flask-socketio.js'
   export default {
     name: 'chat',
     data() {
