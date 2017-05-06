@@ -60,7 +60,10 @@
         };
         this.loading = true;
         auth.login(credentials, 'dashboard', function(success) {
-            this.loading = success;
+          this.loading = success;
+          if (!success) {
+            this.error = 'Oops... Something went wrong!'
+          }
         }.bind(this));
       }
     },
