@@ -27,9 +27,15 @@
     },
     methods: {
       send: function () {
-          socket.send(this.msg);
+          let username = this.$store.state.userStore.authUser.username;
+          socket.send(username + ": " + this.msg);
           this.msg = ''
       }
+    },
+    computed: {
+        user () {
+            return this.$store.state.authUser;
+        }
     },
     mounted () {
         //connecting the user
