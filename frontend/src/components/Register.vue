@@ -62,6 +62,9 @@
         this.loading = true;
         auth.register(credentials, 'dashboard', function(success) {
           this.loading = success;
+          if (!success) {
+              this.error = 'Oops... Something went wrong!'
+          }
         }.bind(this));
       }
     },
