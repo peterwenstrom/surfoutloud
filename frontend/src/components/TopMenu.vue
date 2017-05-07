@@ -22,18 +22,35 @@
         </b-collapse>
       </div>
     </b-navbar>
+    <div v-if="loading" class="row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <grid-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></grid-loader>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex'
+  import GridLoader from 'vue-spinner/src/GridLoader.vue'
 
   export default {
-    methods: {
+    data() {
+      return {
+        loading: false,
+        color: '#41B883',
+        size: '30px',
+        margin: '2px',
+        radius: '2px'
+      }
+    },methods: {
       logout() {
         localStorage.removeItem('authUser');
         this.$store.dispatch('clearUserObject');
+        this.loading = true;
         setTimeout(() => {
+          this.loading = false;
           this.$router.push('login');
         }, 1000);
       }
@@ -42,6 +59,9 @@
       ...mapGetters({
         authUser: 'authUser'
       })
+    },
+    components: {
+      GridLoader
     }
   }
 
