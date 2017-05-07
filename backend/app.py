@@ -40,6 +40,8 @@ jwt = JWTManager(app)
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
+    if not username or not password:
+        return jsonify({'message': 'Username and password cannot be empty'}), 400
 
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT password FROM User where username = %s''', [username])
@@ -47,7 +49,7 @@ def login():
     db_password = row[0][0]
     # check credentials against DB
     if not row or not bcrypt.check_password_hash(db_password, password):
-        return jsonify({'message': 'Bad username or password'}), 401
+        return jsonify({'message': 'Wrong username or password'}), 404
 
     response = {'access_token': create_access_token(identity=username),
                 'username': username}
@@ -58,13 +60,15 @@ def login():
 def register():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
+    if not username or not password:
+        return jsonify({'message': 'Username and password cannot be empty'}), 400
 
     # check DB
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT * FROM User where username = %s''', [username])
     row = cursor.fetchall()
     if row:
-        return jsonify({'message': 'Username already exists'}), 401
+        return jsonify({'message': 'Username already exists'}), 409
 
     password_hash = bcrypt.generate_password_hash(password)
 
