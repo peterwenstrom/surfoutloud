@@ -60,8 +60,11 @@ def login():
 def register():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    if not username or not password:
+    repeat_password = request.json.get('repeat_password', None)
+    if not username or not password or not repeat_password:
         return jsonify({'message': 'Username and password cannot be empty'}), 400
+    elif password != repeat_password:
+        return jsonify({'message': 'The passwords are not identical, please try again'}), 400
 
     # check DB
     cursor = mysql.connection.cursor()

@@ -27,6 +27,16 @@
             v-on:keyup.enter="submit"
           >
         </div>
+        <div class="form-group">
+          <input
+            id="repeat-password"
+            type="password"
+            class="form-control"
+            placeholder="Repeat your password"
+            v-model="credentials.repeat_password"
+            v-on:keyup.enter="submit"
+          >
+        </div>
         <button class="register-btn btn" v-on:click="submit">Register</button>
       </div>
       <grid-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></grid-loader>
@@ -46,7 +56,8 @@
       return {
         credentials: {
           username: '',
-          password: ''
+          password: '',
+          repeat_password: ''
         },
         error: '',
         loading: false,
@@ -60,17 +71,22 @@
       submit() {
         let credentials = {
           username: this.credentials.username,
-          password: this.credentials.password
+          password: this.credentials.password,
+          repeat_password: this.credentials.repeat_password
         };
-        this.loading = true;
-        axios.post(REGISTER_URL, credentials).then(response => {
-          localStorage.setItem('authUser', JSON.stringify(response.data));
-          this.$store.dispatch('setUserObject', response.data);
-          this.$router.push('dashboard');
-        }).catch(err => {
-          this.error = err.response.data.message;
-          this.loading = false;
-        });
+        if (credentials.password === credentials.repeat_password) {
+          this.loading = true;
+          axios.post(REGISTER_URL, credentials).then(response => {
+            localStorage.setItem('authUser', JSON.stringify(response.data));
+            this.$store.dispatch('setUserObject', response.data);
+            this.$router.push('dashboard');
+          }).catch(err => {
+            this.error = err.response.data.message;
+            this.loading = false;
+          });
+        } else {
+            this.error = 'The passwords are not identical, please try again'
+        }
       }
     },
     components: {
