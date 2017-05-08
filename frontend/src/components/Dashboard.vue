@@ -17,7 +17,7 @@
           <div class="portfolio-item">
             <router-link to="/project">
               <p>Project 1</p>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-2.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
             </router-link>
           </div>
         </div>
@@ -25,7 +25,7 @@
           <div class="portfolio-item">
             <p>Project 2</p>
             <a>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-3.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-3.jpg">
             </a>
           </div>
         </div>
@@ -33,7 +33,7 @@
           <div class="portfolio-item">
             <p>Project 3</p>
             <a>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -41,7 +41,7 @@
           <div class="portfolio-item">
             <p>Project 4</p>
             <a>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -49,7 +49,7 @@
           <div class="portfolio-item">
             <p>Project 5</p>
             <a>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -57,7 +57,7 @@
           <div class="portfolio-item">
             <p>Project 6</p>
             <a>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
             </a>
           </div>
         </div>
@@ -65,7 +65,7 @@
           <div class="portfolio-item">
             <p>Project 7</p>
             <a>
-              <img class="img-portfolio img-responsive project" src="static/img/portfolio-4.jpg">
+              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
             </a>
           </div>
         </div>
