@@ -13,7 +13,7 @@
             <router-link tag="b-nav-item" v-if="authUser.access_token" to="/dashboard">Dashboard</router-link>
             <b-nav-item-dropdown v-if="authUser.access_token" right-alignment>
               <template slot="text">
-                <span style="font-weight: bold;">{{authUser.username}}</span>
+                <span style="font-weight: bold; text-transform:capitalize;">{{authUser.username}}</span>
               </template>
               <b-dropdown-item to="#">Profile</b-dropdown-item>
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
