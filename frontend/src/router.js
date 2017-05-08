@@ -7,6 +7,10 @@ import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import Project from '@/components/Project'
+import CreateNewProject from '@/components/CreateNewProject'
+
+
+
 
 Vue.use(Router);
 
@@ -42,6 +46,11 @@ export default new Router({
       path: '/project',
       name: 'Project',
       component: Project
+    },
+    {
+      path: '/createnewproject',
+      name: 'CreateNewProject',
+      component: CreateNewProject
     }
 
   ]

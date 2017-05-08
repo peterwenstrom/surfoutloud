@@ -94,13 +94,57 @@ def register():
 def test_token():
     return get_jwt_identity()
 
+#Todo: need to fix so duplicate memberID:s can be assigned to duplicate projectID:s?
+def addMember(members, projectId):
+    cursor = mysql.connection.cursor()
+    for x in members:
+        cursor.execute('''SELECT id FROM User where username = %s''', [x])
+        row = cursor.fetchall()
+        testid = row[0]
+        if row:
+            try:
+                cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (projectId,testid))
+                mysql.connection.commit()
+                #Todo: make an array of usernames that can be sent back to client
+                #response = {'username': username, 'msg': 'everything went well, ' + username + ' is added'}
+            except:
+                mysql.connection.rollback()
+                response = {'msg': 'Something went wrong, please try again.'}
+                return jsonify(response), 400
+    return "herueka!"
 
-@app.route('/')
-def db_test():
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM Person''')
-    rv = cur.fetchall()
-    return str(rv[1])
+
+
+@app.route('/addproject', methods=['POST'])
+def addProject():
+    admin = request.json.get('username', None)
+    members = request.json.get('memberArray', None)
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT username FROM User where username = %s''', [admin])
+    row = cursor.fetchall()
+    if row:
+        try:
+            cursor.execute('''INSERT INTO Project VALUES (0, %s)''', [admin])
+            cursor.execute('''SELECT max(id) FROM Project''')
+            row = cursor.fetchall()
+            projectId = row[0]
+            mysql.connection.commit()
+            response = {'username': admin, 'projectid': row[0]}
+            addMember(members,projectId)
+            return jsonify(response)
+        except:
+            mysql.connection.rollback()
+            response = {'msg': 'Something went wrong, please try again.'}
+            return jsonify(response), 400
+
+
+    # Only saved as a reference. Table Person is dropped...
+    # @app.route('/')
+    # def db_test():
+    #     cur = mysql.connection.cursor()
+    #     cur.execute('''SELECT * FROM Person''')
+    #     rv = cur.fetchall()
+    #     return str(rv[1])
 
 
 @socketio.on('message')

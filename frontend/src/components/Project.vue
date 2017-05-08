@@ -12,6 +12,14 @@
       <h2>Chat</h2>
       <chat></chat>
     </div>
+    <div class="col-md-4">
+      <router-link to="/CreateNewProject">
+        <h2>Create new project</h2>
+        <h6>TODO: Move to dashboard when it has been dynamic</h6>
+
+      </router-link>
+
+    </div>
   </div>
 </template>
 
