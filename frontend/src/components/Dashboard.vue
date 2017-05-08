@@ -5,7 +5,7 @@
       <h2>Dashboard</h2>
       <hr class="small">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Create new project</p>
             <a href="#">
@@ -13,7 +13,7 @@
             </a>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <router-link to="/project">
               <p>Project 1</p>
@@ -21,7 +21,7 @@
             </router-link>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Project 2</p>
             <a>
@@ -29,7 +29,7 @@
             </a>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Project 3</p>
             <a>
@@ -37,7 +37,7 @@
             </a>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Project 4</p>
             <a>
@@ -45,7 +45,7 @@
             </a>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Project 5</p>
             <a>
@@ -53,7 +53,7 @@
             </a>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Project 6</p>
             <a>
