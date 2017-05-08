@@ -2,11 +2,11 @@
   <div class="hello row">
     <div class="col-md-4">
       <h2>Members</h2>
-        <ul id="repeat-object" class="demo">
-          <li v-for="value in object">
-            {{ value }}
-          </li>
-        </ul>
+      <ul>
+        <li v-for="item in memberList">
+          {{ item }}
+        </li>
+      </ul>
     </div>
     <div class="col-md-4">
       <h2>Chat</h2>
@@ -24,11 +24,9 @@ export default {
   name: 'project',
   data () {
     return {
-      object: {
-        firstName: 'John',
-        lastName: 'Doe',
-        age: 30
-      }
+        memberList: [
+            '-'
+        ]
     }
   },
   methods: {

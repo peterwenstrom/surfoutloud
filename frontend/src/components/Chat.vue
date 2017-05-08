@@ -1,8 +1,8 @@
 <template>
   <div id = "chat">
-    <ul>
-      <li v-for="(history, index) in history">{{ history }}</li>
-    </ul>
+
+      <p v-for="(history, index) in history">{{ history }}</p>
+
 
     <div id = "sendMessage">
       <input v-model="msg" v-on:keyup.enter="send"/>
