@@ -49,7 +49,7 @@ def login():
     db_password = row[0][0]
     # check credentials against DB
     if not row or not bcrypt.check_password_hash(db_password, password):
-        return jsonify({'message': 'Wrong username or password'}), 404
+        return jsonify({'message': 'Wrong username or password'}), 401
 
     response = {'access_token': create_access_token(identity=username),
                 'username': username}
@@ -88,6 +88,17 @@ def register():
         response = {'message': 'Something went wrong, please try again.'}
         return jsonify(response), 400
 
+
+@app.route('/auth', methods=['POST'])
+@jwt_required
+def authorise():
+    username = request.json.get('username', None)
+    if get_jwt_identity() == username:
+        response = {'message': 'Authorised user'}
+        return jsonify(response), 200
+    else:
+        response = {'message': 'Username and token does not match'}
+        return jsonify(response), 401
 
 @app.route('/test_token')
 @jwt_required
