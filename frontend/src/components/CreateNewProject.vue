@@ -45,9 +45,11 @@
                     memberArray: this.newMember.username
                   };
                 axios.post(ADDPROJECT_URL, adminAndMembers).then(response => {
+                    this.$router.push('dashboard');
                 }).catch(err => {
                     //Todo: error handling when user put in members not in db
                     this.msg = err.response.data.msg;
+
                 })
               }
             },
