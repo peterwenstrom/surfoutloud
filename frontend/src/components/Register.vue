@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
       <div v-if="!loading">
         <h2>Register</h2>
         <p>Register here if you don't have an account</p>
