@@ -3,6 +3,7 @@
     <div class="col-md-4"></div>
     <div class="col-md-4">
       <div v-if="!loading">
+        <img class="logo" src="../assets/LogoText.png"/>
         <h2>Log in</h2>
         <p>Log in if you already have an account</p>
         <div class="alert alert-danger" v-if="error">
