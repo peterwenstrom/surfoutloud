@@ -81,7 +81,11 @@
             this.$store.dispatch('setUserObject', response.data);
             this.$router.push('dashboard');
           }).catch(err => {
-            this.error = err.response.data.message;
+            if(err.response) {
+              this.error = err.response.data.message;
+            } else {
+              this.error = 'No response from the server, check your connection or try again later'
+            }
             this.loading = false;
           });
         } else {
