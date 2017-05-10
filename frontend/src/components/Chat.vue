@@ -1,7 +1,20 @@
 <template>
   <div id = "chat">
 
-      <p v-for="(history, index) in history">{{ history }}</p>
+
+    <!--<div>
+      <h5>Active Users</h5>
+      <ul>
+        <li v-for="item in activeUser.user">
+          {{ item }}
+        </li>
+        <li v-for="item in activeUser.inRoom">
+          {{ item }}
+        </li>
+      </ul>
+    </div>-->
+
+
 
 
     <div id = "sendMessage">
@@ -12,6 +25,10 @@
       <!-- Todo: if room number not specified = disable send button-->
       <button class="send-btn btn" v-on:click="sendInRoom">Send</button>
     </div>
+
+     <p v-for="(history, index) in history">{{ history }}</p>
+
+
   </div>
 
 </template>
@@ -32,6 +49,10 @@
         chatmessage: {
             msg: "",
             from: ""
+        },
+        activeUser: {
+            user: [],
+            inRoom: []
         }
       }
     },
@@ -40,9 +61,31 @@
           this.chatmessage.from = this.authUser.username;
           this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
       },
+      sendInRoomResponse: function() {
+        //recieving messages and pushing the messages to the history array
+        this.socket.on('room_response', function(response) {
+              this.history.push(response.data.from + ": " + response.data.msg + " /--/ sent in room " + response.room);
+        }.bind(this));
+      },
       joinRoom: function() {
+
+          /* Right now you can join as many rooms as you like, but not leave them.
+           * There is no sign of how many rooms, or which, you are active in.
+           * Todo: probably add something visual soon, or it gets pretty messy
+           * see todo on "connect".
+           * Had some idea of having room 0 as active users, not perfect though */
           this.socket.emit('join', {room: this.roomNo});
 
+          //this should probably be updated after the socket response
+          this.selectedRoomNo = this.roomNo;
+      },
+      joinRoomResponse: function() {
+        this.socket.on('join_room_response', function(response) {
+            let res = response.data.split(",");
+            console.log("resTot: " + res);
+            console.log(res[1]);
+            //this.activeUser.inRoom.push(res[1]);
+        }.bind(this));
       }
     },
     computed: {
@@ -57,16 +100,8 @@
         //this.socket.send(this.authUser.username + ' has connected!');
       }.bind(this));
 
-    //recieving messages and pushing the messages to the history array
-      this.socket.on('join_room_response', function(response) {
-          console.log(response.data);
-          this.selectedRoomNo = response.data.inRoom;
-      }.bind(this));
-
-      this.socket.on('room_response', function(response) {
-          console.log(response.data);
-          this.history.push(response.data.from + ": " + response.data.msg);
-      }.bind(this));
+      this.sendInRoomResponse();
+      this.joinRoomResponse();
     }
   };
 

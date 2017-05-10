@@ -159,18 +159,17 @@ def addProject():
 
 @socketio.on('sendInRoom')
 def send_room_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
+    #session['receive_count'] = session.get('receive_count', 0) + 1
     emit('room_response',
-         {'data': message['data'], 'count': session['receive_count']},
+         {'data': message['data'], 'room': message['room']},
          room=message['room'])
 
 @socketio.on('join')
 def join(message):
     join_room(message['room'])
-    session['receive_count'] = session.get('receive_count', 0) + 1
+    #session['receive_count'] = session.get('receive_count', 0) + 1
     emit('join_room_response',
-         {'data': 'inRoom' + ', '.join(rooms()),
-          'count': session['receive_count']})
+         {'data': ",".join(rooms())})
 
 
 if __name__ == "__main__":
