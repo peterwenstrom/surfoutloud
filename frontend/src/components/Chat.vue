@@ -5,8 +5,12 @@
 
 
     <div id = "sendMessage">
-      <input v-model="msg" v-on:keyup.enter="send"/>
-      <button class="send-btn btn" v-on:click="send">Send</button>
+      <input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
+      <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
+      <p>Current room number: {{ selectedRoomNo }}</p>
+      <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
+      <!-- Todo: if room number not specified = disable send button-->
+      <button class="send-btn btn" v-on:click="sendInRoom">Send</button>
     </div>
   </div>
 
@@ -21,14 +25,24 @@
     data() {
     return {
         msg: "",
+        roomNo: "",
+        selectedRoomNo: "No room selected",
         history: [],
-        socket: io.connect('http://127.0.0.1:5000')
+        socket: io.connect('http://127.0.0.1:5000'),
+        chatmessage: {
+            msg: "",
+            from: ""
+        }
       }
     },
     methods: {
-      send: function () {
-          this.socket.send(this.authUser.username + ": " + this.msg);
-          this.msg = ''
+      sendInRoom: function () {
+          this.chatmessage.from = this.authUser.username;
+          this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
+      },
+      joinRoom: function() {
+          this.socket.emit('join', {room: this.roomNo});
+
       }
     },
     computed: {
@@ -39,12 +53,19 @@
     created () {
         //connecting the user
       this.socket.on('connect', function() {
-        this.socket.send(this.authUser.username + ' has connected!');
+          //todo: greenlight active members in the project
+        //this.socket.send(this.authUser.username + ' has connected!');
       }.bind(this));
 
     //recieving messages and pushing the messages to the history array
-      this.socket.on('message', function (msg) {
-        this.history.push(msg);
+      this.socket.on('join_room_response', function(response) {
+          console.log(response.data);
+          this.selectedRoomNo = response.data.inRoom;
+      }.bind(this));
+
+      this.socket.on('room_response', function(response) {
+          console.log(response.data);
+          this.history.push(response.data.from + ": " + response.data.msg);
       }.bind(this));
     }
   };
