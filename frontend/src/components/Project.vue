@@ -8,7 +8,7 @@
         </li>
       </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-8">
       <h2>Chat</h2>
       <chat></chat>
     </div>

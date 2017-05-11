@@ -20,9 +20,36 @@
 
 
 
+    <!--<div class="container">
+      <p class="datestamp">May 20, 2014, 4:16 PM</p>
+
+      <div class="bubble">
+        <p>Hey how's it going?</p>
+      </div>
 
 
-    <div id = "sendMessage">
+      <div class="bubble bubble-alt green">
+        <p>Just sending out random SMS to people</p>
+      </div>
+
+      <div class="bubble">
+        <p>Cool, cool.</p>
+      </div>
+
+      <div class="bubble">
+        <p>Sometimes I do that too. Like right now.</p>
+      </div>
+
+      <div class="bubble bubble-alt white">
+        <p>So how's life? Anything interesting? I'm okay just hanging around doing nothing staring out the window, thinking I should go outside but eh.</p>
+      </div>
+    </div>-->
+
+
+
+
+
+    <div class = "container">
       <!--<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
       <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
 
@@ -30,56 +57,19 @@
       <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
       <p>Current room number: No room selected</p>-->
 
-      <!--<div class="menu">
-            <div class="back"><i class="fa fa-chevron-left"></i> <img src="http://i.imgur.com/DY6gND0.png" draggable="false"/></div>
-            <div class="name">Alex</div>
-            <div class="last">18:09</div>
-        </div>-->
+      <div v-for="value in history">
+        <span class = "bubble" v-if="value.from === 'me'">{{ value.message }}</span>
+        <span class = "bubble bubble-alt" v-if="value.from === 'you'">{{ value.message }}</span>
 
-
-          <!--  <ol class="chat">
-              <div v-for="(history, index) in history">
-                <li v-if="history.from = 'you'" class="other">
-                  <div class="avatar"><img src="http://i.imgur.com/HYcn9xO.png" draggable="false"/></div>
-                  <div class="msg">
-                    <p class = "other" >{{ history.message }}</p>
-
-                    <time>20:17</time>
-                  </div>
-                </li>
-                <li v-if="history.from = 'me'" class="self">
-                  <div class="avatar"><img src="http://i.imgur.com/DY6gND0.png" draggable="false"/></div>
-                  <div class="msg">
-                    <p class = "self" >{{ history.message }}</p>
-                    <time>18:08</time>
-                  </div>
-                </li>
-
-              </div>
-            </ol>-->
-
-
-
-
-
-
-
-            <div v-for="(history, index) in history">
-              <p class = "self" v-if="history.from = 'me'">{{ history.message }}</p>
-              <p class = "other" v-else>{{ history.message }}</p>
-            </div>
-
-
-
-
+      </div>
 
 
       <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
-      <button class="send-btn btn" v-on:click="sendInRoom">Send</button>
+      <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
+
     </div>
-
-
   </div>
+
 
 </template>
 
@@ -95,8 +85,7 @@
         roomNo: "1",
         selectedRoomNo: [],
         history: [
-          { from: '' },
-          { message: '' }
+          { from: "", message: "" }
         ],
         socket: io.connect('http://127.0.0.1:5000'),
         chatmessage: {
@@ -107,30 +96,27 @@
           user: [],
           inRoom: []
         },
-         whoClass: 'self',
+        object: {
+          from: 'John',
+          message: 'Doe'
+        }
+
       }
     },
     methods: {
       sendInRoom: function () {
         this.chatmessage.from = this.authUser.username;
-        console.log("rumm: " + this.roomNo);
         this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
         this.chatmessage.msg = '';
       },
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
-
         this.socket.on('room_response', function(response) {
-          console.log("from: " + this.authUser.username);
-          console.log("responsefrom: " + response.data.from);
           if(response.data.from === this.authUser.username){
-            this.history.push({ from: 'me' });
-            this.history.push({ message: response.data.msg});
+            this.history.push({ from: 'me',message: response.data.msg});
             //+ " /--/ sent in room " + response.room
-
           }else{
-            this.history.push({ from: 'you' });
-            this.history.push({ message: response.data.from + ": " + response.data.msg});
+            this.history.push({ from: 'you', message: response.data.from + ": " + response.data.msg});
             //+ " /--/ sent in room " + response.room
           }
         }.bind(this));
@@ -143,9 +129,6 @@
          * see todo on "connect".
          * Had some idea of having room 0 as active users, not perfect though */
         this.socket.emit('join', {room: this.roomNo});
-        console.log("hur ofta sker join???");
-
-
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -156,8 +139,7 @@
         }.bind(this));
       },leaveRoom: function() {
         this.socket.emit('leave', {room: this.roomNo});
-
-        console.log("hur ofta sker leave??");
+        
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -176,8 +158,8 @@
     created () {
       //connecting the user
       //this.socket.on('connect', function() {
-        //todo: greenlight active members in the project
-        //this.socket.send(this.authUser.username + ' has connected!');
+      //todo: greenlight active members in the project
+      //this.socket.send(this.authUser.username + ' has connected!');
       //}.bind(this));
 
 
@@ -210,477 +192,114 @@
     border-style: dashed;
   }*/
 
-/*copied css v*/
+  /*copied css v*/
 
-  html, body {
-    background: #252C33;
-    font-family: 'Lato', sans-serif;
-    margin: 0px auto;
-  }
-  ::selection{
-    background: rgba(82,179,217,0.3);
-    color: inherit;
+
+  /** page structure **/
+  .container {
+    padding: 40px 20px;
+    margin: 0 auto;
+    max-width: 600px;
   }
 
-  /* M E N U */
 
-  .menu {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    height: 50px;
-    background: rgba(27,35,42,0.9);
-    z-index: 100;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
-  .back {
-    position: absolute;
-    width: 90px;
-    height: 50px;
-    top: 0px;
-    left: 0px;
-    color: rgba(255,255,255,0.5);
-    line-height: 45px;
-    font-size: 40px;
-    padding-left: 10px;
-    cursor: pointer;
-    transition: .15s all;
-  }
-  .back img {
-    position: absolute;
-    top: 5px;
-    left: 30px;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 100%;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    margin-left: 15px;
-  }
-  .back:active {
-    background: rgba(0,0,0,0.15);
-  }
-  .name {
-    position: absolute;
-    top: 3px;
-    left: 110px;
-    font-family: 'Lato';
-    font-size: 25px;
-    font-weight: 300;
-    color: rgba(255,255,255,0.98);
-    cursor: default;
-  }
-  .last {
-    position: absolute;
-    top: 30px;
-    left: 115px;
-    font-family: 'Lato';
-    font-size: 11px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.6);
-    cursor: default;
-  }
-  .members {
-    position: absolute;
-    top: 30px;
-    left: 115px;
-    font-family: 'Lato';
-    font-size: 11px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.6);
-    cursor: default;
-    word-spacing: 2px;
-  }
-
-  /* M E S S A G E S */
-
-  .chat {
-    list-style: none;
-    background: none;
-    margin: 0;
-    padding: 0 0 50px 0;
-    margin-top: 60px;
-    margin-bottom: 15px;
-  }
-  .chat li {
-    padding: 0.5rem;
-    overflow: hidden;
-    display: flex;
-  }
-
-  .chat .avatar {
-    width: 40px;
-    height: 40px;
-    position: relative;
-    display: block;
-    z-index: 2;
-    border-radius: 100%;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    background-color: rgba(255,255,255,0.9);
-  }
-  .chat .avatar img {
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    background-color: rgba(255,255,255,0.9);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-  .chat .day {
-    position: relative;
+  .datestamp {
     display: block;
     text-align: center;
-    color: rgba(255,255,255,0.3);
-    height: 20px;
-    text-shadow: 7px 0px 0px #252C33, 6px 0px 0px #252C33, 5px 0px 0px #252C33, 4px 0px 0px #252C33, 3px 0px 0px #252C33, 2px 0px 0px #252C33, 1px 0px 0px #252C33, 1px 0px 0px #252C33, 0px 0px 0px #252C33, -1px 0px 0px #252C33, -2px 0px 0px #252C33, -3px 0px 0px #252C33, -4px 0px 0px #252C33, -5px 0px 0px #252C33, -6px 0px 0px #252C33, -7px 0px 0px #252C33;
-    box-shadow: inset 20px 0px 0px #252C33, inset -20px 0px 0px #252C33, inset 0px -2px 0px rgba(255,255,255,0.1);
-    line-height: 38px;
-    margin-top: 5px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #8b91a0;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
+  }
+
+
+  /** ios1-ios6 bubbles **/
+  .bubble {
+    box-sizing: border-box;
+    float: left;
+    width: auto;
+    max-width: 80%;
+    position: relative;
+    clear: both;
+
+    background: #95c2fd;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.15, #bee2ff), color-stop(1, #95c2fd));
+    background-image: -webkit-linear-gradient(bottom, #bee2ff 15%, #95c2fd 100%);
+    background-image: -moz-linear-gradient(bottom, #bee2ff 15%, #95c2fd 100%);
+    background-image: -ms-linear-gradient(bottom, #bee2ff 15%, #95c2fd 100%);
+    background-image: -o-linear-gradient(bottom, #bee2ff 15%, #95c2fd 100%);
+    background-image: linear-gradient(bottom, #bee2ff 15%, #95c2fd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#95c2fd', endColorstr='#bee2ff');
+
+    border: solid 1px rgba(0,0,0,0.5);
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+
+    -webkit-box-shadow: inset 0 8px 5px rgba(255,255,255,0.65), 0 1px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 8px 5px rgba(255,255,255,0.65), 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 0 8px 5px rgba(255,255,255,0.65), 0 1px 2px rgba(0,0,0,0.2);
     margin-bottom: 20px;
-    cursor: default;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+    padding: 6px 20px;
+    color: #000;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.8);
+    word-wrap: break-word;
   }
-  .chat .notification {
-    position: relative;
-    display: inherit;
-    text-align: center;
-    font-size: 13px;
-    color: rgba(255,255,255,0.15);
-    background: rgba(234, 247, 255, 0.035);
-    line-height: 30px;
-    border-radius: 100px;
-    margin: 7px 35%;
-    height: 30px;
-    width: 30%;
-    box-shadow: 0px 1px 0px rgba(0,0,0,.05), 0px -1px 0px rgba(0,0,0,.05), inset 0px 1px 0px rgba(255,255,255,.02), inset 0px -1px 0px rgba(255,255,255,.02);
-    text-shadow: 0px -1px 0px rgba(0,0,0,.1), 0px 1px 0px rgba(255,255,255,.05);
-    cursor: default;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    transition: all .2s cubic-bezier(0.565, -0.260, 0.255, 1.410);
-  }
-  .chat .notification time {
+
+  .bubble:before, .bubble:after {
+    border-radius: 20px / 5px;
+    content: '';
+    display: block;
     position: absolute;
-    top: 7px;
-    right: 7px;
-    font-size: 11px;
-    padding: 8px;
-    border-radius: 100px;
-    background: #252C33;
-    box-shadow: 0px 0px 2px rgba(255,255,255,.02), inset 0px 0px 1px rgba(27,35,42,0.1);
-    height: 1px;
-    line-height: 0px;
-    color: rgba(255,255,255,0.1);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    transition: all .2s cubic-bezier(0.565, -0.260, 0.255, 1.410);
+  }
+  .bubble:before {
+    border: 10px solid transparent;
+    border-bottom-color: rgba(0,0,0,0.5);
+    bottom: 0px;
+    left: -7px;
+    z-index: -2;
+  }
+  .bubble:after {
+    border: 8px solid transparent;
+    border-bottom-color: #bee2ff; /* arrow color */
+    bottom: 1px;
+    left: -5px;
   }
 
-  .other .msg {
-    border-top-left-radius: 0px;
-    box-shadow: -1px 2px 0px #c1cbcd;
-  }
-  .other:before {
-    content: "";
-    position: relative;
-    top: 0px;
-    right: 0px;
-    left: 0px;
-    width: 0px;
-    height: 0px;
-    border: 5px solid #eef8ff;
-    border-left-color: transparent;
-    border-bottom-color: transparent;
-  }
-
-  .self {
-    justify-content: flex-end;
-    align-items: flex-end;
-  }
-  .self .msg {
-    border-bottom-right-radius: 0px;
-    box-shadow: 1px 2px 0px #c1cbcd;
-  }
-  .self:after {
-    content: "";
-    position: relative;
-    display: inline-block;
+  .bubble-alt {
     float: right;
-    bottom: 0px;
-    right: 0px;
-    width: 0px;
-    height: 0px;
-    border: 5px solid #eef8ff;
-    border-right-color: transparent;
-    border-top-color: transparent;
-    box-shadow: 0px 2px 0px #c1cbcd;
+  }
+  .bubble-alt:before {
+    left: auto;
+    right: -7px;
+  }
+  .bubble-alt:after {
+    left: auto;
+    right: -5px;
   }
 
-  .msg {
-    background: #eef8ff;
-    min-width: 50px;
-    padding: 10px;
-    border-radius: 2px;
-    word-break: break-all;
-  }
-  .msg .user {
-    font-size: 14px;
-    margin: 0 0 2px 0;
-    color: #666;
-    font-weight: 700;
-    margin-top: -2px;
-    margin-bottom: 5px;
-    transition: all .2s ease;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-  .msg .user .range.admin {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 300;
-    color: #6aea96;
-    padding: 2px;
-    border-radius: 3px;
-    border: solid 1px #6aea96;
-    background: rgba(255,255,255,0);
-    margin-left: 5px;
-  }
-  .msg p {
-    font-size: 13px;
-    margin: 0 0 2px 0;
-    color: #777;
-    transition: all .2s ease;
-  }
-  .msg img {
-    position: relative;
-    display: block;
-    width: 600px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 3px #eee;
-    transition: all .8s cubic-bezier(0.565, -0.260, 0.255, 1.410);
-    cursor: default;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+  .bubble p {
+    font-size: 1.4em;
   }
 
-  .msg time {
-    font-size: 0.7rem;
-    color: rgba(0,0,0,.35);
-    margin-top: 3px;
-    float: right;
-    cursor: default;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+  /* yellow bubble */
+  .yellow {
+    background: #7acd47;
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.15, #fcf3c3),color-stop(1, #f4e371));
+    background-image: -webkit-linear-gradient(bottom, #fcf3c3 15%, #f4e371 100%);
+    background-image: -moz-linear-gradient(bottom, #fcf3c3 15%, #f4e371 100%);
+    background-image: -ms-linear-gradient(bottom, #fcf3c3 15%, #f4e371 100%);
+    background-image: -o-linear-gradient(bottom, #fcf3c3 15%, #f4e371 100%);
+    background-image: linear-gradient(bottom, #fcf3c3 15%, #f4e371 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#f4e371', endColorstr='#fcf3c3');
   }
-  .msg time:before{
-    content:"\f017";
-    color: #ddd;
-    font-family: FontAwesome;
-    display: inline-block;
-    margin-right: 4px;
+  .yellow:after {
+    border-bottom-color: #fcf3c3;
   }
 
 
 
-  @-webikt-keyframes pulse {
-    from { opacity: 0; }
-    to { opacity: 0.5; }
-  }
 
-  ::-webkit-scrollbar {
-    min-width: 12px;
-    width: 12px;
-    max-width: 12px;
-    min-height: 12px;
-    height: 12px;
-    max-height: 12px;
-    background: #252C33;
-    box-shadow: inset 0px 50px 0px rgba(27,35,42,0.9), inset 0px -50px 0px #eee;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    border-radius: 100px;
-    border: solid 3px #252C33;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.1);
-  }
-
-  ::-webkit-scrollbar-thumb:active {
-    background: rgba(255,255,255,0.1);
-  }
-
-  ::-webkit-scrollbar-button {
-    display: block;
-    height: 26px;
-  }
-
-  /* T Y P E */
-  .typezone{
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    height: 50px;
-    z-index: 99;
-    background: #eee;
-    border: none;
-    outline: none;
-  }
-  textarea, textarea:hover {
-    position: absolute;
-    bottom: 0px;
-    left: 8%;
-    right: 8%;
-    width: 80%;
-    height: 30px;
-    z-index: 100;
-    background: #fafafa;
-    border: none;
-    outline: none;
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-top: 2%;
-    color: #666;
-    font-weight: 400;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    overflow: hidden;
-    resize: none;
-    z-index: 200;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);
-  }
-  textarea:focus {
-    height: 300px;
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
-  }
-
-  .send {
-    position: fixed;
-    display: block;
-    bottom: 0px;
-    right: 0px;
-    width: 8%;
-    height: 50px;
-    border: none;
-    outline: none;
-    z-index: 100;
-    cursor: pointer;
-    background-image: url(http://i.imgur.com/VSQxJKL.png);
-    background-repeat: no-repeat;
-    background-size: 34px 34px;
-    background-position: 45% 9px;
-    background-color: rgba(255,255,255,0);
-  }
-  .send:active {
-    opacity: 0.85;
-  }
-
-  /* R E S P O N S I V E   C O N F I G U R A T I O N */
-
-  @media screen and (max-width: 750px) {
-    ::-webkit-scrollbar {
-      display: none;
-    }
-    .chat{
-      margin-bottom: 55px;
-    }
-    .msg p {
-      font-size: 11px;
-    }
-    .msg .user {
-      font-size: 13px;
-    }
-    .msg img {
-      width: 300px;
-    }
-    .chat .notification {
-      font-size: 12px;
-      margin: 7px 30%;
-      width: 40%;
-    }
-    .chat .day {
-      font-size: 11px;
-    }
-    .emojis {
-      width: 25%;
-    }
-    .send {
-      width: 25%;
-    }
-    textarea {
-      left: 0px;
-      right: 0px;
-      bottom: 50px;
-      padding-left: 5%;
-      padding-right: 5%;
-      padding-top: 20px;
-      width: 90%;
-      border-radius: 0px;
-      height: 28px;
-      background: #fafafa;
-      box-shadow: none;
-      transition: all .4s cubic-bezier(0.2, -0.2, 0.2, 1.2);
-    }
-    textarea:focus {
-      height: 30vh;
-      margin-top: 30vh;
-      box-shadow: 0px -20px 20px rgba(0,0,0,0.1);
-    }
-    form:focus ~ .typezone {
-      bottom: 50vh;
-    }
-  }
-  @media screen and (max-width: 550px) {
-    .msg p {
-      max-width: 250px;
-    }
-    .msg img {
-      width: 200px;
-    }
-    .chat .notification {
-      font-size: 12px;
-      margin: 7px 0px;
-      width: 100%;
-      border-radius: 0px;
-    }
-    .chat .notification time {
-      right: 10px;
-    }
-  }
 
 
 </style>
