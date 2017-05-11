@@ -125,6 +125,21 @@ def addMember(members, projectId):
     return "herueka!"
 
 
+@app.route('/getprojects', methods=['GET'])
+@jwt_required
+def get_projects():
+    username = get_jwt_identity()
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s)''',
+                   [username])
+    rows = cursor.fetchall()
+    projects = []
+    for row in rows:
+        cursor.execute('''SELECT * FROM Project where id = %s''', [row[0]])
+        projects.append(cursor.fetchall()[0])
+
+    return jsonify({'projects': projects}), 200
+
 
 @app.route('/addproject', methods=['POST'])
 def addProject():
@@ -148,14 +163,6 @@ def addProject():
             response = {'msg': 'Something went wrong, please try again.'}
             return jsonify(response), 400
 
-
-    # Only saved as a reference. Table Person is dropped...
-    # @app.route('/')
-    # def db_test():
-    #     cur = mysql.connection.cursor()
-    #     cur.execute('''SELECT * FROM Person''')
-    #     rv = cur.fetchall()
-    #     return str(rv[1])
 
 @socketio.on('sendInRoom')
 def send_room_message(message):
