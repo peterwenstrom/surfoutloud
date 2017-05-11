@@ -8,7 +8,6 @@ import router from './router'
 import axios from 'axios'
 
 import store from './store'
-
 Vue.use(BootstrapVue);
 
 Vue.config.productionTip = false;

@@ -25,12 +25,18 @@
       <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
       <p>Current room number: No room selected</p>-->
 
+      <div class="messageWin">
+      <div v-for="(history, index) in history">
+        <p class = "me" v-if="history.from = 'me'">{{ history.message }}</p>
+        <p class = "you" v-else>{{ history.message }}</p>
+      </div>
+      </div>
+
+
       <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
       <!-- Todo: if room number not specified = disable send button-->
       <button class="send-btn btn" v-on:click="sendInRoom">Send</button>
     </div>
-
-     <p v-for="(history, index) in history">{{ history }}</p>
 
 
   </div>
@@ -48,7 +54,10 @@
         msg: "",
         roomNo: "1",
         selectedRoomNo: [],
-        history: [],
+        history: [
+          { from: '' },
+          { message: '' }
+        ],
         socket: io.connect('http://127.0.0.1:5000'),
         chatmessage: {
             msg: "",
@@ -70,9 +79,19 @@
         //recieving messages and pushing the messages to the history array
 
         this.socket.on('room_response', function(response) {
+              console.log("from: " + this.authUser.username);
+              console.log("responsefrom: " + response.data.from);
+              if(response.data.from === this.authUser.username){
+                this.history.push({ from: 'me' });
+                this.history.push({ message: response.data.msg});
+                //+ " /--/ sent in room " + response.room
 
-              this.history.push(response.data.from + ": " + response.data.msg + " /--/ sent in room " + response.room);
-        }.bind(this));
+              }else{
+                this.history.push({ from: 'you' });
+                this.history.push({ message: response.data.from + ": " + response.data.msg});
+                //+ " /--/ sent in room " + response.room
+              }
+              }.bind(this));
       },
       joinRoom: function() {
 
@@ -144,4 +163,17 @@
     background-color: #35495E;
     color: #fff;
   }
+  .messageWin{
+    overflow: scroll;
+    height: 200px;
+    border-style: dashed;
+  }
+  .me {
+    float: right;
+  }
+  .you {
+    float: left;
+  }
+
+
 </style>
