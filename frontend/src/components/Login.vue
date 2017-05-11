@@ -38,8 +38,7 @@
   import axios from 'axios'
   import GridLoader from 'vue-spinner/src/GridLoader.vue'
 
-  const API_URL = 'http://localhost:5000/';
-  const LOGIN_URL = API_URL + 'login';
+  const LOGIN_URL = '/api/login';
 
   export default {
     data() {
