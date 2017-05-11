@@ -1,18 +1,36 @@
 <template>
   <div class="portfolio-item">
-    <router-link to="/project">
-      <p>Project {{project[0]}}</p>
-      <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
-    </router-link>
+    <transition name="fade">
+      <router-link v-if="show" to="/project">
+        <p>Project {{project[0]}}</p>
+        <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
+      </router-link>
+    </transition>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['project']
+    data () {
+      return {
+        show: false
+      }
+    },
+    props: ['project'],
+    mounted() {
+        this.show = true;
+    }
   }
 </script>
 
 <style scoped>
-
+  .portfolio-item {
+    margin-bottom: 10px;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
+  }
 </style>

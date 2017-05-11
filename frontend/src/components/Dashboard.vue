@@ -13,14 +13,7 @@
             </router-link>
           </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <router-link to="/project">
-              <p>Project 1</p>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
-            </router-link>
-          </div>
-        </div>
+        <ring-loader :loading="loading" :color="color" :size="size"></ring-loader>
         <div v-for="project in projects" class="col-md-3 col-sm-6">
           <project-widget v-bind:project="project"></project-widget>
         </div>
@@ -38,12 +31,18 @@
   import ProjectWidget from './ProjectWidget.vue'
   import axios from 'axios'
   import {mapGetters} from 'vuex'
+  import RingLoader from 'vue-spinner/src/RingLoader.vue'
 
   export default {
     name: 'Dashboard',
     data() {
       return {
-        projects: []
+        projects: [],
+        loading: false,
+        color: '#41B883',
+        size: '100px',
+        margin: '2px',
+        radius: '2px'
       }
     },
     computed: {
@@ -55,14 +54,18 @@
     },
     components: {
       Icon,
-      ProjectWidget
+      ProjectWidget,
+      RingLoader
     },
     mounted () {
-      axios.get('/api/getprojects',
-        {headers: {'Authorization': 'Bearer ' + this.authUser.access_token}}).then( response => {
-        console.log(response);
-        this.projects = response.data.projects;
-      });
+      this.loading = true;
+      setTimeout(() => {
+        axios.get('/api/getprojects',
+          {headers: {'Authorization': 'Bearer ' + this.authUser.access_token}}).then( response => {
+          this.projects = response.data.projects;
+          this.loading = false;
+        });
+      }, 1000);
     }
   };
 
