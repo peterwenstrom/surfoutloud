@@ -21,6 +21,9 @@
             </router-link>
           </div>
         </div>
+        <div class="col-md-3 col-sm-6">
+
+        </div>
       </div>
     </div>
 
@@ -33,18 +36,32 @@
 <script>
   import 'vue-awesome/icons/plus-circle'
   import Icon from 'vue-awesome/components/Icon'
+  import axios from 'axios'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'Dashboard',
     data() {
       return {
-
+        projects: []
       }
+    },
+    computed: {
+      ...mapGetters({
+        authUser: 'authUser'
+      })
     },
     methods: {
     },
     components: {
         Icon
+    },
+    mounted () {
+      axios.get('/api/getprojects',
+        {headers: {'Authorization': 'Bearer ' + this.authUser.access_token}}).then( response => {
+        console.log(response);
+        this.projects = response.data.projects;
+      });
     }
   };
 
