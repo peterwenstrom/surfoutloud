@@ -29,14 +29,15 @@
         </div>
         <button class="login-btn btn" v-on:click="submit">Log in</button>
       </div>
-      <grid-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></grid-loader>
+      <ring-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
-  import GridLoader from 'vue-spinner/src/GridLoader.vue'
+  import RingLoader from 'vue-spinner/src/RingLoader.vue'
+  import userAuth from '../user/userAuth'
 
   const LOGIN_URL = '/api/login';
 
@@ -50,7 +51,7 @@
         error: '',
         loading: false,
         color: '#41B883',
-        size: '30px',
+        size: '120px',
         margin: '2px',
         radius: '2px'
       }
@@ -62,23 +63,18 @@
           password: this.credentials.password
         };
         this.loading = true;
-        axios.post(LOGIN_URL, credentials).then(response => {
-          localStorage.setItem('authUser', JSON.stringify(response.data));
-          this.$store.dispatch('setUserObject', response.data);
-          this.$router.push('dashboard');
-        }).catch(err => {
-          if (err.response) {
-            this.error = err.response.data.message;
-          } else {
-              this.error = 'No response from the server, check your connection or try again later'
-          }
-          this.loading = false;
+        userAuth.login(credentials, error => {
+            if(error) {
+                this.error = error;
+            } else {
+              this.$router.push('dashboard');
+            }
+            this.loading = false;
         });
-
       }
     },
     components: {
-      GridLoader
+      RingLoader
     }
   }
 </script>
