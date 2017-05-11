@@ -4,6 +4,7 @@ from flask_socketio import SocketIO, send, emit, join_room, leave_room, close_ro
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flask_bcrypt import Bcrypt
+from datetime import timedelta
 
 
 class CustomFlask(Flask):
@@ -19,7 +20,7 @@ class CustomFlask(Flask):
 
 
 app = CustomFlask(__name__)
-
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'sql11.freemysqlhosting.net'
