@@ -21,12 +21,11 @@
             </router-link>
           </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-
+        <div v-for="project in projects" class="col-md-3 col-sm-6">
+          <project-widget v-bind:project="project"></project-widget>
         </div>
       </div>
     </div>
-
   </div>
 
 
@@ -36,6 +35,7 @@
 <script>
   import 'vue-awesome/icons/plus-circle'
   import Icon from 'vue-awesome/components/Icon'
+  import ProjectWidget from './ProjectWidget.vue'
   import axios from 'axios'
   import {mapGetters} from 'vuex'
 
@@ -54,7 +54,8 @@
     methods: {
     },
     components: {
-        Icon
+      Icon,
+      ProjectWidget
     },
     mounted () {
       axios.get('/api/getprojects',
