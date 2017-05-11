@@ -40,7 +40,7 @@
         </div>
         <button class="register-btn btn" v-on:click="submit">Register</button>
       </div>
-      <ring-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
+      <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
   </div>
 </template>
@@ -49,8 +49,6 @@
   import axios from 'axios'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
   import userAuth from '../user/userAuth'
-
-  const REGISTER_URL = '/api/register';
 
   export default {
     data() {
@@ -101,5 +99,9 @@
   .register-btn {
     background-color: #35495E;
     color: #fff;
+  }
+  .loading {
+    text-align:center;
+    display: inline-block;
   }
 </style>

@@ -25,7 +25,7 @@
     <div v-if="loading" class="row">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
-        <ring-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
+        <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
         setTimeout(() => {
           this.loading = false;
           this.$router.push('login');
-        }, 1000);
+        }, 1200);
       }
     },
     computed: {
@@ -78,5 +78,9 @@
   }
   .ml-auto > li {
     margin: 0px 15px 0px 15px;
+  }
+  .loading {
+    text-align:center;
+    display: inline-block;
   }
 </style>

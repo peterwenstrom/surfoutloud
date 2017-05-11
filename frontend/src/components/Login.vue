@@ -29,7 +29,7 @@
         </div>
         <button class="login-btn btn" v-on:click="submit">Log in</button>
       </div>
-      <ring-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
+      <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
   </div>
 </template>
@@ -38,8 +38,6 @@
   import axios from 'axios'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
   import userAuth from '../user/userAuth'
-
-  const LOGIN_URL = '/api/login';
 
   export default {
     data() {
@@ -83,5 +81,9 @@
   .login-btn {
     background-color: #41B883;
     color: #fff;
+  }
+  .loading {
+    text-align:center;
+    display: inline-block;
   }
 </style>
