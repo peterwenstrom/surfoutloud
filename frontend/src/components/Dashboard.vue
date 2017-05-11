@@ -7,10 +7,10 @@
       <div class="row">
         <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
-            <p>Create new project</p>
-            <a href="#">
-              <span class="glyphicon glyphicon-plus"></span>
-            </a>
+            <router-link to="/CreateNewProject">
+              <p>Create new project</p>
+              <icon name="plus-circle"></icon>
+            </router-link>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -22,57 +22,10 @@
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 2</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-3.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 3</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 4</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 5</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 6</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="portfolio-item">
-            <p>Project 7</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
+
         </div>
       </div>
-      <!-- /.row (nested) -->
     </div>
-    <!-- /.col-lg-10 -->
 
   </div>
 
@@ -81,15 +34,34 @@
 </template>
 
 <script>
+  import 'vue-awesome/icons/plus-circle'
+  import Icon from 'vue-awesome/components/Icon'
+  import axios from 'axios'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'Dashboard',
     data() {
       return {
-
+        projects: []
       }
     },
+    computed: {
+      ...mapGetters({
+        authUser: 'authUser'
+      })
+    },
     methods: {
+    },
+    components: {
+        Icon
+    },
+    mounted () {
+      axios.get('/api/getprojects',
+        {headers: {'Authorization': 'Bearer ' + this.authUser.access_token}}).then( response => {
+        console.log(response);
+        this.projects = response.data.projects;
+      });
     }
   };
 
@@ -109,6 +81,11 @@
   .project {
     width: 80%;
     height: 80%;
+  }
+
+  .fa-icon {
+    width: 48%;
+    height: auto;
   }
 
 </style>
