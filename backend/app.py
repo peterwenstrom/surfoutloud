@@ -171,6 +171,13 @@ def join(message):
     emit('join_room_response',
          {'data': ",".join(rooms())})
 
+@socketio.on('leave')
+def leave(message):
+    leave_room(message['room'])
+    #session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('leave_room_response',
+         {'data': ",".join(rooms())})
+
 
 if __name__ == "__main__":
     socketio.run(app)

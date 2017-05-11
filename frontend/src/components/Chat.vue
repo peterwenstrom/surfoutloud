@@ -18,9 +18,13 @@
 
 
     <div id = "sendMessage">
-      <input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
+      <!--<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
       <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
-      <p>Current room number: {{ selectedRoomNo }}</p>
+
+      <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
+      <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
+      <p>Current room number: No room selected</p>-->
+
       <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
       <!-- Todo: if room number not specified = disable send button-->
       <button class="send-btn btn" v-on:click="sendInRoom">Send</button>
@@ -42,8 +46,8 @@
     data() {
     return {
         msg: "",
-        roomNo: "",
-        selectedRoomNo: "No room selected",
+        roomNo: "1",
+        selectedRoomNo: [],
         history: [],
         socket: io.connect('http://127.0.0.1:5000'),
         chatmessage: {
@@ -59,11 +63,14 @@
     methods: {
       sendInRoom: function () {
           this.chatmessage.from = this.authUser.username;
+
           this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
       },
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
+
         this.socket.on('room_response', function(response) {
+
               this.history.push(response.data.from + ": " + response.data.msg + " /--/ sent in room " + response.room);
         }.bind(this));
       },
@@ -77,13 +84,26 @@
           this.socket.emit('join', {room: this.roomNo});
 
           //this should probably be updated after the socket response
-          this.selectedRoomNo = this.roomNo;
+          this.selectedRoomNo.push(this.roomNo);
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
             let res = response.data.split(",");
             console.log("resTot: " + res);
-            console.log(res[1]);
+            console.log("joined room: " + this.roomNo);
+            //this.activeUser.inRoom.push(res[1]);
+        }.bind(this));
+      },leaveRoom: function() {
+          this.socket.emit('leave', {room: this.roomNo});
+
+          //this should probably be updated after the socket response
+          this.selectedRoomNo.slice(this.selectedRoomNo.indexOf(this.roomNo));
+      },
+      leaveRoomResponse: function() {
+        this.socket.on('leave_room_response', function(response) {
+            let res = response.data.split(",");
+            console.log("resTot: " + res);
+            console.log("left room no: " + this.roomNo);
             //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
       }
@@ -100,8 +120,11 @@
         //this.socket.send(this.authUser.username + ' has connected!');
       }.bind(this));
 
+
+      this.joinRoom();
       this.sendInRoomResponse();
       this.joinRoomResponse();
+      this.leaveRoomResponse();
     }
   };
 
