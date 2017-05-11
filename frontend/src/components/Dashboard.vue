@@ -8,9 +8,7 @@
         <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
             <p>Create new project</p>
-            <a href="#">
-              <span class="glyphicon glyphicon-plus"></span>
-            </a>
+            <icon name="plus-circle"></icon>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -21,58 +19,8 @@
             </router-link>
           </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 2</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-3.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 3</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 4</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 5</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="portfolio-item">
-            <p>Project 6</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="portfolio-item">
-            <p>Project 7</p>
-            <a>
-              <img class="img-portfolio img-responsive project" src="../assets/portfolio-4.jpg">
-            </a>
-          </div>
-        </div>
       </div>
-      <!-- /.row (nested) -->
     </div>
-    <!-- /.col-lg-10 -->
 
   </div>
 
@@ -81,6 +29,8 @@
 </template>
 
 <script>
+  import 'vue-awesome/icons/plus-circle'
+  import Icon from 'vue-awesome/components/Icon'
 
   export default {
     name: 'Dashboard',
@@ -90,6 +40,9 @@
       }
     },
     methods: {
+    },
+    components: {
+        Icon
     }
   };
 
@@ -109,6 +62,11 @@
   .project {
     width: 80%;
     height: 80%;
+  }
+
+  .fa-icon {
+    width: 48%;
+    height: auto;
   }
 
 </style>
