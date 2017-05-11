@@ -25,7 +25,7 @@
     <div v-if="loading" class="row">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
-        <grid-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></grid-loader>
+        <ring-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
       </div>
     </div>
   </div>
@@ -33,21 +33,21 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import GridLoader from 'vue-spinner/src/GridLoader.vue'
+  import RingLoader from 'vue-spinner/src/RingLoader.vue'
+  import userAuth from '../user/userAuth'
 
   export default {
     data() {
       return {
         loading: false,
         color: '#41B883',
-        size: '30px',
+        size: '120px',
         margin: '2px',
         radius: '2px'
       }
     },methods: {
       logout() {
-        localStorage.removeItem('authUser');
-        this.$store.dispatch('clearUserObject');
+        userAuth.logout();
         this.loading = true;
         setTimeout(() => {
           this.loading = false;
@@ -61,7 +61,7 @@
       })
     },
     components: {
-      GridLoader
+      RingLoader
     }
   }
 
