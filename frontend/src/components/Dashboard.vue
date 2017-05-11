@@ -7,8 +7,10 @@
       <div class="row">
         <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
-            <p>Create new project</p>
-            <icon name="plus-circle"></icon>
+            <router-link to="/CreateNewProject">
+              <p>Create new project</p>
+              <icon name="plus-circle"></icon>
+            </router-link>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
