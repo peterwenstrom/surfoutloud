@@ -26,10 +26,10 @@
       <p>Current room number: No room selected</p>-->
 
       <div class="messageWin">
-      <div v-for="(history, index) in history">
-        <p class = "me" v-if="history.from = 'me'">{{ history.message }}</p>
-        <p class = "you" v-else>{{ history.message }}</p>
-      </div>
+        <div v-for="(history, index) in history">
+          <p class = "me" v-if="history.from = 'me'">{{ history.message }}</p>
+          <p class = "you" v-else>{{ history.message }}</p>
+        </div>
       </div>
 
 
@@ -74,6 +74,8 @@
           this.chatmessage.from = this.authUser.username;
 
           this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
+          this.chatmessage.msg = '';
+          this.scrollToEnd();
       },
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
@@ -163,16 +165,28 @@
     background-color: #35495E;
     color: #fff;
   }
-  .messageWin{
+  /*.messageWin{
     overflow: scroll;
     height: 200px;
     border-style: dashed;
-  }
+  }*/
+
+      .messageWin
+    {
+        width:      100%;
+        height:     200px;
+        overflow: scroll;
+        border: dashed;
+    }
+
   .me {
-    float: right;
+    text-align: right;
+    right: 0;
   }
   .you {
-    float: left;
+    text-align: left;
+    left: 0;
+    right: 100%;
   }
 
 
