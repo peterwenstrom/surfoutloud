@@ -49,8 +49,7 @@
   import axios from 'axios'
   import GridLoader from 'vue-spinner/src/GridLoader.vue'
 
-  const API_URL = 'http://localhost:5000/';
-  const REGISTER_URL = API_URL + 'register';
+  const REGISTER_URL = '/api/register';
 
   export default {
     data() {

@@ -11,8 +11,7 @@
   import TopMenu from './components/TopMenu.vue'
   import axios from 'axios'
 
-  const API_URL = 'http://localhost:5000/';
-  const AUTH_URL = API_URL + 'auth';
+  const AUTH_URL = '/api/auth';
 
   export default {
     created () {
