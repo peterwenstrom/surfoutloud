@@ -171,6 +171,7 @@ def send_room_message(message):
          {'data': message['data'], 'room': message['room']},
          room=message['room'])
 
+
 @socketio.on('join')
 def join(message):
     join_room(message['room'])
