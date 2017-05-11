@@ -64,12 +64,12 @@
         };
         this.loading = true;
         userAuth.login(credentials, error => {
-            if(error) {
-                this.error = error;
-            } else {
-              this.$router.push('dashboard');
-            }
-            this.loading = false;
+          if(error) {
+            this.error = error;
+          } else {
+            this.$router.push('dashboard');
+          }
+          this.loading = false;
         });
       }
     },

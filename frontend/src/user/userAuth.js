@@ -25,8 +25,18 @@ export default {
     localStorage.removeItem('authUser');
   },
 
-  register () {
-
+  register (credentials, callback) {
+    axios.post(REGISTER_URL, credentials).then(response => {
+      localStorage.setItem('authUser', JSON.stringify(response.data));
+      store.dispatch('setUserObject', response.data);
+      callback(false);
+    }).catch( error => {
+      if(error.response) {
+        callback(error.response.data.message);
+      } else {
+        callback('No response from the server, check your connection or try again later');
+      }
+    });
   },
 
   checkAuth () {

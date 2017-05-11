@@ -40,14 +40,15 @@
         </div>
         <button class="register-btn btn" v-on:click="submit">Register</button>
       </div>
-      <grid-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></grid-loader>
+      <ring-loader style="margin-left:40%;" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
-  import GridLoader from 'vue-spinner/src/GridLoader.vue'
+  import RingLoader from 'vue-spinner/src/RingLoader.vue'
+  import userAuth from '../user/userAuth'
 
   const REGISTER_URL = '/api/register';
 
@@ -62,7 +63,7 @@
         error: '',
         loading: false,
         color: '#41B883',
-        size: '30px',
+        size: '120px',
         margin: '2px',
         radius: '2px'
       }
@@ -76,25 +77,21 @@
         };
         if (credentials.password === credentials.repeat_password) {
           this.loading = true;
-          axios.post(REGISTER_URL, credentials).then(response => {
-            localStorage.setItem('authUser', JSON.stringify(response.data));
-            this.$store.dispatch('setUserObject', response.data);
-            this.$router.push('dashboard');
-          }).catch(err => {
-            if(err.response) {
-              this.error = err.response.data.message;
+          userAuth.register(credentials, error => {
+            if (error) {
+              this.error = error;
             } else {
-              this.error = 'No response from the server, check your connection or try again later'
+              this.$router.push('dashboard');
             }
             this.loading = false;
           });
         } else {
-            this.error = 'The passwords are not identical, please try again'
+          this.error = 'The passwords are not identical, please try again'
         }
       }
     },
     components: {
-        GridLoader
+      RingLoader
     }
 
   }
