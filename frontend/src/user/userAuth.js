@@ -1,8 +1,8 @@
 import store from '../store'
 import axios from 'axios'
 
-const LOGIN_URL = '/api/login';
-const REGISTER_URL = '/api/register';
+const LOGIN_URL = API_URL + '/login';
+const REGISTER_URL = API_URL + '/register';
 const AUTH_URL = '/api/auth';
 
 export default {
