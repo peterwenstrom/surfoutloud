@@ -26,12 +26,13 @@
 </template>
 
 <script>
-  import 'vue-awesome/icons/plus-circle'
-  import Icon from 'vue-awesome/components/Icon'
-  import ProjectWidget from './ProjectWidget.vue'
   import axios from 'axios'
   import {mapGetters} from 'vuex'
+
+  import ProjectWidget from './ProjectWidget.vue'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
+  import Icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/plus-circle'
 
   export default {
     name: 'Dashboard',

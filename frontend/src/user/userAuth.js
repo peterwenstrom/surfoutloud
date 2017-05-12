@@ -40,7 +40,7 @@ export default {
   },
 
   checkAuth () {
-
+    return store.getters.authorized;
   },
 
   checkServerAuth () {
