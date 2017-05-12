@@ -10,7 +10,7 @@
     </div>
     <div class="col-md-8">
       <h2>Chat</h2>
-      <chat></chat>
+      <chat v-bind:projectId="projectId"></chat>
     </div>
   </div>
 </template>
@@ -25,7 +25,8 @@ export default {
     return {
         memberList: [
             '-'
-        ]
+        ],
+        projectId: ""
     }
   },
   methods: {
@@ -33,6 +34,9 @@ export default {
   },
   components:{
     'chat':chat
+  },
+  created() {
+      this.projectId = this.$route.query.attr;
   }
 }
 </script>

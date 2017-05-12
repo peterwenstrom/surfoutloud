@@ -64,6 +64,7 @@
         axios.get('/api/getprojects',
           {headers: {'Authorization': 'Bearer ' + this.authUser.access_token}}).then( response => {
           this.projects = response.data.projects;
+          console.log("projekt array: " + response.data.projects);
           this.loading = false;
         });
       }, 1000);
