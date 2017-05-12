@@ -82,10 +82,11 @@
 
   export default {
     name: 'chat',
+    props: ['projectId'],
     data() {
       return {
         msg: "",
-        roomNo: "1",
+        roomNo: this.projectId.toString(),
         selectedRoomNo: [],
         history: [
           { from: "", message: "" }

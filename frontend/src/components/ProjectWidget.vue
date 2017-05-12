@@ -1,11 +1,13 @@
 <template>
   <div class="portfolio-item">
     <transition name="fade">
-      <router-link v-if="show" to="/project">
+      <!--<router-link v-if="show" :to="{ path: '/project', query: { attr:'project' }}">-->
+        <router-link v-if="show" :to="{  path: '/project', query: { attr: project[0]}}">
         <p>Project {{project[0]}}</p>
         <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
       </router-link>
     </transition>
+
   </div>
 </template>
 

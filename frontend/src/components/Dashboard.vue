@@ -65,6 +65,7 @@
       setTimeout(() => {
         axios.get('/api/getprojects', userAuth.addAuthHeader() ).then( response => {
           this.projects = response.data.projects;
+          console.log("projekt array: " + response.data.projects);
           this.loading = false;
         });
       }, 1000);
