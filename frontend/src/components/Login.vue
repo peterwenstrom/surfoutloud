@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-lg-4 col-sm-2"></div>
+    <div class="col-lg-4 col-sm-8">
       <div v-if="!loading">
         <img class="logo" src="../assets/LogoText.png"/>
         <h2>Log in</h2>

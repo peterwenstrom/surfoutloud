@@ -97,7 +97,7 @@
 
 <style scoped>
   .register-btn {
-    background-color: #35495E;
+    background-color: #41B883;
     color: #fff;
   }
   .loading {

@@ -27,6 +27,10 @@
   .portfolio-item {
     margin-bottom: 10px;
   }
+  .project {
+    width: 80%;
+    height: 80%;
+  }
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s
   }
