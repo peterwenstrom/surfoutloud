@@ -4,20 +4,21 @@
     <div class="col-lg-12 text-center">
       <h2>Dashboard</h2>
       <hr class="small">
-      <div class="row">
+      <div v-if="!loading" class="row">
         <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
-            <router-link to="/CreateNewProject">
+            <router-link to="/createnewproject">
               <p>Create new project</p>
               <icon name="plus-circle"></icon>
             </router-link>
           </div>
         </div>
-        <ring-loader :loading="loading" :color="color" :size="size"></ring-loader>
+
         <div v-for="project in projects" class="col-md-3 col-sm-6">
           <project-widget v-bind:project="project"></project-widget>
         </div>
       </div>
+      <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
   </div>
 
@@ -41,7 +42,7 @@
         projects: [],
         loading: false,
         color: '#41B883',
-        size: '100px',
+        size: '120px',
         margin: '2px',
         radius: '2px'
       }
@@ -79,5 +80,9 @@
     width: 48%;
     height: auto;
   }
+  .loading {
+    text-align:center;
+    display: inline-block;
+  }
 
-</style scoped>
+</style>

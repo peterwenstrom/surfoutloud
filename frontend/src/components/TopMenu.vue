@@ -22,10 +22,12 @@
         </b-collapse>
       </div>
     </b-navbar>
-    <div v-if="loading" class="row">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4">
-        <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
+    <div v-if="loading" class="container spinner-div">
+      <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="spinner-container col-lg-4">
+          <ring-loader class="loading" :loading="loading" :color="color" :size="size"></ring-loader>
+        </div>
       </div>
     </div>
   </div>
@@ -82,5 +84,15 @@
   .loading {
     text-align:center;
     display: inline-block;
+  }
+  .spinner-div {
+    background-color: #fff;
+    border-radius: 25px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+  .spinner-container {
+    padding-top: 30px;
+    padding-bottom: 30px;
   }
 </style>
