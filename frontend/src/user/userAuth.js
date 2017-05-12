@@ -48,7 +48,7 @@ export default {
   },
 
   addAuthHeader () {
-
+    return {headers: {'Authorization': 'Bearer ' + store.getters.accessToken}}
   }
 
 }

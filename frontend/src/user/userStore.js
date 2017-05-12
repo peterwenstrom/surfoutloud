@@ -1,20 +1,29 @@
 
 const state = {
-  authUser: {'access_token': '', 'username': ''}
+  user: {'access_token': '', 'username': ''},
+  authorized: false
 };
 
 const getters = {
   authUser(state) {
-    return state.authUser;
+    return state.user;
+  },
+  authorized(state) {
+    return state.authorized;
+  },
+  accessToken(state) {
+    return state.user.access_token;
   }
 };
 
 const mutations = {
   SET_AUTH_USER (state, userObject) {
-    state.authUser = userObject
+    state.user = userObject;
+    state.authorized = true
   },
   CLEAR_AUTH_USER (state) {
-    state.authUser = {'access_token': '', 'username': ''}
+    state.user = {'access_token': '', 'username': ''};
+    state.authorized = false
   }
 };
 
