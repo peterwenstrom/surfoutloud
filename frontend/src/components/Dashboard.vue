@@ -29,6 +29,7 @@
 <script>
   import axios from 'axios'
   import {mapGetters} from 'vuex'
+  import userAuth from '../user/userAuth'
 
   import ProjectWidget from './ProjectWidget.vue'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
@@ -62,8 +63,7 @@
     mounted () {
       this.loading = true;
       setTimeout(() => {
-        axios.get('/api/getprojects',
-          {headers: {'Authorization': 'Bearer ' + this.authUser.access_token}}).then( response => {
+        axios.get('/api/getprojects', userAuth.addAuthHeader() ).then( response => {
           this.projects = response.data.projects;
           this.loading = false;
         });

@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const LOGIN_URL = API_URL + '/login';
 const REGISTER_URL = API_URL + '/register';
-const AUTH_URL = '/api/auth';
+const AUTH_URL = API_URL + '/auth';
 
 export default {
   login (credentials, callback) {
@@ -43,8 +43,21 @@ export default {
     return store.getters.authorized;
   },
 
-  checkServerAuth () {
-
+  checkServerAuth (callback) {
+    const user = JSON.parse(localStorage.getItem('authUser'));
+    if(!user) {
+      store.dispatch('clearUserObject');
+      callback('login');
+    } else {
+      axios.post(AUTH_URL, user, {headers: {'Authorization': 'Bearer ' + user.access_token}}).then( () => {
+        store.dispatch('setUserObject', user);
+        callback('dashboard');
+      }).catch( () => {
+        store.dispatch('clearUserObject');
+        localStorage.removeItem('authUser');
+        callback('login');
+      });
+    }
   },
 
   addAuthHeader () {

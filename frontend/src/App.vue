@@ -10,26 +10,13 @@
 <script>
   import TopMenu from './components/TopMenu.vue'
   import axios from 'axios'
-
-  const AUTH_URL = '/api/auth';
+  import userAuth from './user/userAuth'
 
   export default {
     created () {
-      if(localStorage.getItem('authUser') === null) {
-        this.$store.dispatch('clearUserObject');
-        this.$router.push('login');
-      } else {
-        const userObject = JSON.parse(localStorage.getItem('authUser'));
-        axios.post(AUTH_URL, userObject,
-          {headers: {'Authorization': 'Bearer ' + userObject.access_token}}).then( () => {
-          this.$store.dispatch('setUserObject', userObject);
-          this.$router.push('dashboard');
-        }).catch( () => {
-          this.$store.dispatch('clearUserObject');
-          localStorage.removeItem('authUser');
-          this.$router.push('login');
-        });
-      }
+      userAuth.checkServerAuth( redirect => {
+          this.$router.push(redirect)
+      });
     },
     components: {
         TopMenu
