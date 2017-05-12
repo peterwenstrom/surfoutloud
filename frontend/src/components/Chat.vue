@@ -17,57 +17,60 @@
 
 
 
-
-
-
-    <!--<div class="container">
-      <p class="datestamp">May 20, 2014, 4:16 PM</p>
-
-      <div class="bubble">
-        <p>Hey how's it going?</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-primary">
+            <div id="chatWindow" class="panel-body">
+              <ul class="chat">
+                <div id="newest" v-for="value in history">
+                  <span class = "bubble bubble-alt" v-if="value.from === 'me'">
+                    <div class="chat-body clearfix">
+                       {{ value.message }}
+                    </div>
+                    </span>
+                  <span class = "bubble" v-if="value.from === 'you'">
+                    <div class="chat-body clearfix">
+                        {{ value.message }}
+                    </div>
+                  </span>
+                </div>
+              </ul>
+            </div>
+            <div class="panel-footer">
+              <div class="input-group">
+                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
+                <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
+                                Send</button>
+                        </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-
-      <div class="bubble bubble-alt green">
-        <p>Just sending out random SMS to people</p>
-      </div>
-
-      <div class="bubble">
-        <p>Cool, cool.</p>
-      </div>
-
-      <div class="bubble">
-        <p>Sometimes I do that too. Like right now.</p>
-      </div>
-
-      <div class="bubble bubble-alt white">
-        <p>So how's life? Anything interesting? I'm okay just hanging around doing nothing staring out the window, thinking I should go outside but eh.</p>
-      </div>
-    </div>-->
+    </div>
 
 
 
-
-
-    <div class = "container">
-      <!--<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
+<!--    <div class = "container">
+      &lt;!&ndash;<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
       <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
 
       <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
       <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
-      <p>Current room number: No room selected</p>-->
+      <p>Current room number: No room selected</p>&ndash;&gt;
 
       <div v-for="value in history">
-        <span class = "bubble" v-if="value.from === 'me'">{{ value.message }}</span>
-        <span class = "bubble bubble-alt" v-if="value.from === 'you'">{{ value.message }}</span>
-
+        <span class = "bubble bubble-alt" v-if="value.from === 'me'">{{ value.message }}</span>
+        <span class = "bubble" v-if="value.from === 'you'">{{ value.message }}</span>
       </div>
 
 
       <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
       <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
 
-    </div>
+    </div>-->
   </div>
 
 
@@ -95,10 +98,6 @@
         activeUser: {
           user: [],
           inRoom: []
-        },
-        object: {
-          from: 'John',
-          message: 'Doe'
         }
 
       }
@@ -119,6 +118,7 @@
             this.history.push({ from: 'you', message: response.data.from + ": " + response.data.msg});
             //+ " /--/ sent in room " + response.room
           }
+
         }.bind(this));
       },
       joinRoom: function() {
@@ -139,7 +139,7 @@
         }.bind(this));
       },leaveRoom: function() {
         this.socket.emit('leave', {room: this.roomNo});
-        
+
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -199,7 +199,7 @@
   .container {
     padding: 40px 20px;
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 700px;
   }
 
 
@@ -297,6 +297,67 @@
     border-bottom-color: #fcf3c3;
   }
 
+  /*****/
+  .chat
+  {
+    list-style: none;
+    margin: 8px;
+    padding: 0;
+  }
+
+  .chat li
+  {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+  }
+
+  .chat li.left .chat-body
+  {
+    margin-left: 60px;
+  }
+
+  .chat li.right .chat-body
+  {
+    margin-right: 60px;
+  }
+
+
+  .chat li .chat-body p
+  {
+    margin: 0;
+    color: #777777;
+  }
+
+  .panel .slidedown .glyphicon, .chat .glyphicon
+  {
+    margin-right: 5px;
+  }
+
+  .panel-body
+  {
+    overflow-y: scroll;
+    height: 250px;
+  }
+
+
+  ::-webkit-scrollbar-track
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar
+  {
+    width: 12px;
+    background-color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar-thumb
+  {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+  }
 
 
 
