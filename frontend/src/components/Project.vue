@@ -17,7 +17,6 @@
 
 <script>
   import axios from 'axios'
-  import auth from '../auth'
   import chat from './Chat'
 
 export default {
