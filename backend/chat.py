@@ -1,0 +1,25 @@
+from config import socketio
+from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
+
+
+@socketio.on('sendInRoom')
+def send_room_message(message):
+    # session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('room_response',
+         {'data': message['data'], 'room': message['room']},
+         room=message['room'])
+
+
+@socketio.on('join')
+def join(message):
+    join_room(message['room'])
+    # session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('join_room_response',
+         {'data': ",".join(rooms())})
+
+@socketio.on('leave')
+def leave(message):
+    leave_room(message['room'])
+    # session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('leave_room_response',
+         {'data': ",".join(rooms())})
