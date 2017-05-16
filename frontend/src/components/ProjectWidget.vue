@@ -1,8 +1,7 @@
 <template>
   <div class="portfolio-item">
     <transition name="fade">
-      <!--<router-link v-if="show" :to="{ path: '/project', query: { attr:'project' }}">-->
-        <router-link v-if="show" :to="{  path: '/project', query: { attr: project[0]}}">
+        <router-link class="project-link" v-if="show" :to="{  path: '/project', query: { attr: project[0]}}">
         <p>Project {{project[0]}}</p>
         <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
       </router-link>
@@ -32,6 +31,9 @@
   .project {
     width: 80%;
     height: 80%;
+  }
+  .project-link {
+    color: #35495E;
   }
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s

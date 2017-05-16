@@ -7,7 +7,7 @@
       <div v-if="!loading" class="row">
         <div class="col-md-3 col-sm-6">
           <div class="portfolio-item">
-            <router-link to="/createnewproject">
+            <router-link class="create" to="/createnewproject">
               <p>Create new project</p>
               <icon name="plus-circle"></icon>
             </router-link>
@@ -84,6 +84,9 @@
   .loading {
     text-align:center;
     display: inline-block;
+  }
+  .create {
+    color: #41B883;
   }
 
 </style>
