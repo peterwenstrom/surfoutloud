@@ -15,7 +15,7 @@
               <template slot="text">
                 <span style="font-weight: bold; text-transform:capitalize;">{{authUser.username}}</span>
               </template>
-              <b-dropdown-item to="#">Profile</b-dropdown-item>
+              <b-dropdown-item to="/profile">Profile</b-dropdown-item>
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-nav>

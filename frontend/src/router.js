@@ -5,6 +5,7 @@ import Chat from '@/components/Chat'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import Profile from '@/components/Profile'
 import Project from '@/components/Project'
 import CreateNewProject from '@/components/CreateNewProject'
 
@@ -36,6 +37,12 @@ const router = new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
+      meta: {requiresAuth: true}
     },
     {
       path: '/project',
