@@ -35,8 +35,7 @@ const router = new Router({
     {
       path: '/register',
       name: 'Register',
-      component: Register,
-      meta: {requiresAuth: true}
+      component: Register
     },
     {
       path: '/project',
