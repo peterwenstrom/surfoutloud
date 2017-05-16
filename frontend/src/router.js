@@ -8,23 +8,24 @@ import Register from '@/components/Register'
 import Project from '@/components/Project'
 import CreateNewProject from '@/components/CreateNewProject'
 
-
-
+import user from './user/userAuth'
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
 /*  mode: 'history',*/ //Uncomment to remove the hashtag, transition is not smooth though...
   routes: [
     {
       path: '/chat',
       name: 'Chat',
-      component: Chat
+      component: Chat,
+      meta: {requiresAuth: true}
     },
     {
       path: '/dashboard',
       name: 'Dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {requiresAuth: true}
     },
     {
       path: '/login',
@@ -34,18 +35,36 @@ export default new Router({
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: {requiresAuth: true}
     },
     {
       path: '/project',
       name: 'Project',
-      component: Project
+      component: Project,
+      meta: {requiresAuth: true}
     },
     {
       path: '/createnewproject',
       name: 'CreateNewProject',
-      component: CreateNewProject
+      component: CreateNewProject,
+      meta: {requiresAuth: true}
     }
 
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.requiresAuth) {
+    if(user.checkAuth()) {
+      next();
+    }
+    else {
+      next('/login');
+    }
+  } else {
+    next()
+  }
+});
+
+export default router;
