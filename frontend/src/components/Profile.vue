@@ -4,7 +4,7 @@
       <h2>Profile page</h2>
       <p>Below you can find and edit your profile details</p>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
       <div class="form-group">
         <input
           id="username"
@@ -14,13 +14,32 @@
           v-model="credentials.username"
           v-on:keyup.enter=""
           disabled>
-        <div class="edit" v-on:click="unlockUsername"><icon name="pencil-square-o"></icon></div>
+      </div>
+      <div class="alert alert-danger" v-if="username_error">
+        <p>{{ username_error }}</p>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="alert alert-danger" v-if="error">
-        <p>{{ error }}</p>
+    <div class="col-md-1">
+      <div class="row">
+        <div class="col-md-12" v-if="!edit_username">
+          <div class="icon-div" v-on:click="editUsername(true)">
+            <icon name="pencil-square-o"></icon>
+          </div>
+        </div>
+        <div class="col-md-6 col-2" v-if="edit_username">
+          <div class="icon-div" v-on:click="username_error='hejsan'">
+            <icon id="submit" name="check-square-o"></icon>
+          </div>
+        </div>
+        <div class="col-md-6 col-2" v-if="edit_username">
+          <div class="icon-div" v-on:click="editUsername(false)">
+            <icon id="cancel" name="window-close-o"></icon>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <div class="col-md-5">
       <div class="form-group">
         <input
           id="password"
@@ -30,7 +49,6 @@
           v-model="credentials.password"
           v-on:keyup.enter=""
           disabled>
-        <div class="edit" v-on:click="unlockPassword"><icon name="pencil-square-o"></icon></div>
       </div>
       <div class="form-group">
         <input
@@ -42,7 +60,28 @@
           v-on:keyup.enter=""
           disabled>
       </div>
-      <button class="register-btn btn" v-on:click="">Register</button>
+      <div class="alert alert-danger" v-if="password_error">
+        <p>{{ password_error }}</p>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <div class="row">
+        <div class="col-md-12" v-if="!edit_password">
+          <div class="icon-div" v-on:click="editPassword(true)">
+            <icon name="pencil-square-o"></icon>
+          </div>
+        </div>
+        <div class="col-md-6 col-2" v-if="edit_password">
+          <div class="icon-div" v-on:click="password_error='hejsan'">
+            <icon id="submit" name="check-square-o"></icon>
+          </div>
+        </div>
+        <div class="col-md-6 col-2" v-if="edit_password">
+          <div class="icon-div" v-on:click="editPassword(false)">
+            <icon id="cancel" name="window-close-o"></icon>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -52,6 +91,8 @@
 
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/pencil-square-o'
+  import 'vue-awesome/icons/check-square-o'
+  import 'vue-awesome/icons/window-close-o'
 
   export default {
     data() {
@@ -61,19 +102,28 @@
           password: 'password',
           repeat_password: 'password'
         },
-        error: ''
+        edit_username: false,
+        edit_password: false,
+        username_error: '',
+        password_error: ''
       }
     },
     methods: {
-      unlockUsername () {
-        document.getElementById('username').disabled = false;
-
+      editUsername (option) {
+        document.getElementById('username').disabled = !option;
+        this.edit_username = option;
       },
-      unlockPassword () {
-        document.getElementById('password').disabled = false;
-        document.getElementById('repeat-password').disabled = false;
-        this.credentials.password = '';
-        this.credentials.repeat_password = '';
+      editPassword (option) {
+        document.getElementById('password').disabled = !option;
+        document.getElementById('repeat-password').disabled = !option;
+        if (option) {
+          this.credentials.password = '';
+          this.credentials.repeat_password = '';
+        } else {
+          this.credentials.password = 'password';
+          this.credentials.repeat_password = 'password';
+        }
+        this.edit_password = option;
       }
     },
     computed: {
@@ -92,14 +142,23 @@
 </script>
 
 <style scoped>
-  .edit {
-    display: inline-block;
-    cursor: pointer;
-    padding-left: 5px;
+  #submit {
+    color: #41B883;
   }
-  .profile-form {
-    display:inline-block;
-    width:80%;
+  #cancel {
+    color: #f44250;
+  }
+  .icon-div {
+    display: inline;
+  }
+  .fa-icon {
+    width: 20px;
+    height: auto;
+    padding-top: 5px;
+    cursor: pointer;
+  }
+  .row {
+    margin-top: 0px;
   }
 
 </style>
