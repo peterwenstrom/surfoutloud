@@ -22,17 +22,17 @@
     <div class="col-md-1">
       <div class="row">
         <div class="col-md-12" v-if="!edit_username">
-          <div class="icon-div" v-on:click="editUsername(true)">
+          <div class="icon-div" v-on:click="enableEditUsername(true)">
             <icon name="pencil-square-o"></icon>
           </div>
         </div>
         <div class="col-md-6 col-2" v-if="edit_username">
-          <div class="icon-div" v-on:click="username_error='hejsan'">
+          <div class="icon-div" v-on:click="editUsername">
             <icon id="submit" name="check-square-o"></icon>
           </div>
         </div>
         <div class="col-md-6 col-2" v-if="edit_username">
-          <div class="icon-div" v-on:click="editUsername(false)">
+          <div class="icon-div" v-on:click="enableEditUsername(false)">
             <icon id="cancel" name="window-close-o"></icon>
           </div>
         </div>
@@ -67,7 +67,7 @@
     <div class="col-md-1">
       <div class="row">
         <div class="col-md-12" v-if="!edit_password">
-          <div class="icon-div" v-on:click="editPassword(true)">
+          <div class="icon-div" v-on:click="enableEditPassword(true)">
             <icon name="pencil-square-o"></icon>
           </div>
         </div>
@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="col-md-6 col-2" v-if="edit_password">
-          <div class="icon-div" v-on:click="editPassword(false)">
+          <div class="icon-div" v-on:click="enableEditPassword(false)">
             <icon id="cancel" name="window-close-o"></icon>
           </div>
         </div>
@@ -88,11 +88,15 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import axios from 'axios'
+  import userAuth from '../user/userAuth'
 
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/pencil-square-o'
   import 'vue-awesome/icons/check-square-o'
   import 'vue-awesome/icons/window-close-o'
+
+  const EDIT_USERNAME_URL = API_URL + '/editusername';
 
   export default {
     data() {
@@ -109,11 +113,11 @@
       }
     },
     methods: {
-      editUsername (option) {
+      enableEditUsername (option) {
         document.getElementById('username').disabled = !option;
         this.edit_username = option;
       },
-      editPassword (option) {
+      enableEditPassword (option) {
         document.getElementById('password').disabled = !option;
         document.getElementById('repeat-password').disabled = !option;
         if (option) {
@@ -124,12 +128,21 @@
           this.credentials.repeat_password = 'password';
         }
         this.edit_password = option;
+      },
+      editUsername () {
+        axios.post(EDIT_USERNAME_URL, {username: this.credentials.username}, userAuth.addAuthHeader()).then( response => {
+          console.log(response);
+        }).catch( err => {
+            console.log(err.response)
+        })
+
       }
     },
     computed: {
       ...mapGetters({
         authUser: 'authUser'
       })
+
     },
     created () {
         this.credentials.username = this.authUser.username;

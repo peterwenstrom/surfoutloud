@@ -65,3 +65,21 @@ def authorize():
     else:
         response = {'message': 'Username and token does not match'}
         return jsonify(response), 401
+
+
+@app.route('/editusername', methods=['POST'])
+@jwt_required
+def edit_username():
+    new_username = request.json.get('username', None)
+    if not new_username:
+        return jsonify({'message': 'New username cannot be empty'}), 400
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT * FROM User where username = %s''', [new_username])
+    row = cursor.fetchall()
+    if row:
+        return jsonify({'message': 'Username already exists'}), 409
+    cursor.execute('''UPDATE User set username = %s where username = %s''', (new_username, get_jwt_identity()))
+    mysql.connection.commit()
+
+    return jsonify({'message': 'Username successfully changed'}), 200
