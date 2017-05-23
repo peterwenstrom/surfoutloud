@@ -31,3 +31,7 @@ def leave(message):
     disconnect()
     emit('leave_room_response',
          {'data': ",".join(rooms())})
+
+@socketio.on('my_ping')
+def my_ping(message):
+    emit('my_pong', {'data': message['start']})

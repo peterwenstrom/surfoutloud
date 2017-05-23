@@ -53,24 +53,24 @@
 
 
 
-<!--    <div class = "container">
-      &lt;!&ndash;<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
-      <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
+    <!--    <div class = "container">
+          &lt;!&ndash;<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
+          <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
 
-      <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
-      <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
-      <p>Current room number: No room selected</p>&ndash;&gt;
+          <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
+          <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
+          <p>Current room number: No room selected</p>&ndash;&gt;
 
-      <div v-for="value in history">
-        <span class = "bubble bubble-alt" v-if="value.from === 'me'">{{ value.message }}</span>
-        <span class = "bubble" v-if="value.from === 'you'">{{ value.message }}</span>
-      </div>
+          <div v-for="value in history">
+            <span class = "bubble bubble-alt" v-if="value.from === 'me'">{{ value.message }}</span>
+            <span class = "bubble" v-if="value.from === 'you'">{{ value.message }}</span>
+          </div>
 
 
-      <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
-      <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
+          <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
+          <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
 
-    </div>-->
+        </div>-->
   </div>
 
 
@@ -149,12 +149,38 @@
           console.log("left room no: " + this.roomNo);
           //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
+      },
+      pingUser: function() {
+        let start_time;
+        let self = this;
+        //setInterval(function() {
+        start_time = (new Date).getTime();
+        this.socket.emit('my_ping', {start: start_time});
+
+        setTimeout(function(){ self.pingUser() }, 1000);
+        //}, 1000);
+
+      },
+      pongUser: function(){
+        let ping_pong_times = [];
+        this.socket.on('my_pong', function(response) {
+          let latency = (new Date).getTime() - response.data;
+          ping_pong_times.push(latency);
+          ping_pong_times = ping_pong_times.slice(-30); // keep last 30 samples
+          let sum = 0;
+          for (let i = 0; i < ping_pong_times.length; i++)
+            sum += ping_pong_times[i];
+          console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
+        }.bind(this));
       }
     },
     computed: {
       ...mapGetters({
         authUser: 'authUser'
       })
+    },
+    mounted () {
+
     },
     created () {
       //connecting the user
@@ -168,9 +194,11 @@
       this.sendInRoomResponse();
       this.joinRoomResponse();
       this.leaveRoomResponse();
+      this.pingUser();
+      this.pongUser();
     },
     destroyed() {
-        this.leaveRoom();
+      this.leaveRoom();
     }
   };
 
