@@ -24,12 +24,12 @@
             <div id="chatWindow" class="panel-body">
               <ul class="chat">
                 <div id="newest" v-for="value in history">
-                  <span class = "bubble bubble-alt" v-if="value.from === 'me'">
+                  <span class = "bubble bubble-alt" v-if="value.who === 'me'">
                     <div class="chat-body clearfix">
                        {{ value.message }}
                     </div>
                     </span>
-                  <span class = "bubble" v-if="value.from === 'you'">
+                  <span class = "bubble" v-if="value.who === 'you'">
                     <div class="chat-body clearfix">
                         {{ value.message }}
                     </div>
@@ -89,12 +89,12 @@
         roomNo: this.projectId.toString(),
         selectedRoomNo: [],
         history: [
-          { from: "", message: "" }
+          { who: "", message: "" }
         ],
         socket: io.connect('http://127.0.0.1:5000'),
         chatmessage: {
           msg: "",
-          from: ""
+          who: ""
         },
         activeUser: {
           user: [],
@@ -105,18 +105,18 @@
     },
     methods: {
       sendInRoom: function () {
-        this.chatmessage.from = this.authUser.username;
+        this.chatmessage.who = this.authUser.username;
         this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
         this.chatmessage.msg = '';
       },
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
         this.socket.on('room_response', function(response) {
-          if(response.data.from === this.authUser.username){
-            this.history.push({ from: 'me',message: response.data.msg});
+          if(response.data.who === this.authUser.username){
+            this.history.push({ who: 'me',message: response.data.msg});
             //+ " /--/ sent in room " + response.room
           }else{
-            this.history.push({ from: 'you', message: response.data.from + ": " + response.data.msg});
+            this.history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
             //+ " /--/ sent in room " + response.room
           }
 
@@ -129,7 +129,7 @@
          * Todo: probably add something visual soon, or it gets pretty messy
          * see todo on "connect".
          * Had some idea of having room 0 as active users, not perfect though */
-        this.socket.emit('join', {room: this.roomNo});
+        this.socket.emit('join', {who: this.authUser.username, room: this.roomNo});
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -139,7 +139,7 @@
           //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
       },leaveRoom: function() {
-        this.socket.emit('leave', {room: this.roomNo});
+        this.socket.emit('leave', {who: this.authUser.username, room: this.roomNo});
 
       },
       leaveRoomResponse: function() {
@@ -168,6 +168,9 @@
       this.sendInRoomResponse();
       this.joinRoomResponse();
       this.leaveRoomResponse();
+    },
+    destroyed() {
+        this.leaveRoom();
     }
   };
 

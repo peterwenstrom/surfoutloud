@@ -9,7 +9,10 @@
     </div>
     <p v-model="msg"></p>
     <h6>Members to be added in this project:</h6>
-    <p>{{ newMember.username }}</p>
+
+    <div v-for="item in newMember.username">
+      {{ item }}
+    </div>
 
 
     <button class="send-btn btn" v-on:click="createProject">Create project</button>
@@ -35,24 +38,24 @@
       }
     },
     methods: {
-              addMember: function() {
-                this.newMember.username.push(this.member);
-                this.member = "";
-              },
-              createProject: function() {
-                  let adminAndMembers = {
-                  username: this.authUser.username,
-                    memberArray: this.newMember.username
-                  };
-                axios.post(ADDPROJECT_URL, adminAndMembers).then(response => {
-                    this.$router.push('dashboard');
-                }).catch(err => {
-                    //Todo: error handling when user put in members not in db
-                    this.msg = err.response.data.msg;
+      addMember: function() {
+        this.newMember.username.push(this.member);
+        this.member = "";
+      },
+      createProject: function() {
+        let adminAndMembers = {
+          username: this.authUser.username,
+          memberArray: this.newMember.username
+        };
+        axios.post(ADDPROJECT_URL, adminAndMembers).then(response => {
+          this.$router.push('dashboard');
+        }).catch(err => {
+          //Todo: error handling when user put in members not in db
+          this.msg = err.response.data.msg;
 
-                })
-              }
-            },
+        })
+      }
+    },
     computed: {
       ...mapGetters({
         authUser: 'authUser'
