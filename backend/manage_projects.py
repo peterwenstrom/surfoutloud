@@ -12,6 +12,7 @@ def add_member(members, project_id):
         test_id = row[0]
         if row:
             try:
+                # projectId, MemberId
                 cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, test_id))
                 mysql.connection.commit()
                 # Todo: make an array of usernames that can be sent back to client
@@ -44,7 +45,7 @@ def add_project():
     admin = request.json.get('username', None)
     members = request.json.get('memberArray', None)
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT username FROM User where username = %s''', [admin])
+    cursor.execute('''SELECT id, username FROM User where username = %s''', [admin])
     row = cursor.fetchall()
     if row:
         try:
@@ -53,6 +54,7 @@ def add_project():
             row = cursor.fetchall()
             project_id = row[0]
             mysql.connection.commit()
+            members.append(admin)
             response = {'username': admin, 'projectid': row[0]}
             add_member(members, project_id)
             return jsonify(response)
