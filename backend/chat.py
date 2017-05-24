@@ -1,7 +1,8 @@
 from config import socketio
-from flask import session, request
+from flask import jsonify, session, request
 from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
 
+active_users = []
 
 @socketio.on('sendInRoom')
 def send_room_message(message):
@@ -19,6 +20,7 @@ def join(message):
     # session['receive_count'] = session.get('receive_count', 0) + 1
     print("Joined ROOM!")
     print(message['who'])
+    active_users.append(message['who'])
     emit('join_room_response',
          {'data': ",".join(rooms())})
 
@@ -28,10 +30,13 @@ def leave(message):
     # session['receive_count'] = session.get('receive_count', 0) + 1
     print("LEEEFT ROOM!")
     print(message['who'])
+    active_users.remove(message['who'])
     disconnect()
     emit('leave_room_response',
          {'data': ",".join(rooms())})
 
 @socketio.on('my_ping')
 def my_ping(message):
-    emit('my_pong', {'data': message['start']})
+    emit('my_pong', {'data': message['start'], 'active_users': active_users})
+
+

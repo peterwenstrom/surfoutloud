@@ -96,10 +96,9 @@
           msg: "",
           who: ""
         },
-        activeUser: {
-          user: [],
-          inRoom: []
-        }
+        activeUsers: [
+
+        ]
 
       }
     },
@@ -153,12 +152,12 @@
       pingUser: function() {
         let start_time;
         let self = this;
-        //setInterval(function() {
+
         start_time = (new Date).getTime();
         this.socket.emit('my_ping', {start: start_time});
 
-        setTimeout(function(){ self.pingUser() }, 1000);
-        //}, 1000);
+        setTimeout(function(){ self.pingUser() }, 5000);
+
 
       },
       pongUser: function(){
@@ -171,6 +170,12 @@
           for (let i = 0; i < ping_pong_times.length; i++)
             sum += ping_pong_times[i];
           console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
+
+          console.log("active users: " + response.active_users);
+          this.activeUsers = response.active_users;
+          this.$emit('active', response.active_users);
+
+
         }.bind(this));
       }
     },
