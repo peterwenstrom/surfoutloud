@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "deploy": "git subtree push — prefix frontend/dist heroku master"
   },
   "dependencies": {
     "axios": "^0.16.1",
