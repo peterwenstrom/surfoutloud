@@ -171,7 +171,10 @@
             sum += ping_pong_times[i];
           console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
 
-          console.log("active users: " + response.active_users);
+          if (Math.round(10 * sum / ping_pong_times.length) / 10 > 500.0){
+              this.leaveRoom();
+          }
+
           this.activeUsers = response.active_users;
           this.$emit('active', response.active_users);
 

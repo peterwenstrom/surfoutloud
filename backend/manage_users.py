@@ -43,7 +43,7 @@ def register():
 
     # create new user in DB
     try:
-        cursor.execute('''INSERT INTO User VALUES (0, %s, %s)''', (username.title(), password_hash))
+        cursor.execute('''INSERT INTO User VALUES (0, %s, %s)''', (username, password_hash))
         mysql.connection.commit()
         response = {'access_token': create_access_token(identity=username),
                     'username': username}
