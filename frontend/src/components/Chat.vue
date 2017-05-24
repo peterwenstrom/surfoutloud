@@ -170,8 +170,7 @@
           for (let i = 0; i < ping_pong_times.length; i++)
             sum += ping_pong_times[i];
           console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
-
-          console.log("active users: " + response.active_users);
+          
           this.activeUsers = response.active_users;
           this.$emit('active', response.active_users);
 

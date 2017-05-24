@@ -12,8 +12,6 @@
         <span v-if="activeUserList[index] === 'false'" class='circle'></span>
       </div>
 
-
-
     </div>
     <div class="col-md-8">
       <h2>Chat</h2>
@@ -37,8 +35,6 @@
       return {
         memberList: [
 
-
-
         ],
         activeUserList: [
 
@@ -49,6 +45,7 @@
     },
     methods: {
       onActiveUserUpdate (value) {
+        let i = 0;
 
         for (i; i<this.memberList.length; i++){
 
@@ -79,19 +76,11 @@
 
       ).then( response => {
         let i = 0;
-        console.log("arrayMEMBERS: ");
-        console.log(response.data);
+
         for (i; i<response.data.members.length; i++){
-
+            //the drawback here is that you cannot have usernames with space in it.. maybe we do not want it anyway
           Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
-
-          //this.memberList.push({member: JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''), active: "false"});
-          //this.memberList.splice(i, 1, {member: JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''), active: "false"});
         }
-
-        console.log("memberlist: ");
-        console.log(this.memberList);
-        console.log("member array: " + response.data.members);
       });
     }
   }
