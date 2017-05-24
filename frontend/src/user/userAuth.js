@@ -60,6 +60,11 @@ export default {
     }
   },
 
+  refreshUser (user) {
+    localStorage.setItem('authUser', user);
+    store.dispatch('setUserObject', user);
+  },
+
   addAuthHeader () {
     return {headers: {'Authorization': 'Bearer ' + store.getters.accessToken}}
   }

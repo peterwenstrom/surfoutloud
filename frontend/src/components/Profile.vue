@@ -130,11 +130,20 @@
         this.edit_password = option;
       },
       editUsername () {
-        axios.post(EDIT_USERNAME_URL, {username: this.credentials.username}, userAuth.addAuthHeader()).then( response => {
-          console.log(response);
-        }).catch( err => {
-            console.log(err.response)
-        })
+        if (this.authUser.username === this.credentials.username) {
+          this.enableEditUsername(false);
+          this.username_error = '';
+        } else {
+          axios.post(EDIT_USERNAME_URL,
+            {username: this.credentials.username},
+            userAuth.addAuthHeader()).then( response => {
+            userAuth.refreshUser(response.data);
+            this.enableEditUsername(false);
+            this.username_error = '';
+          }).catch( error => {
+            this.username_error = error.response.data.message
+          })
+        }
 
       }
     },

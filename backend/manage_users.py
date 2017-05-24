@@ -13,9 +13,8 @@ def login():
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT password FROM User where username = %s''', [username])
     row = cursor.fetchall()
-    db_password = row[0][0]
     # check credentials against DB
-    if not row or not bcrypt.check_password_hash(db_password, password):
+    if not row or not bcrypt.check_password_hash(row[0][0], password):
         return jsonify({'message': 'Wrong username or password'}), 401
 
     response = {'access_token': create_access_token(identity=username),
@@ -82,4 +81,6 @@ def edit_username():
     cursor.execute('''UPDATE User set username = %s where username = %s''', (new_username, get_jwt_identity()))
     mysql.connection.commit()
 
-    return jsonify({'message': 'Username successfully changed'}), 200
+    response = {'access_token': create_access_token(identity=new_username),
+                'username': new_username}
+    return jsonify(response), 200
