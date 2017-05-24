@@ -61,7 +61,7 @@ export default {
   },
 
   refreshUser (user) {
-    localStorage.setItem('authUser', user);
+    localStorage.setItem('authUser', JSON.stringify(user));
     store.dispatch('setUserObject', user);
   },
 

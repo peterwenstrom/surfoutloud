@@ -27,15 +27,18 @@
             <icon name="pencil-square-o"></icon>
           </div>
         </div>
-        <div class="col-md-6 col-2" v-if="edit_username">
+        <div class="col-md-6 col-2" v-if="edit_username && !username_loading">
           <div class="icon-div" v-on:click="editUsername">
             <icon id="submit" name="check-square-o"></icon>
           </div>
         </div>
-        <div class="col-md-6 col-2" v-if="edit_username">
+        <div class="col-md-6 col-2" v-if="edit_username && !username_loading">
           <div class="icon-div" v-on:click="enableEditUsername(false)">
             <icon id="cancel" name="window-close-o"></icon>
           </div>
+        </div>
+        <div class="col-md-12" v-if="username_loading">
+          <pulse-loader class="loading" :loading="username_loading" :size="size"></pulse-loader>
         </div>
       </div>
     </div>
@@ -72,15 +75,18 @@
             <icon name="pencil-square-o"></icon>
           </div>
         </div>
-        <div class="col-md-6 col-2" v-if="edit_password">
+        <div class="col-md-6 col-2" v-if="edit_password && !password_loading">
           <div class="icon-div" v-on:click="password_error='hejsan'">
             <icon id="submit" name="check-square-o"></icon>
           </div>
         </div>
-        <div class="col-md-6 col-2" v-if="edit_password">
+        <div class="col-md-6 col-2" v-if="edit_password && !password_loading">
           <div class="icon-div" v-on:click="enableEditPassword(false)">
             <icon id="cancel" name="window-close-o"></icon>
           </div>
+        </div>
+        <div class="col-md-12" v-if="password_loading">
+          <pulse-loader class="loading" :loading="password_loading" :size="size"></pulse-loader>
         </div>
       </div>
     </div>
@@ -92,6 +98,7 @@
   import axios from 'axios'
   import userAuth from '../user/userAuth'
 
+  import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/pencil-square-o'
   import 'vue-awesome/icons/check-square-o'
@@ -111,7 +118,10 @@
         edit_username: false,
         edit_password: false,
         username_error: '',
-        password_error: ''
+        password_error: '',
+        size: '10px',
+        username_loading: false,
+        password_loading: false
       }
     },
     methods: {
@@ -136,25 +146,31 @@
           this.enableEditUsername(false);
           this.username_error = '';
         } else {
+          this.username_loading = true;
           axios.post(EDIT_USERNAME_URL,
             {username: this.credentials.username},
             userAuth.addAuthHeader()).then( response => {
             userAuth.refreshUser(response.data);
             this.enableEditUsername(false);
             this.username_error = '';
+            this.username_loading = false;
           }).catch( error => {
-            this.username_error = error.response.data.message
+            this.username_error = error.response.data.message;
+            this.username_loading = false;
           })
         }
       },
       editPassword () {
         if (this.credentials.password === this.credentials.repeat_password) {
+          this.password_loading = true;
           axios.post(EDIT_PASSWORD_URL,
             {password: this.credentials.password, repeat_password: this.credentials.repeat_password},
             userAuth.addAuthHeader()).then( () => {
             this.enableEditPassword(false);
             this.password_error = '';
+            this.password_loading = false;
           }).catch( error => {
+            this.password_loading = false;
             this.password_error = error.response.data.message
           })
         } else {
@@ -172,7 +188,8 @@
         this.credentials.username = this.authUser.username;
     },
     components: {
-      Icon
+      Icon,
+      PulseLoader
     }
   }
 
@@ -196,6 +213,9 @@
   }
   .row {
     margin-top: 0px;
+  }
+  .loading {
+    padding-top: 10px;
   }
 
 </style>
