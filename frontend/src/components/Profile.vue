@@ -3,6 +3,7 @@
     <div class="col-md-12">
       <h2>Profile page</h2>
       <p>Below you can find and edit your profile details</p>
+      <hr class="small">
     </div>
     <div class="col-md-5">
       <div class="form-group">
@@ -12,7 +13,7 @@
           class="form-control profile-form"
           placeholder="Enter new username"
           v-model="credentials.username"
-          v-on:keyup.enter=""
+          v-on:keyup.enter="editUsername"
           disabled>
       </div>
       <div class="alert alert-danger" v-if="username_error">
@@ -47,7 +48,7 @@
           class="form-control profile-form"
           placeholder="Enter new password"
           v-model="credentials.password"
-          v-on:keyup.enter=""
+          v-on:keyup.enter="editPassword"
           disabled>
       </div>
       <div class="form-group">
@@ -57,7 +58,7 @@
           class="form-control profile-form"
           placeholder="Repeat new password"
           v-model="credentials.repeat_password"
-          v-on:keyup.enter=""
+          v-on:keyup.enter="editPassword"
           disabled>
       </div>
       <div class="alert alert-danger" v-if="password_error">
@@ -97,6 +98,7 @@
   import 'vue-awesome/icons/window-close-o'
 
   const EDIT_USERNAME_URL = API_URL + '/editusername';
+  const EDIT_PASSWORD_URL = API_URL + '/editpassword';
 
   export default {
     data() {
@@ -144,7 +146,20 @@
             this.username_error = error.response.data.message
           })
         }
-
+      },
+      editPassword () {
+        if (this.credentials.password === this.credentials.repeat_password) {
+          axios.post(EDIT_PASSWORD_URL,
+            {password: this.credentials.password, repeat_password: this.credentials.repeat_password},
+            userAuth.addAuthHeader()).then( () => {
+            this.enableEditPassword(false);
+            this.password_error = '';
+          }).catch( error => {
+            this.password_error = error.response.data.message
+          })
+        } else {
+          this.password_error = 'The passwords are not identical, please try again'
+        }
       }
     },
     computed: {
