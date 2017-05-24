@@ -9,10 +9,11 @@ def add_member(members, project_id):
     for x in members:
         cursor.execute('''SELECT id FROM User where username = %s''', [x])
         row = cursor.fetchall()
-        test_id = row[0]
+        member_id = row[0]
         if row:
             try:
-                cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, test_id))
+                # projectId, MemberId
+                cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, member_id))
                 mysql.connection.commit()
                 # Todo: make an array of usernames that can be sent back to client
                 # response = {'username': username, 'msg': 'everything went well, ' + username + ' is added'}
@@ -21,6 +22,19 @@ def add_member(members, project_id):
                 response = {'msg': 'Something went wrong, please try again.'}
                 return jsonify(response), 400
     return "herueka!"
+
+@app.route('/getmembers', methods=['POST'])
+def get_members():
+    projId = request.json.get('projectId', None)
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT memberid FROM Member where projectid = %s''',[projId])
+    rows = cursor.fetchall()
+    members = []
+    for row in rows:
+        cursor.execute('''SELECT username FROM User where id = %s''', [row])
+        members.append(cursor.fetchall()[0])
+
+    return jsonify({'members': members}), 200
 
 
 @app.route('/getprojects', methods=['GET'])
@@ -44,7 +58,7 @@ def add_project():
     admin = request.json.get('username', None)
     members = request.json.get('memberArray', None)
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT username FROM User where username = %s''', [admin])
+    cursor.execute('''SELECT id, username FROM User where username = %s''', [admin])
     row = cursor.fetchall()
     if row:
         try:
@@ -53,6 +67,7 @@ def add_project():
             row = cursor.fetchall()
             project_id = row[0]
             mysql.connection.commit()
+            members.append(admin)
             response = {'username': admin, 'projectid': row[0]}
             add_member(members, project_id)
             return jsonify(response)

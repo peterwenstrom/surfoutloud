@@ -24,12 +24,12 @@
             <div id="chatWindow" class="panel-body">
               <ul class="chat">
                 <div id="newest" v-for="value in history">
-                  <span class = "bubble bubble-alt" v-if="value.from === 'me'">
+                  <span class = "bubble bubble-alt" v-if="value.who === 'me'">
                     <div class="chat-body clearfix">
                        {{ value.message }}
                     </div>
                     </span>
-                  <span class = "bubble" v-if="value.from === 'you'">
+                  <span class = "bubble" v-if="value.who === 'you'">
                     <div class="chat-body clearfix">
                         {{ value.message }}
                     </div>
@@ -53,24 +53,24 @@
 
 
 
-<!--    <div class = "container">
-      &lt;!&ndash;<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
-      <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
+    <!--    <div class = "container">
+          &lt;!&ndash;<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
+          <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
 
-      <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
-      <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
-      <p>Current room number: No room selected</p>&ndash;&gt;
+          <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
+          <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
+          <p>Current room number: No room selected</p>&ndash;&gt;
 
-      <div v-for="value in history">
-        <span class = "bubble bubble-alt" v-if="value.from === 'me'">{{ value.message }}</span>
-        <span class = "bubble" v-if="value.from === 'you'">{{ value.message }}</span>
-      </div>
+          <div v-for="value in history">
+            <span class = "bubble bubble-alt" v-if="value.from === 'me'">{{ value.message }}</span>
+            <span class = "bubble" v-if="value.from === 'you'">{{ value.message }}</span>
+          </div>
 
 
-      <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
-      <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
+          <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
+          <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
 
-    </div>-->
+        </div>-->
   </div>
 
 
@@ -89,34 +89,33 @@
         roomNo: this.projectId.toString(),
         selectedRoomNo: [],
         history: [
-          { from: "", message: "" }
+          { who: "", message: "" }
         ],
         socket: io.connect('http://127.0.0.1:5000'),
         chatmessage: {
           msg: "",
-          from: ""
+          who: ""
         },
-        activeUser: {
-          user: [],
-          inRoom: []
-        }
+        activeUsers: [
+
+        ]
 
       }
     },
     methods: {
       sendInRoom: function () {
-        this.chatmessage.from = this.authUser.username;
+        this.chatmessage.who = this.authUser.username;
         this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
         this.chatmessage.msg = '';
       },
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
         this.socket.on('room_response', function(response) {
-          if(response.data.from === this.authUser.username){
-            this.history.push({ from: 'me',message: response.data.msg});
+          if(response.data.who === this.authUser.username){
+            this.history.push({ who: 'me',message: response.data.msg});
             //+ " /--/ sent in room " + response.room
           }else{
-            this.history.push({ from: 'you', message: response.data.from + ": " + response.data.msg});
+            this.history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
             //+ " /--/ sent in room " + response.room
           }
 
@@ -129,7 +128,7 @@
          * Todo: probably add something visual soon, or it gets pretty messy
          * see todo on "connect".
          * Had some idea of having room 0 as active users, not perfect though */
-        this.socket.emit('join', {room: this.roomNo});
+        this.socket.emit('join', {who: this.authUser.username, room: this.roomNo});
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -139,7 +138,7 @@
           //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
       },leaveRoom: function() {
-        this.socket.emit('leave', {room: this.roomNo});
+        this.socket.emit('leave', {who: this.authUser.username, room: this.roomNo});
 
       },
       leaveRoomResponse: function() {
@@ -149,12 +148,44 @@
           console.log("left room no: " + this.roomNo);
           //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
+      },
+      pingUser: function() {
+        let start_time;
+        let self = this;
+
+        start_time = (new Date).getTime();
+        this.socket.emit('my_ping', {start: start_time});
+
+        setTimeout(function(){ self.pingUser() }, 5000);
+
+
+      },
+      pongUser: function(){
+        let ping_pong_times = [];
+        this.socket.on('my_pong', function(response) {
+          let latency = (new Date).getTime() - response.data;
+          ping_pong_times.push(latency);
+          ping_pong_times = ping_pong_times.slice(-30); // keep last 30 samples
+          let sum = 0;
+          for (let i = 0; i < ping_pong_times.length; i++)
+            sum += ping_pong_times[i];
+          console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
+
+          console.log("active users: " + response.active_users);
+          this.activeUsers = response.active_users;
+          this.$emit('active', response.active_users);
+
+
+        }.bind(this));
       }
     },
     computed: {
       ...mapGetters({
         authUser: 'authUser'
       })
+    },
+    mounted () {
+
     },
     created () {
       //connecting the user
@@ -168,6 +199,11 @@
       this.sendInRoomResponse();
       this.joinRoomResponse();
       this.leaveRoomResponse();
+      this.pingUser();
+      this.pongUser();
+    },
+    destroyed() {
+      this.leaveRoom();
     }
   };
 
