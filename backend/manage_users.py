@@ -84,3 +84,22 @@ def edit_username():
     response = {'access_token': create_access_token(identity=new_username),
                 'username': new_username}
     return jsonify(response), 200
+
+
+@app.route('/editpassword', methods=['POST'])
+@jwt_required
+def edit_password():
+    password = request.json.get('password', None)
+    repeat_password = request.json.get('repeat_password', None)
+    if not password or not repeat_password:
+        return jsonify({'message': 'Password field cannot be empty'}), 400
+    elif password != repeat_password:
+        return jsonify({'message': 'The passwords are not identical, please try again'}), 400
+
+    password_hash = bcrypt.generate_password_hash(password)
+    cursor = mysql.connection.cursor()
+    cursor.execute('''UPDATE User set password = %s where username = %s''', (password_hash, get_jwt_identity()))
+    mysql.connection.commit()
+
+    return jsonify({'message': 'Success'}), 200
+
