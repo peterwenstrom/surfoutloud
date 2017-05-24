@@ -49,8 +49,10 @@ export default {
       store.dispatch('clearUserObject');
       callback('login');
     } else {
-      axios.post(AUTH_URL, user, {headers: {'Authorization': 'Bearer ' + user.access_token}}).then( () => {
-        store.dispatch('setUserObject', user);
+      axios.post(AUTH_URL, user,
+        {headers: {'Authorization': 'Bearer ' + user.access_token}}).then( response => {
+        localStorage.setItem('authUser', JSON.stringify(response.data));
+        store.dispatch('setUserObject', response.data);
         callback('dashboard');
       }).catch( () => {
         store.dispatch('clearUserObject');

@@ -59,7 +59,8 @@ def register():
 def authorize():
     username = request.json.get('username', None)
     if get_jwt_identity() == username:
-        response = {'message': 'Authorized user'}
+        response = {'access_token': create_access_token(identity=username),
+                    'username': username}
         return jsonify(response), 200
     else:
         response = {'message': 'Username and token does not match'}

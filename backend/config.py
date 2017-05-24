@@ -28,7 +28,7 @@ app.config['MYSQL_PASSWORD'] = 'vlgFFX7C1v'
 app.config['MYSQL_DB'] = 'sql11166771'
 
 # JWT configurations
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=2)
 app.config['SECRET_KEY'] = 'asupersecretsecret'
 
 CORS(app)
