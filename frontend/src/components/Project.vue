@@ -26,7 +26,7 @@
   import Vue from 'vue'
   import axios from 'axios'
   import chat from './Chat'
-  const GETMEMBERS_URL = API_URL + 'getmembers';
+  const GETMEMBERS_URL = API_URL + '/getmembers';
 
   export default {
     name: 'project',
