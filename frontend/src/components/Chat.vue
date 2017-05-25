@@ -91,7 +91,7 @@
         history: [
           { who: "", message: "" }
         ],
-        socket: io.connect('http://127.0.0.1:5000'),
+        socket: io.connect(API_URL),
         chatmessage: {
           msg: "",
           who: ""
