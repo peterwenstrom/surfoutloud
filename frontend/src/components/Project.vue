@@ -13,10 +13,13 @@
       </div>
 
     </div>
-    <div class="col-md-8">
+    <div class="col-md-4">
       <h2>Chat</h2>
       <chat v-bind:projectId="projectId" @active="onActiveUserUpdate"></chat>
 
+
+    </div>
+    <div class="col-md-4">
 
     </div>
   </div>

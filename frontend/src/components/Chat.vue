@@ -1,22 +1,5 @@
 <template>
   <div id = "chat">
-
-
-    <!--<div>
-      <h5>Active Users</h5>
-      <ul>
-        <li v-for="item in activeUser.user">
-          {{ item }}
-        </li>
-        <li v-for="item in activeUser.inRoom">
-          {{ item }}
-        </li>
-      </ul>
-    </div>-->
-
-
-
-
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -50,30 +33,7 @@
         </div>
       </div>
     </div>
-
-
-
-    <!--    <div class = "container">
-          &lt;!&ndash;<input v-model="roomNo" v-on:keyup.enter="joinRoom" placeholder="roomNo"/>
-          <button class="send-btn btn" v-on:click="joinRoom">Activate room</button>
-
-          <input v-model="roomNo" v-on:keyup.enter="leaveRoom" placeholder="roomNo"/>
-          <button class="send-btn btn" v-on:click="leaveRoom">Deactivate room</button>
-          <p>Current room number: No room selected</p>&ndash;&gt;
-
-          <div v-for="value in history">
-            <span class = "bubble bubble-alt" v-if="value.from === 'me'">{{ value.message }}</span>
-            <span class = "bubble" v-if="value.from === 'you'">{{ value.message }}</span>
-          </div>
-
-
-          <input v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom"/>
-          <button v-model="chatmessage.msg" class="send-btn btn" v-on:click="sendInRoom">Send</button>
-
-        </div>-->
   </div>
-
-
 </template>
 
 <script>
@@ -122,8 +82,6 @@
         }.bind(this));
       },
       joinRoom: function() {
-          console.log("chat_url: ");
-          console.log(CHAT_URL);
         /* Right now you can join as many rooms as you like, but not leave them.
          * There is no sign of how many rooms, or which, you are active in.
          * Todo: probably add something visual soon, or it gets pretty messy
@@ -136,7 +94,6 @@
           let res = response.data.split(",");
           console.log("resTot: " + res);
           console.log("joined room: " + this.roomNo);
-          //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
       },leaveRoom: function() {
         this.socket.emit('leave', {who: this.authUser.username, room: this.roomNo});
@@ -147,7 +104,6 @@
           let res = response.data.split(",");
           console.log("resTot: " + res);
           console.log("left room no: " + this.roomNo);
-          //this.activeUser.inRoom.push(res[1]);
         }.bind(this));
       },
       pingUser: function() {
@@ -188,13 +144,6 @@
 
     },
     created () {
-      //connecting the user
-      //this.socket.on('connect', function() {
-      //todo: greenlight active members in the project
-      //this.socket.send(this.authUser.username + ' has connected!');
-      //}.bind(this));
-
-
       this.joinRoom();
       this.sendInRoomResponse();
       this.joinRoomResponse();
