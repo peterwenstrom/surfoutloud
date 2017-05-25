@@ -201,9 +201,9 @@
       this.pingUser();
       this.pongUser();
     },
-    destroyed() {
-      this.leaveRoom();
-    }
+    //destroyed() {
+    //  this.leaveRoom();
+    //}
   };
 
 
