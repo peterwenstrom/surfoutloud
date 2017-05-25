@@ -91,7 +91,7 @@
         history: [
           { who: "", message: "" }
         ],
-        socket: io.connect('http://127.0.0.1:5000'),
+        socket: io.connect(API_URL),
         chatmessage: {
           msg: "",
           who: ""
@@ -122,7 +122,8 @@
         }.bind(this));
       },
       joinRoom: function() {
-
+          console.log("chat_url: ");
+          console.log(CHAT_URL);
         /* Right now you can join as many rooms as you like, but not leave them.
          * There is no sign of how many rooms, or which, you are active in.
          * Todo: probably add something visual soon, or it gets pretty messy
@@ -170,10 +171,6 @@
           for (let i = 0; i < ping_pong_times.length; i++)
             sum += ping_pong_times[i];
           console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
-
-          if (Math.round(10 * sum / ping_pong_times.length) / 10 > 500.0){
-              this.leaveRoom();
-          }
 
           this.activeUsers = response.active_users;
           this.$emit('active', response.active_users);

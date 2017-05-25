@@ -36,6 +36,8 @@
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/plus-circle'
 
+  const GET_PROJECTURL = API_URL + '/getprojects';
+
   export default {
     name: 'Dashboard',
     data() {
@@ -63,7 +65,7 @@
     mounted () {
       this.loading = true;
       setTimeout(() => {
-        axios.get('/api/getprojects', userAuth.addAuthHeader() ).then( response => {
+        axios.get(GET_PROJECTURL, userAuth.addAuthHeader() ).then( response => {
           this.projects = response.data.projects;
           console.log("projekt array: " + response.data.projects);
           this.loading = false;
