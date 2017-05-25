@@ -14,21 +14,21 @@
           type="text"
           class="form-control"
           placeholder="Add a name to your project"
-          v-model="project_name"
+          v-model="project_details.name"
           v-on:keyup.enter=""
         >
       </div>
       <label for="project-description"><strong>Project Description</strong></label>
-      <div class="form-group">
-        <input
-          id="project-description"
-          type="text"
-          class="form-control"
-          placeholder="Add a short description of your project"
-          v-model="project_description"
-          v-on:keyup.enter=""
-        >
-      </div>
+
+      <textarea
+        id="project-description"
+        rows="5"
+        class="form-control"
+        placeholder="Add a short description of your project"
+        v-model="project_details.description"
+        v-on:keyup.enter=""
+      ></textarea>
+
     </div>
 
     <div class="col-md-6">
@@ -51,7 +51,7 @@
           <hr class="small">
           <p><strong>Members that will be added to the project:</strong></p>
         </div>
-        <div class="added-member" v-for="member in newMember.username">
+        <div class="added-member" v-for="member in project_details.new_members">
 
           <a>{{ member }}</a>
           <div class="icon-div" v-on:click="removeMember(member)">
@@ -84,11 +84,12 @@
     name: 'CreateNewProject',
     data() {
       return {
-        newMember: {
-          username: []
+        project_details: {
+          new_members: [],
+          name: '',
+          description: '',
+          admin: ''
         },
-        project_name: '',
-        project_description: '',
         msg: '',
         member: '',
         error: ''
@@ -96,21 +97,17 @@
     },
     methods: {
       addMember () {
-        this.newMember.username.push(this.member);
+        this.project_details.new_members.push(this.member);
         this.member = "";
       },
       removeMember (user) {
-        const index = this.newMember.username.indexOf(user);
+        const index = this.project_details.new_members.indexOf(user);
         if (index > -1) {
-          this.newMember.username.splice(index, 1);
+          this.project_details.new_members.splice(index, 1);
         }
       },
       createProject () {
-        let adminAndMembers = {
-          username: this.authUser.username,
-          memberArray: this.newMember.username
-        };
-        axios.post(ADDPROJECT_URL, adminAndMembers, userAuth.addAuthHeader()).then( response => {
+        axios.post(ADDPROJECT_URL, this.project_details, userAuth.addAuthHeader()).then( response => {
           this.$router.push('dashboard')
         }).catch( error => {
           this.error = error.response.data.message
@@ -121,6 +118,9 @@
       ...mapGetters({
         authUser: 'authUser'
       })
+    },
+    mounted () {
+      this.project_details.admin = this.authUser.username
     },
     components: {
       Icon
