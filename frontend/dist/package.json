@@ -1,0 +1,11 @@
+{
+ "name": "blog",
+ "version": "1.0.0",
+ "description": "Vue project for course TDDD27",
+ "author": "Peter och Per",
+ "private": true,
+ "scripts": {
+   "postinstall": "npm install express",
+   "start": "node server.js"
+ }
+}
