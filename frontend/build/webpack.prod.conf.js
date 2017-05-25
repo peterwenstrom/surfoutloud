@@ -28,7 +28,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env,
-      'API_URL': JSON.stringify('add when deployed')
+      'API_URL': JSON.stringify('http://surfoutloudserver.herokuapp.com/')
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
