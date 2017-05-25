@@ -8,5 +8,11 @@ import manage_users
 import manage_projects
 
 
+@app.route('/hello')
+def hello():
+    return 'hello'
+
+
+
 if __name__ == "__main__":
     socketio.run(app)
