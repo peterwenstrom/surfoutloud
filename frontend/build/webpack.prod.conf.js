@@ -28,7 +28,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env,
-      'API_URL': JSON.stringify('https://54.243.58.160:5000'),
+      'API_URL': JSON.stringify('https://surfoutloudserver.herokuapp.com'),
       'CHAT_URL': JSON.stringify('wss://surfoutloudserver.herokuapp.com')
     }),
     new webpack.optimize.UglifyJsPlugin({
