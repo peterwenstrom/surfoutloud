@@ -122,7 +122,8 @@
         }.bind(this));
       },
       joinRoom: function() {
-
+          console.log("chat_url: ");
+          console.log(CHAT_URL);
         /* Right now you can join as many rooms as you like, but not leave them.
          * There is no sign of how many rooms, or which, you are active in.
          * Todo: probably add something visual soon, or it gets pretty messy
