@@ -30,6 +30,7 @@ def leave(message):
     # session['receive_count'] = session.get('receive_count', 0) + 1
     print("LEEEFT ROOM!")
     print(message['who'])
+    print(message['room'])
     active_users.remove(message['who'])
     disconnect()
     emit('leave_room_response',

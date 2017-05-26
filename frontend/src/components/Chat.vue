@@ -52,6 +52,7 @@
           { who: "", message: "" }
         ],
         socket: io.connect(API_URL),
+        username: '',
         chatmessage: {
           msg: "",
           who: ""
@@ -87,7 +88,6 @@
          * Todo: probably add something visual soon, or it gets pretty messy
          * see todo on "connect".
          * Had some idea of having room 0 as active users, not perfect though */
-        console.log("FKSDNGJKDNFAKLSDNGSJKDGNSDJFKNSD");
         this.socket.emit('join', {who: this.authUser.username, room: this.roomNo});
       },
       joinRoomResponse: function() {
@@ -96,9 +96,9 @@
           console.log("resTot: " + res);
           console.log("joined room: " + this.roomNo);
         }.bind(this));
-      },leaveRoom: function() {
-        this.socket.emit('leave', {who: this.authUser.username, room: this.roomNo});
-
+      },
+      leaveRoom: function() {
+        this.socket.emit('leave', {who: this.username, room: this.roomNo});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -142,9 +142,12 @@
       })
     },
     mounted () {
-
+      this.username = this.authUser.username
     },
     created () {
+
+      document.addEventListener('beforeunload', this.leaveRoom);
+
       this.joinRoom();
       this.sendInRoomResponse();
       this.joinRoomResponse();
@@ -152,8 +155,9 @@
       this.pingUser();
       this.pongUser();
     },
-    destroyed() {
+    beforeDestroy() {
       this.leaveRoom();
+      document.removeEventListener('beforeunload', this.leaveRoom);
     }
   };
 
