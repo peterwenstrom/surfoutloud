@@ -134,6 +134,10 @@
 
 
         }.bind(this));
+      },
+      handleClose() {
+        this.leaveRoom();
+        return null
       }
     },
     computed: {
@@ -146,7 +150,7 @@
     },
     created () {
 
-      document.addEventListener('beforeunload', this.leaveRoom);
+      window.addEventListener('beforeunload', this.handleClose);
 
       this.joinRoom();
       this.sendInRoomResponse();
@@ -157,7 +161,7 @@
     },
     beforeDestroy() {
       this.leaveRoom();
-      document.removeEventListener('beforeunload', this.leaveRoom);
+      window.removeEventListener('beforeunload', this.handleClose);
     }
   };
 
