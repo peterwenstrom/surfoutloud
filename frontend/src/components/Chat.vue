@@ -87,6 +87,7 @@
          * Todo: probably add something visual soon, or it gets pretty messy
          * see todo on "connect".
          * Had some idea of having room 0 as active users, not perfect though */
+        console.log("FKSDNGJKDNFAKLSDNGSJKDGNSDJFKNSD");
         this.socket.emit('join', {who: this.authUser.username, room: this.roomNo});
       },
       joinRoomResponse: function() {
