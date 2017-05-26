@@ -18,7 +18,6 @@ def add_members(members_ids, project_id):
     cursor = mysql.connection.cursor()
 
     for member_id in members_ids:
-        print(member_id)
         try:
             cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, member_id))
             mysql.connection.commit()
@@ -53,8 +52,15 @@ def get_projects():
     rows = cursor.fetchall()
     projects = []
     for row in rows:
+        project = {}
         cursor.execute('''SELECT * FROM Project where id = %s''', [row[0]])
-        projects.append(cursor.fetchall()[0])
+        project_row = cursor.fetchall()[0]
+        # create neat project object instead of crazy db row
+        project['id'] = project_row[0]
+        project['admin'] = project_row[1]
+        project['name'] = project_row[2]
+        project['description'] = project_row[3]
+        projects.append(project)
 
     return jsonify({'projects': projects}), 200
 
@@ -81,7 +87,6 @@ def add_project():
         members.append(admin)
         members = list(set(members))
         members_ids = validate_members(members)
-        print(members_ids)
         error = add_members(members_ids, project_id)
         if error:
             return jsonify(error), 400
