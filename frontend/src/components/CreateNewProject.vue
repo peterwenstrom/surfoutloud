@@ -15,7 +15,7 @@
           class="form-control"
           placeholder="Add a name to your project"
           v-model="project_details.name"
-          v-on:keyup.enter=""
+          required
         >
       </div>
       <label for="project-description"><strong>Project Description</strong></label>
@@ -61,10 +61,13 @@
       </div>
     </div>
 
-
     <div class="col-md-12">
       <hr class="small">
-      <button class="create-btn btn" v-on:click="createProject">Create project</button>
+      <pulse-loader :loading="loading" ></pulse-loader>
+      <button class="create-btn btn" v-if="!loading" v-on:click="createProject">Create project</button>
+      <div class="alert alert-danger" v-if="error">
+        <p>{{ error }}</p>
+      </div>
     </div>
   </div>
 
@@ -75,10 +78,11 @@
   import { mapGetters } from 'vuex'
   import userAuth from '../user/userAuth'
 
+  import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/plus-circle'
 
-  const ADDPROJECT_URL = API_URL + '/addproject';
+  const ADD_PROJECT_URL = API_URL + '/addproject';
 
   export default {
     name: 'CreateNewProject',
@@ -92,7 +96,8 @@
         },
         msg: '',
         member: '',
-        error: ''
+        error: '',
+        loading: false
       }
     },
     methods: {
@@ -107,9 +112,12 @@
         }
       },
       createProject () {
-        axios.post(ADDPROJECT_URL, this.project_details, userAuth.addAuthHeader()).then( response => {
-          this.$router.push('dashboard')
+        this.loading = true;
+        axios.post(ADD_PROJECT_URL, this.project_details, userAuth.addAuthHeader()).then( response => {
+          this.loading = false;
+          this.$router.push('project?attr=' + response.data.project_id)
         }).catch( error => {
+          this.loading = false;
           this.error = error.response.data.message
         })
       }
@@ -123,7 +131,8 @@
       this.project_details.admin = this.authUser.username
     },
     components: {
-      Icon
+      Icon,
+      PulseLoader
     }
   };
 
@@ -135,6 +144,9 @@
     background-color: #41B883;
     color: #fff;
     cursor: pointer;
+  }
+  .alert {
+    margin-top: 20px;
   }
   .fa-icon {
     color: #41B883;

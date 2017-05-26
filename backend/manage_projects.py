@@ -4,14 +4,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 def validate_members(members):
-
     cursor = mysql.connection.cursor()
     member_ids = []
     for member in members:
         cursor.execute('''SELECT id FROM User where username = %s''', [member])
         row = cursor.fetchall()
         if row:
-            member_ids.append(row[0])
+            member_ids.append(row[0][0])
     return member_ids
 
 
@@ -19,14 +18,15 @@ def add_members(members_ids, project_id):
     cursor = mysql.connection.cursor()
 
     for member_id in members_ids:
+        print(member_id)
         try:
             cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, member_id))
             mysql.connection.commit()
         except:
             mysql.connection.rollback()
-            response = {'msg': 'Something went wrong, please try again.'}
-            return jsonify(response), 400
-        return "herueka!"
+            response = {'message': 'Something went wrong, please try again.'}
+            return response
+    return False
 
 
 @app.route('/getmembers', methods=['POST'])
@@ -68,10 +68,6 @@ def add_project():
     project_description = request.json.get('description', None)
     if not project_description or not project_name:
         return jsonify({'message': 'Please enter a project name and description'}), 400
-    if members:
-        members.append(admin)
-        members = list(set(members))
-        members_ids = validate_members(members)
 
     cursor = mysql.connection.cursor()
     try:
@@ -82,11 +78,16 @@ def add_project():
         project_id = row[0]
         mysql.connection.commit()
 
-        add_members(members_ids, project_id)
-
-        response = {'username': admin, 'project_id': row[0]}
-        return jsonify(response)
+        members.append(admin)
+        members = list(set(members))
+        members_ids = validate_members(members)
+        print(members_ids)
+        error = add_members(members_ids, project_id)
+        if error:
+            return jsonify(error), 400
+        response = {'username': admin, 'project_id': project_id}
+        return jsonify(response), 200
     except:
         mysql.connection.rollback()
-        response = {'msg': 'Something went wrong, please try again.'}
+        response = {'message': 'Something went wrong, please try again.'}
         return jsonify(response), 400
