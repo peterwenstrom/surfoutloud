@@ -36,7 +36,7 @@
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/plus-circle'
 
-  const GET_PROJECTURL = API_URL + '/getprojects';
+  const GET_PROJECT_URL = API_URL + '/getprojects';
 
   export default {
     name: 'Dashboard',
@@ -65,7 +65,7 @@
     mounted () {
       this.loading = true;
 
-      axios.get(GET_PROJECTURL, userAuth.addAuthHeader() ).then( response => {
+      axios.get(GET_PROJECT_URL, userAuth.addAuthHeader() ).then( response => {
         this.projects = response.data.projects;
         this.loading = false;
       });
