@@ -64,13 +64,12 @@
     },
     mounted () {
       this.loading = true;
-      setTimeout(() => {
-        axios.get(GET_PROJECTURL, userAuth.addAuthHeader() ).then( response => {
-          this.projects = response.data.projects;
-          console.log("projekt array: " + response.data.projects);
-          this.loading = false;
-        });
-      }, 1000);
+
+      axios.get(GET_PROJECTURL, userAuth.addAuthHeader() ).then( response => {
+        this.projects = response.data.projects;
+        this.loading = false;
+      });
+
     }
   };
 
