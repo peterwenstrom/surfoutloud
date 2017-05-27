@@ -83,10 +83,6 @@
     },
     mounted(){
 
-      let projIdArray = {
-        projectId: this.projectId
-      };
-
       axios.post(GET_MEMBERS_URL, {project_id: this.project.id}).then( response => {
         let i = 0;
 
@@ -95,11 +91,13 @@
           Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
         }
       });
+    },
+    beforeDestroy() {
+      this.$store.dispatch('clearProjectObject')
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   h1, h2 {
     font-weight: normal;
