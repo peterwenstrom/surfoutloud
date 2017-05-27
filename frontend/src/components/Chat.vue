@@ -41,7 +41,7 @@
   import {mapGetters} from 'vuex'
 
   export default {
-    name: 'chat',
+    name: 'Chat',
     props: ['projectId'],
     data() {
       return {

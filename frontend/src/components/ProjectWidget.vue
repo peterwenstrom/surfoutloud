@@ -1,10 +1,10 @@
 <template>
   <div class="portfolio-item">
     <transition name="fade">
-        <router-link class="project-link" v-if="show" :to="{  path: '/project', query: { attr: project.id}}">
+      <a class="project-link" v-if="show" v-on:click="selectProject">
         <p>{{project.name}}</p>
         <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
-      </router-link>
+      </a>
     </transition>
 
   </div>
@@ -18,6 +18,12 @@
       }
     },
     props: ['project'],
+    methods: {
+      selectProject() {
+        this.$store.dispatch('setProjectObject', this.project);
+        this.$router.push('project')
+      }
+    },
     mounted() {
         this.show = true;
     }
@@ -40,5 +46,8 @@
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0
+  }
+  a {
+    cursor: pointer;
   }
 </style>

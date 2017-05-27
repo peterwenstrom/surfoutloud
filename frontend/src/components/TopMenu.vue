@@ -27,7 +27,6 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import RingLoader from 'vue-spinner/src/RingLoader.vue'
   import userAuth from '../user/userAuth'
 
   export default {

@@ -17,7 +17,7 @@
 
     <div class="col-md-4">
       <h2>Chat</h2>
-      <chat v-bind:projectId="projectId" @active="onActiveUserUpdate"></chat>
+      <chat v-bind:projectId="project.id" @active="onActiveUserUpdate"></chat>
 
 
     </div>
@@ -29,8 +29,10 @@
 
 <script>
   import Vue from 'vue'
+  import {mapGetters} from 'vuex'
   import axios from 'axios'
   import Chat from './Chat'
+
 
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/user'
@@ -71,8 +73,13 @@
       Chat,
       Icon
     },
+    computed: {
+      ...mapGetters({
+        project: 'project'
+      })
+    },
     created() {
-      this.projectId = this.$route.query.attr;
+      this.projectId = this.project.id
     },
     mounted(){
 
@@ -80,10 +87,7 @@
         projectId: this.projectId
       };
 
-      axios.post(GET_MEMBERS_URL,
-        projIdArray
-
-      ).then( response => {
+      axios.post(GET_MEMBERS_URL, {project_id: this.project.id}).then( response => {
         let i = 0;
 
         for (i; i<response.data.members.length; i++){

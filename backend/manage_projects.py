@@ -30,7 +30,7 @@ def add_members(members_ids, project_id):
 
 @app.route('/getmembers', methods=['POST'])
 def get_members():
-    project_id = request.json.get('projectId', None)
+    project_id = request.json.get('project_id', None)
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT memberid FROM Member where projectid = %s''', [project_id])
     rows = cursor.fetchall()
