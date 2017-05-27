@@ -13,7 +13,7 @@
     "axios": "^0.16.1",
     "bootstrap-vue": "^0.14.0",
     "vue": "^2.2.2",
-    "vue-router": "^2.2.0",
+    "vue-router": "^2.2.0",s
     "vuex": "^2.3.1"
   },
   "devDependencies": {

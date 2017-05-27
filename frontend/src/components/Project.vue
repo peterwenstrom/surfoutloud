@@ -1,13 +1,13 @@
 <template>
   <div class="hello row">
-    <div class="col-md-4">
+    <div class="col-md-2">
       <h2>Members</h2>
       <table class="table table-striped">
         <tbody>
         <tr v-for="(item, index) in memberList">
           <td>
             <p>{{ item }}</p>
-            <icon v-if="activeUserList[index] == 'true'" class="green" name="user"></icon>
+            <icon v-if="activeUserList[index] === 'true'" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
           </td>
         </tr>
@@ -15,14 +15,13 @@
       </table>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
       <h2>Chat</h2>
       <chat v-bind:projectId="project.id" @active="onActiveUserUpdate"></chat>
-
-
     </div>
     <div class="col-md-4">
-
+      <h2>Files</h2>
+      <file></file>
     </div>
   </div>
 </template>
@@ -32,6 +31,7 @@
   import {mapGetters} from 'vuex'
   import axios from 'axios'
   import Chat from './Chat'
+  import File from './File'
 
 
   import Icon from 'vue-awesome/components/Icon'
@@ -71,7 +71,8 @@
     },
     components:{
       Chat,
-      Icon
+      Icon,
+      File
     },
     computed: {
       ...mapGetters({
@@ -87,7 +88,7 @@
         let i = 0;
 
         for (i; i<response.data.members.length; i++){
-            //the drawback here is that you cannot have usernames with space in it.. maybe we do not want it anyway
+          //the drawback here is that you cannot have usernames with space in it.. maybe we do not want it anyway
           Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
         }
       });
