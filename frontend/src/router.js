@@ -60,22 +60,35 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    if (user.checkAuth()) {
-      next();
-    }
-    else {
-      next('/login');
-    }
-  }else if (!to.meta.requiresAuth) {
-    if (!user.checkAuth()) {
-      next();
-    }
-    else {
-      next('/dashboard');
-    }
+  const second_time = localStorage.getItem('second_time');
+  if (from.fullPath === '/' && !second_time) {
+    localStorage.setItem('second_time', true);
+    user.checkServerAuth( redirect => {
+      if (redirect === '/') {
+        next('dashboard')
+      } else {
+        next(redirect)
+      }
+    })
   } else {
-    next()
+    localStorage.removeItem('second_time');
+    if (to.meta.requiresAuth) {
+      if (user.checkAuth()) {
+        next();
+      }
+      else {
+        next('/login');
+      }
+    } else if (!to.meta.requiresAuth) {
+      if (!user.checkAuth()) {
+        next();
+      }
+      else {
+        next('/dashboard');
+      }
+    } else {
+      next()
+    }
   }
 });
 
