@@ -3,7 +3,7 @@
     <h4>All files in project</h4>
     <tr v-for="item in fileArray">
       <td>
-        <p>{{ item }}</p>
+        <a v-on:click="downloadFile(item)">{{ item }}</a>
       </td>
     </tr>
     <form>
@@ -18,9 +18,10 @@
     data(){
       return{
         fileTobeUploaded: '',
-        projectFolder: 'templateproject',
+        projectFolder: '/templateproject/',
         allFiles: '',
-        fileArray: []
+        fileArray: [],
+        fileToBeDownloaded: ''
       }
     },
     methods: {
@@ -29,7 +30,7 @@
         console.log(e.target.files[0]);
 
         const dropbox_api_arg = JSON.stringify({
-          path: '/' + this.projectFolder + '/' +  e.target.files[0].name,
+          path: this.projectFolder +  e.target.files[0].name,
           mode: 'add',
           autorename: true,
           mute: false
@@ -52,7 +53,7 @@
 
       },
       getFiles: function(){
-        axios.get('https://api.dropboxapi.com/1/metadata/auto/?' + 'path=/templateproject/', {
+        axios.get('https://api.dropboxapi.com/1/metadata/auto/?' + 'path=' + this.projectFolder, {
             headers: {
               'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk'
             }
@@ -60,45 +61,37 @@
         ).then( response => {
           this.fileArray = [];
           for(let i = 0; i < response.data.contents.length; i++){
-            this.fileArray.push(response.data.contents[i].path);
+            let filePath = response.data.contents[i].path;
+            let fileName = filePath.split("/");
+            this.fileArray.push(fileName[2]);
           }
 
-          console.log(response.data.contents[0].path);
-          if (response.data.kind === 'file') {
-            let blob = response.data.getAsFile();
-            let reader = new FileReader();
-            reader.onload = function(event){
-              console.log(event.target.result)
-            }; // data url!
-            reader.readAsDataURL(blob);
-
-          }
+          console.log(response.data);
 
         });
       }
       ,
-      downloadFile: function(evt, file) {
-        evt.preventDefault();
-        let xhr = new XMLHttpRequest();
-        xhr.responseType = 'arraybuffer';
+      downloadFile: function(file) {
+        
 
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
-            FileSaver.saveAs(blob, file.name, true);
-          }
-          else {
-            let errorMessage = xhr.response || 'Unable to download file';
-            // Upload failed. Do something here with the error.
-          }
-        };
 
-        xhr.open('POST', 'https://content.dropboxapi.com/2/files/download');
-        xhr.setRequestHeader('Authorization', 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk');
-        xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-          path: this.projectFolder + '/' + file
-        }));
-        xhr.send();
+        axios.get('https://content.dropboxapi.com/2/files/download', {
+            headers: {
+              'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
+              'Dropbox-API-Arg': JSON.stringify({
+                path: this.projectFolder + file
+              })
+
+            }
+          }
+        ).then( response => {
+        //TODO: Save response to users computer!
+          console.log(response);
+
+        });
+
+
+
       }
 
 
