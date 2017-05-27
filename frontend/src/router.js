@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Chat from '@/components/Chat'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
@@ -14,13 +13,11 @@ import user from './user/userAuth'
 Vue.use(Router);
 
 const router = new Router({
-/*  mode: 'history',*/ //Uncomment to remove the hashtag, transition is not smooth though...
   routes: [
     {
-      path: '/chat',
-      name: 'Chat',
-      component: Chat,
-      meta: {requiresAuth: true}
+      path: '/',
+      name: 'None',
+      redirect: { name: 'Login' }
     },
     {
       path: '/dashboard',
@@ -31,12 +28,14 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {requiresAuth: false}
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: {requiresAuth: false}
     },
     {
       path: '/profile',
@@ -61,16 +60,28 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.requiresAuth) {
-    if(user.checkAuth()) {
+  if (to.meta.requiresAuth) {
+    if (user.checkAuth()) {
       next();
     }
     else {
       next('/login');
     }
+  }else if (!to.meta.requiresAuth) {
+    if (!user.checkAuth()) {
+      next();
+    }
+    else {
+      next('/dashboard');
+    }
   } else {
     next()
   }
+});
+
+router.afterEach((to, from) => {
+
+
 });
 
 export default router;

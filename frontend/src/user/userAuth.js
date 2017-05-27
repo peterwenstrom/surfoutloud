@@ -40,7 +40,7 @@ export default {
   },
 
   checkAuth () {
-    return store.getters.authorized;
+    return store.getters.authorized
   },
 
   checkServerAuth (callback) {
@@ -53,7 +53,7 @@ export default {
         {headers: {'Authorization': 'Bearer ' + user.access_token}}).then( response => {
         localStorage.setItem('authUser', JSON.stringify(response.data));
         store.dispatch('setUserObject', response.data);
-        callback('dashboard');
+        callback(window.location.hash.substr(1));
       }).catch( () => {
         store.dispatch('clearUserObject');
         localStorage.removeItem('authUser');
