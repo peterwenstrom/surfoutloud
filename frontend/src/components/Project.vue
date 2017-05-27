@@ -1,18 +1,20 @@
 <template>
   <div class="hello row">
     <div class="col-md-4">
-
-
       <h2>Members</h2>
-
-      <div v-for="(item, index) in memberList">
-
-        {{ item }}
-          <span v-if="activeUserList[index] === 'true'" class='circle green'></span>
-        <span v-if="activeUserList[index] === 'false'" class='circle'></span>
-      </div>
-
+      <table class="table table-striped">
+        <tbody>
+        <tr v-for="(item, index) in memberList">
+          <td>
+            <p>{{ item }}</p>
+            <icon v-if="activeUserList[index] == 'true'" class="green" name="user"></icon>
+            <icon v-else name="user"></icon>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+
     <div class="col-md-4">
       <h2>Chat</h2>
       <chat v-bind:projectId="projectId" @active="onActiveUserUpdate"></chat>
@@ -28,7 +30,11 @@
 <script>
   import Vue from 'vue'
   import axios from 'axios'
-  import chat from './Chat'
+  import Chat from './Chat'
+
+  import Icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/user'
+
   const GET_MEMBERS_URL = API_URL + '/getmembers';
 
   export default {
@@ -54,7 +60,7 @@
           if (value.indexOf(this.memberList[i]) > -1 ){
             this.activeUserList.splice(i, 1, 'true');
 
-          }else{
+          } else {
             this.activeUserList.splice(i, 1, 'false');
           }
         }
@@ -62,7 +68,8 @@
       }
     },
     components:{
-      'chat':chat
+      Chat,
+      Icon
     },
     created() {
       this.projectId = this.$route.query.attr;
@@ -107,14 +114,12 @@
   a {
     color: #42b983;
   }
-  .circle:before {
-    content: ' \25CF';
-    font-size: 20px;
-    color: black;
+  p {
+    margin-right: 5px;
+    display: inline-block;
   }
-
-  .green:before {
-    color: lawngreen;
+  .green {
+    color: #41B883;
   }
 
 </style>
