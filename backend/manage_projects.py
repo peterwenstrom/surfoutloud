@@ -90,7 +90,7 @@ def add_project():
         error = add_members(members_ids, project_id)
         if error:
             return jsonify(error), 400
-        response = {'username': admin, 'project_id': project_id}
+        response = {'admin': admin, 'id': project_id, 'description': project_description, 'name': project_name}
         return jsonify(response), 200
     except:
         mysql.connection.rollback()
