@@ -22,48 +22,26 @@
         </b-collapse>
       </div>
     </b-navbar>
-    <div v-if="loading" class="container spinner-div">
-      <div class="row">
-        <div class="col-lg-4"></div>
-        <div class="spinner-container col-lg-4">
-          <ring-loader class="loading" :loading="loading" :color="color" :size="size"></ring-loader>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex'
-  import RingLoader from 'vue-spinner/src/RingLoader.vue'
   import userAuth from '../user/userAuth'
 
   export default {
     data() {
       return {
-        loading: false,
-        color: '#41B883',
-        size: '120px',
-        margin: '2px',
-        radius: '2px'
       }
     },methods: {
       logout() {
         userAuth.logout();
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.$router.push('login');
-        }, 1200);
       }
     },
     computed: {
       ...mapGetters({
         authUser: 'authUser'
       })
-    },
-    components: {
-      RingLoader
     }
   }
 
@@ -80,20 +58,6 @@
   }
   .ml-auto > li {
     margin: 0px 15px 0px 15px;
-  }
-  .loading {
-    text-align:center;
-    display: inline-block;
-  }
-  .spinner-div {
-    background-color: #fff;
-    border-radius: 25px;
-    margin-top: 60px;
-    margin-bottom: 60px;
-  }
-  .spinner-container {
-    padding-top: 30px;
-    padding-bottom: 30px;
   }
   .menu-name {
     font-weight: bold;

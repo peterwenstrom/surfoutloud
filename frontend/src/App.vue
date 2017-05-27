@@ -13,11 +13,6 @@
   import userAuth from './user/userAuth'
 
   export default {
-    created () {
-      userAuth.checkServerAuth( redirect => {
-          this.$router.push(redirect)
-      });
-    },
     components: {
         TopMenu
     }
