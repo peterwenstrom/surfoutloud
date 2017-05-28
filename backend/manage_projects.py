@@ -114,7 +114,8 @@ def add_project():
             return jsonify(response), 400
 
         members = list(set(members))
-        members.remove(admin)
+        if admin in members:
+            members.remove(admin)
         members_ids = validate_members(members)
         error = add_members(members_ids, project_id)
         if error:
