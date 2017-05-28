@@ -81,12 +81,22 @@ def add_project():
         cursor.execute('''INSERT INTO Project VALUES (0, %s, %s, %s)''',
                        (admin, project_name, project_description))
         cursor.execute('''SELECT max(id) FROM Project''')
-        row = cursor.fetchall()
-        project_id = row[0]
+        project_id = cursor.fetchall()[0]
+
         mysql.connection.commit()
 
-        members.append(admin)
+        cursor.execute('''SELECT id FROM User where username = %s''', [admin])
+        admin_id = cursor.fetchall()[0]
+        try:
+            cursor.execute('''INSERT INTO Member VALUES (0, %s, %s, 1)''', (project_id, admin_id))
+            mysql.connection.commit()
+        except:
+            mysql.connection.rollback()
+            response = {'message': 'Something went wrong, please try again.'}
+            return jsonify(response), 400
+
         members = list(set(members))
+        members.remove(admin)
         members_ids = validate_members(members)
         error = add_members(members_ids, project_id)
         if error:
