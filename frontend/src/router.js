@@ -44,7 +44,7 @@ const router = new Router({
       meta: {requiresAuth: true}
     },
     {
-      path: '/project',
+      path: '/project/:project_id',
       name: 'Project',
       component: Project,
       meta: {requiresAuth: true}
