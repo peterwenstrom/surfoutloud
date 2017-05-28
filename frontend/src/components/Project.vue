@@ -82,7 +82,7 @@
     },
     created () {
       if (!this.project_selected) {
-
+        const project_id = this.$route.params.project_id
       }
     },
     mounted (){

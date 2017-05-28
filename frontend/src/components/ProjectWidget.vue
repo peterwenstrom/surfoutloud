@@ -21,11 +21,11 @@
     methods: {
       selectProject() {
         this.$store.dispatch('setProjectObject', this.project);
-        this.$router.push('project')
+        this.$router.push('project/' + this.project.id)
       }
     },
     mounted() {
-        this.show = true;
+      this.show = true;
     }
   }
 </script>

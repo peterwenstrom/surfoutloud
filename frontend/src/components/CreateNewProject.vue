@@ -173,7 +173,7 @@
         axios.post(ADD_PROJECT_URL, this.project_details, userAuth.addAuthHeader()).then( response => {
           this.loading = false;
           this.$store.dispatch('setProjectObject', response.data);
-          this.$router.push('project')
+          this.$router.push('project/' + response.data.id)
         }).catch( error => {
           this.loading = false;
           this.error = error.response.data.message
