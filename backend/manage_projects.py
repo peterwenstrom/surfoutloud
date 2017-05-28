@@ -53,17 +53,35 @@ def get_projects(accepted):
     rows = cursor.fetchall()
     projects = []
     for row in rows:
-        project = {}
         cursor.execute('''SELECT * FROM Project where id = %s''', [row[0]])
         project_row = cursor.fetchall()[0]
         # create neat project object instead of crazy db row
-        project['id'] = project_row[0]
-        project['admin'] = project_row[1]
-        project['name'] = project_row[2]
-        project['description'] = project_row[3]
+        project = {
+            'id': project_row[0],
+            'admin': project_row[1],
+            'name': project_row[2],
+            'description': project_row[3]
+        }
         projects.append(project)
 
     return jsonify({'projects': projects}), 200
+
+
+@app.route('/getprojectdetails/<project_id>', methods=['GET'])
+@jwt_required
+def get_project_details(project_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT * FROM Project where id = %s''', [project_id])
+    project_row = cursor.fetchall()[0]
+    # create neat project object
+    project = {
+        'id': project_row[0],
+        'admin': project_row[1],
+        'name': project_row[2],
+        'description': project_row[3]
+    }
+
+    return jsonify({'project': project}), 200
 
 
 @app.route('/addproject', methods=['POST'])
