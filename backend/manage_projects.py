@@ -19,7 +19,7 @@ def add_members(members_ids, project_id):
 
     for member_id in members_ids:
         try:
-            cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, member_id))
+            cursor.execute('''INSERT INTO Member VALUES (0, %s, %s, 0)''', (project_id, member_id))
             mysql.connection.commit()
         except:
             mysql.connection.rollback()
@@ -29,10 +29,11 @@ def add_members(members_ids, project_id):
 
 
 @app.route('/getmembers', methods=['POST'])
+@jwt_required
 def get_members():
     project_id = request.json.get('project_id', None)
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT memberid FROM Member where projectid = %s''', [project_id])
+    cursor.execute('''SELECT memberid FROM Member where projectid = %s AND accepted = 1''', [project_id])
     rows = cursor.fetchall()
     members = []
     for row in rows:
@@ -42,13 +43,14 @@ def get_members():
     return jsonify({'members': members}), 200
 
 
-@app.route('/getprojects', methods=['GET'])
+@app.route('/getprojects/<accepted>', methods=['GET'])
 @jwt_required
-def get_projects():
+def get_projects(accepted):
     username = get_jwt_identity()
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s)''',
-                   [username])
+    cursor.execute(
+        '''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s) AND accepted = %s''',
+        (username, accepted))
     rows = cursor.fetchall()
     projects = []
     for row in rows:
@@ -65,8 +67,8 @@ def get_projects():
     return jsonify({'projects': projects}), 200
 
 
-@jwt_required
 @app.route('/addproject', methods=['POST'])
+@jwt_required
 def add_project():
     admin = request.json.get('admin', None)
     members = request.json.get('new_members', None)
