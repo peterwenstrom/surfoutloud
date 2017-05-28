@@ -14,6 +14,7 @@
 
 <script>
   import axios from 'axios'
+  import FileSaver from 'file-saver'
   export default {
     data(){
       return{
@@ -21,7 +22,8 @@
         projectFolder: '/templateproject/',
         allFiles: '',
         fileArray: [],
-        fileToBeDownloaded: ''
+        fileToBeDownloaded: '',
+        fileName: ''
       }
     },
     methods: {
@@ -39,7 +41,7 @@
         axios.post('https://content.dropboxapi.com/2/files/upload', e.target.files[0] , {
             headers: {
               'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
-              'Content-Type': 'application/octet-stream',
+              'Content-Type': 'application/octet-stream', //application/octet-stream, which is used for arbitrary binary data.
               'Dropbox-API-Arg': dropbox_api_arg
             }
           }
@@ -62,37 +64,79 @@
           this.fileArray = [];
           for(let i = 0; i < response.data.contents.length; i++){
             let filePath = response.data.contents[i].path;
-            let fileName = filePath.split("/");
-            this.fileArray.push(fileName[2]);
+            this.fileName = filePath.split("/");
+            this.fileArray.push(this.fileName[2]);
           }
 
           console.log(response.data);
 
         });
-      }
-      ,
-      downloadFile: function(file) {
-        
+      },
+
+//
+      /// funkar inte...
+
+/*      downloadFile: function(fileName) {
+
 
 
         axios.get('https://content.dropboxapi.com/2/files/download', {
             headers: {
               'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
               'Dropbox-API-Arg': JSON.stringify({
-                path: this.projectFolder + file
+                path: this.projectFolder + fileName
               })
 
             }
           }
         ).then( response => {
-        //TODO: Save response to users computer!
-          console.log(response);
+          //TODO: Save response to users computer!
+
+
+          let fileTag = fileName.split(".");
+          console.log("this.filename");
+          console.log(fileName);
+          console.log("response");
+          console.log(Object.values(response.headers)[1]);
+
+
+
+
+          let blob = new Blob([Object.values(response.headers)[1]], {type: "application/octet-stream"})
+          console.log("blob: ");
+          console.log(blob);
+
+          FileSaver.saveAs(blob, fileName, true);
+
 
         });
 
 
 
+      },*/
+      downloadFile: function(fileName) {
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'arraybuffer';
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
+            FileSaver.saveAs(blob, fileName, true);
+          }
+          else {
+            let errorMessage = xhr.response || 'Unable to download file';
+          }
+        };
+
+        xhr.open('POST', 'https://content.dropboxapi.com/2/files/download');
+        xhr.setRequestHeader('Authorization', 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk');
+        xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+          path: this.projectFolder + fileName
+        }));
+        xhr.send();
       }
+
+
 
 
     },
