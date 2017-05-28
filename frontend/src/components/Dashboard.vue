@@ -36,7 +36,7 @@
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/plus-circle'
 
-  const GET_PROJECT_URL = API_URL + '/getprojects';
+  const GET_PROJECT_URL = API_URL + '/getprojects/1';
 
   export default {
     name: 'Dashboard',

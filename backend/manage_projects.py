@@ -42,13 +42,14 @@ def get_members():
     return jsonify({'members': members}), 200
 
 
-@app.route('/getprojects', methods=['GET'])
+@app.route('/getprojects/<accepted>', methods=['GET'])
 @jwt_required
-def get_projects():
+def get_projects(accepted):
     username = get_jwt_identity()
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s AND accepted = 1)''',
-                   [username])
+    cursor.execute(
+        '''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s) AND accepted = %s''',
+        (username, accepted))
     rows = cursor.fetchall()
     projects = []
     for row in rows:
