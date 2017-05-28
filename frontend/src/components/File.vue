@@ -3,7 +3,7 @@
     <h4>All files in project</h4>
     <tr v-for="item in fileArray">
       <td>
-        <a v-on:click="downloadFile(item)">{{ item }}</a>
+        <img v-bind:src="thumbNail" class="thumbnail"><a v-on:click="downloadFile(item)">{{ item }}</a>
       </td>
     </tr>
     <form>
@@ -23,7 +23,8 @@
         allFiles: '',
         fileArray: [],
         fileToBeDownloaded: '',
-        fileName: ''
+        fileName: '',
+        thumbNail: ''
       }
     },
     methods: {
@@ -76,44 +77,44 @@
 //
       /// funkar inte...
 
-/*      downloadFile: function(fileName) {
+      /*      downloadFile: function(fileName) {
 
 
 
-        axios.get('https://content.dropboxapi.com/2/files/download', {
-            headers: {
-              'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
-              'Dropbox-API-Arg': JSON.stringify({
-                path: this.projectFolder + fileName
-              })
+       axios.get('https://content.dropboxapi.com/2/files/download', {
+       headers: {
+       'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
+       'Dropbox-API-Arg': JSON.stringify({
+       path: this.projectFolder + fileName
+       })
 
-            }
-          }
-        ).then( response => {
-          //TODO: Save response to users computer!
-
-
-          let fileTag = fileName.split(".");
-          console.log("this.filename");
-          console.log(fileName);
-          console.log("response");
-          console.log(Object.values(response.headers)[1]);
+       }
+       }
+       ).then( response => {
+       //TODO: Save response to users computer!
 
 
-
-
-          let blob = new Blob([Object.values(response.headers)[1]], {type: "application/octet-stream"})
-          console.log("blob: ");
-          console.log(blob);
-
-          FileSaver.saveAs(blob, fileName, true);
-
-
-        });
+       let fileTag = fileName.split(".");
+       console.log("this.filename");
+       console.log(fileName);
+       console.log("response");
+       console.log(Object.values(response.headers)[1]);
 
 
 
-      },*/
+
+       let blob = new Blob([Object.values(response.headers)[1]], {type: "application/octet-stream"})
+       console.log("blob: ");
+       console.log(blob);
+
+       FileSaver.saveAs(blob, fileName, true);
+
+
+       });
+
+
+
+       },*/
       downloadFile: function(fileName) {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'arraybuffer';
@@ -121,6 +122,8 @@
         xhr.onload = function() {
           if (xhr.status === 200) {
             let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
+            console.log("xhrresponse");
+            console.log(xhr.response);
             FileSaver.saveAs(blob, fileName, true);
           }
           else {
@@ -134,6 +137,39 @@
           path: this.projectFolder + fileName
         }));
         xhr.send();
+      },
+
+      getThumbNails: function() {
+
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+
+        xhr.onload = function(e) {
+          if (xhr.status === 200) {
+            let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
+            console.log("xhrresponse");
+            console.log(xhr.response);
+
+            let urlCreator = window.URL || window.webkitURL;
+
+            this.thumbNail = urlCreator.createObjectURL(this.response);
+            console.log("thumbNail");
+            console.log(this.thumbNail);
+            //FileSaver.saveAs(blob, fileName, true);
+          }
+          else {
+            let errorMessage = xhr.response || 'Unable to download file';
+          }
+        };
+
+        xhr.open('POST', 'https://content.dropboxapi.com/2/files/get_thumbnail');
+        xhr.setRequestHeader('Authorization', 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk');
+        xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+          path: 'rev:9381e76314d',
+          format: "jpeg",
+          size: 'w64h64'
+        }));
+        xhr.send();
       }
 
 
@@ -142,6 +178,7 @@
     },
     created(){
       this.getFiles();
+      this.getThumbNails();
     }
   }
 </script>
@@ -164,5 +201,12 @@
   .main-content div {
     padding-top: 30px;
     padding-bottom: 30px;
+  }
+
+  .thumbnail {
+    width: 64px;
+    height: 64px;
+    float: left;
+    margin: 5px;
   }
 </style>
