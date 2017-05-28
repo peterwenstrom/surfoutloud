@@ -125,3 +125,36 @@ def add_project():
         mysql.connection.rollback()
         response = {'message': 'Something went wrong, please try again.'}
         return jsonify(response), 400
+
+
+@app.route('/answerprojectinvite', methods=['POST'])
+@jwt_required
+def answer_project_invite():
+    username = get_jwt_identity()
+    answer = request.json.get('answer', None)
+    project_id = request.json.get('project_id', None)
+
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT id FROM User where username = %s''', [username])
+    user_id = cursor.fetchall()[0]
+
+    if answer == 'accept':
+        try:
+            cursor.execute('''UPDATE Member SET accepted = 1 WHERE memberid = %s AND projectid = %s''',
+                           (user_id, project_id))
+            mysql.connection.commit()
+            return jsonify({'message': 'Invite was accepted'}), 200
+        except:
+            mysql.connection.rollback()
+            return jsonify({'message': 'Something went wrong, please try again.'}), 400
+
+    else:
+        try:
+            cursor.execute('''DELETE FROM Member WHERE memberid = %s AND projectid = %s''',
+                           (user_id, project_id))
+            mysql.connection.commit()
+            return jsonify({'message': 'Invite was declined'}), 200
+        except:
+            mysql.connection.rollback()
+            return jsonify({'message': 'Something went wrong, please try again.'}), 400
+
