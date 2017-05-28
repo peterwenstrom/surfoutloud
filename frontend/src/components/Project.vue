@@ -21,7 +21,7 @@
     </div>
     <div class="col-md-4">
       <h2>Files</h2>
-      <file></file>
+      <file v-bind:projectId="project.id"></file>
     </div>
   </div>
 </template>

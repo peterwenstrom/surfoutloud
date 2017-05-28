@@ -1,13 +1,28 @@
 <template>
   <div>
     <h4>All files in project</h4>
-    <tr v-for="item in fileArray">
-      <td>
-        <img v-bind:src="thumbNail" class="thumbnail"><a v-on:click="downloadFile(item)">{{ item }}</a>
-      </td>
-    </tr>
+
+    {{ emptyList }}
+
+    <table class="table table-striped">
+      <tbody>
+      <tr v-for="(item,index) in fileArray">
+        <td>
+          <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="thumbnail"></icon></div>
+          <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="thumbnail"></icon></div>
+          <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="thumbnail"></icon></div>
+          <p>{{ item }}</p>
+
+          <div v-on:click="downloadFile(item)"><icon  name="cloud-download" class="thumbnail point hover"></icon></div>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
     <form>
-      <input type="file" name="file" id="file" v-on:change="postFile">
+
+      <input type="file" name="file" id="file" class="point" v-on:change="postFile">
     </form>
   </div>
 </template>
@@ -15,16 +30,24 @@
 <script>
   import axios from 'axios'
   import FileSaver from 'file-saver'
+  import Icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/file-word-o'
+  import 'vue-awesome/icons/picture-o'
+  import 'vue-awesome/icons/sticky-note-o'
+  import 'vue-awesome/icons/cloud-download'
   export default {
+    props: ['projectId'],
     data(){
       return{
         fileTobeUploaded: '',
-        projectFolder: '/templateproject/',
+        projectFolder: '/' + this.projectId + '/',
         allFiles: '',
         fileArray: [],
+        fileTypeArray: [],
         fileToBeDownloaded: '',
         fileName: '',
-        thumbNail: ''
+        thumbNail: '',
+        emptyList: ''
       }
     },
     methods: {
@@ -49,6 +72,8 @@
         ).then( response => {
           console.log(response);
 
+          this.getFiles();
+
         }).catch( error => {
           console.log(error);
           this.error = error
@@ -67,10 +92,28 @@
             let filePath = response.data.contents[i].path;
             this.fileName = filePath.split("/");
             this.fileArray.push(this.fileName[2]);
+
+            let fileEnd = this.fileName[2].split(".");
+            console.log(fileEnd[1]);
+
+            if (fileEnd[1] === 'docx'){
+              console.log(fileEnd[1]);
+              this.fileTypeArray.push('docx');
+            }else if (fileEnd[1] === 'jpeg' || 'png' || 'jpg' ){
+              console.log(fileEnd[1]);
+              this.fileTypeArray.push('img');
+            } else {
+              this.fileTypeArray.push('default');
+            }
+
+
           }
 
           console.log(response.data);
 
+        }).catch( error => {
+            this.error = error;
+          this.emptyList = 'The file list is empty, why not add a file? :)'
         });
       },
 
@@ -139,46 +182,13 @@
         xhr.send();
       },
 
-      getThumbNails: function() {
-
-        let xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-
-        xhr.onload = function(e) {
-          if (xhr.status === 200) {
-            let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
-            console.log("xhrresponse");
-            console.log(xhr.response);
-
-            let urlCreator = window.URL || window.webkitURL;
-
-            this.thumbNail = urlCreator.createObjectURL(this.response);
-            console.log("thumbNail");
-            console.log(this.thumbNail);
-            //FileSaver.saveAs(blob, fileName, true);
-          }
-          else {
-            let errorMessage = xhr.response || 'Unable to download file';
-          }
-        };
-
-        xhr.open('POST', 'https://content.dropboxapi.com/2/files/get_thumbnail');
-        xhr.setRequestHeader('Authorization', 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk');
-        xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-          path: 'rev:9381e76314d',
-          format: "jpeg",
-          size: 'w64h64'
-        }));
-        xhr.send();
-      }
-
-
-
 
     },
     created(){
       this.getFiles();
-      this.getThumbNails();
+    },
+    components: {
+      Icon,
     }
   }
 </script>
@@ -204,9 +214,17 @@
   }
 
   .thumbnail {
-    width: 64px;
-    height: 64px;
+    width: 20px;
+    height: 20px;
     float: left;
     margin: 5px;
+  }
+
+  .point {
+    cursor: pointer;
+  }
+
+  .hover:hover {
+    color: darkorange;
   }
 </style>
