@@ -8,10 +8,10 @@
         </div>
         <b-collapse is-nav id="nav_collapse">
           <b-nav is-nav-bar class="ml-auto">
-            <router-link tag="b-nav-item" v-if="!authUser.access_token" to="/login">Log in</router-link>
-            <router-link tag="b-nav-item" v-if="!authUser.access_token" to="/register">Register</router-link>
-            <router-link tag="b-nav-item" v-if="authUser.access_token" to="/dashboard">Dashboard</router-link>
-            <b-nav-item-dropdown v-if="authUser.access_token" right-alignment>
+            <router-link tag="b-nav-item" v-if="!authorized" to="/login">Log in</router-link>
+            <router-link tag="b-nav-item" v-if="!authorized" to="/register">Register</router-link>
+            <router-link tag="b-nav-item" v-if="authorized" to="/dashboard">Dashboard</router-link>
+            <b-nav-item-dropdown v-if="authorized" right-alignment>
               <template slot="text">
                 <span class="menu-name">{{authUser.username}}</span>
               </template>
@@ -40,7 +40,8 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        authUser: 'authUser',
+        authorized: 'authorized'
       })
     }
   }
