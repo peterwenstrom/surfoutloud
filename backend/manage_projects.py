@@ -19,7 +19,7 @@ def add_members(members_ids, project_id):
 
     for member_id in members_ids:
         try:
-            cursor.execute('''INSERT INTO Member VALUES (0, %s, %s)''', (project_id, member_id))
+            cursor.execute('''INSERT INTO Member VALUES (0, %s, %s, 0)''', (project_id, member_id))
             mysql.connection.commit()
         except:
             mysql.connection.rollback()
@@ -32,7 +32,7 @@ def add_members(members_ids, project_id):
 def get_members():
     project_id = request.json.get('project_id', None)
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT memberid FROM Member where projectid = %s''', [project_id])
+    cursor.execute('''SELECT memberid FROM Member where projectid = %s AND accepted = 1''', [project_id])
     rows = cursor.fetchall()
     members = []
     for row in rows:
@@ -47,7 +47,7 @@ def get_members():
 def get_projects():
     username = get_jwt_identity()
     cursor = mysql.connection.cursor()
-    cursor.execute('''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s)''',
+    cursor.execute('''SELECT projectid FROM Member where memberid = (SELECT id FROM User where username = %s AND accepted = 1)''',
                    [username])
     rows = cursor.fetchall()
     projects = []
