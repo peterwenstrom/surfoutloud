@@ -91,7 +91,7 @@
         </div>
       </div>
     </div>
-    <project-invites></project-invites>
+    <project-invites v-bind:username="this.authUser.username"></project-invites>
   </div>
 </template>
 
