@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-md-12">
       <h2>Profile page</h2>
-      <p>Below you can find and edit your profile details</p>
+      <p>Below you can find and edit your profile details as well as
+        accept invitations you've received to existing projects</p>
       <hr class="small">
     </div>
     <div class="col-md-5">
@@ -90,6 +91,7 @@
         </div>
       </div>
     </div>
+    <project-invites></project-invites>
   </div>
 </template>
 
@@ -97,6 +99,8 @@
   import {mapGetters} from 'vuex'
   import axios from 'axios'
   import userAuth from '../user/userAuth'
+
+  import ProjectInvites from './ProjectInvites.vue'
 
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   import Icon from 'vue-awesome/components/Icon'
@@ -189,7 +193,8 @@
     },
     components: {
       Icon,
-      PulseLoader
+      PulseLoader,
+      ProjectInvites
     }
   }
 
