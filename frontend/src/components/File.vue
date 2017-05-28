@@ -1,20 +1,30 @@
 <template>
   <div>
-    <h4>All files in project</h4>
+    <h5>All files in project</h5>
 
     {{ emptyList }}
 
     <table class="table table-striped">
+
+      <thead>
+      <tr>
+        <th>File type</th>
+        <th>File name</th>
+        <th>Download</th>
+      </tr>
+      </thead>
       <tbody>
       <tr v-for="(item,index) in fileArray">
         <td>
           <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="thumbnail"></icon></div>
           <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="thumbnail"></icon></div>
           <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="thumbnail"></icon></div>
+        </td>
+        <td>
           <p>{{ item }}</p>
-
+        </td>
+        <td>
           <div v-on:click="downloadFile(item)"><icon  name="cloud-download" class="thumbnail point hover"></icon></div>
-
         </td>
       </tr>
       </tbody>
@@ -194,29 +204,13 @@
 </script>
 
 <style scoped>
-
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  th {
     text-align: center;
-    color: #2c3e50;
-  }
-  .main-content {
-    background-color: #fff;
-    border-radius: 25px;
-    margin-top: 60px;
-    margin-bottom: 60px;
-  }
-  .main-content div {
-    padding-top: 30px;
-    padding-bottom: 30px;
   }
 
   .thumbnail {
     width: 20px;
     height: 20px;
-    float: left;
     margin: 5px;
   }
 

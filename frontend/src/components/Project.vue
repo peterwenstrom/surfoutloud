@@ -1,12 +1,20 @@
 <template>
   <div class="hello row">
-    <div class="col-md-2">
-      <h2>Members</h2>
+    <div class="col-md-12">
+      <h2>Project name: <i>{{project.name}}</i></h2>
+      <p><strong>Project description: </strong><i>{{project.description}}</i></p>
+      <hr class="small">
+    </div>
+    <div class="col-md-2 border-right">
+      <h3>Members</h3>
+      <hr class="small">
       <table class="table table-striped">
         <tbody>
         <tr v-for="(item, index) in memberList">
           <td>
             <p>{{ item }}</p>
+          </td>
+          <td>
             <icon v-if="activeUserList[index] === 'true'" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
           </td>
@@ -15,12 +23,13 @@
       </table>
     </div>
 
-    <div class="col-md-6">
-      <h2>Chat</h2>
+    <div class="col-md-6 border-right">
+      <h3>Chat</h3>
+
       <chat v-bind:projectId="project.id" @active="onActiveUserUpdate"></chat>
     </div>
     <div class="col-md-4">
-      <h2>Files</h2>
+      <h3>Files</h3>
       <file v-bind:projectId="project.id"></file>
     </div>
   </div>
@@ -128,12 +137,14 @@
   a {
     color: #42b983;
   }
-  p {
-    margin-right: 5px;
-    display: inline-block;
+  td p {
+    text-align: left;
   }
   .green {
     color: #41B883;
+  }
+  .border-right {
+    border-right: 1px solid #eceeef;
   }
 
 </style>
