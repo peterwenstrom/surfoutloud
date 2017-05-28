@@ -30,9 +30,10 @@
   import Vue from 'vue'
   import {mapGetters} from 'vuex'
   import axios from 'axios'
+  import userAuth from '../user/userAuth'
+
   import Chat from './Chat'
   import File from './File'
-
 
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/user'
@@ -84,7 +85,7 @@
     },
     mounted(){
 
-      axios.post(GET_MEMBERS_URL, {project_id: this.project.id}).then( response => {
+      axios.post(GET_MEMBERS_URL, {project_id: this.project.id}, userAuth.addAuthHeader()).then( response => {
         let i = 0;
 
         for (i; i<response.data.members.length; i++){

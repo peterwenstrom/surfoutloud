@@ -29,6 +29,7 @@ def add_members(members_ids, project_id):
 
 
 @app.route('/getmembers', methods=['POST'])
+@jwt_required
 def get_members():
     project_id = request.json.get('project_id', None)
     cursor = mysql.connection.cursor()
@@ -66,8 +67,8 @@ def get_projects(accepted):
     return jsonify({'projects': projects}), 200
 
 
-@jwt_required
 @app.route('/addproject', methods=['POST'])
+@jwt_required
 def add_project():
     admin = request.json.get('admin', None)
     members = request.json.get('new_members', None)
