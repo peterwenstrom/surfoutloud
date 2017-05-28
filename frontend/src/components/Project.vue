@@ -38,7 +38,7 @@
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/user'
 
-  const GET_MEMBERS_URL = API_URL + '/getmembers';
+  const GET_MEMBERS_URL = API_URL + '/getmembers/';
 
   export default {
     name: 'project',
@@ -50,8 +50,7 @@
         activeUserList: [
 
         ],
-        isActive: false,
-        projectId: ""
+        isActive: false
       }
     },
     methods: {
@@ -77,15 +76,18 @@
     },
     computed: {
       ...mapGetters({
-        project: 'project'
+        project: 'project',
+        project_selected: 'project_selected'
       })
     },
-    created() {
-      this.projectId = this.project.id
-    },
-    mounted(){
+    created () {
+      if (!this.project_selected) {
 
-      axios.post(GET_MEMBERS_URL, {project_id: this.project.id}, userAuth.addAuthHeader()).then( response => {
+      }
+    },
+    mounted (){
+
+      axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
         let i = 0;
 
         for (i; i<response.data.members.length; i++){

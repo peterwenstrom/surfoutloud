@@ -28,10 +28,9 @@ def add_members(members_ids, project_id):
     return False
 
 
-@app.route('/getmembers', methods=['POST'])
+@app.route('/getmembers/<project_id>', methods=['GET'])
 @jwt_required
-def get_members():
-    project_id = request.json.get('project_id', None)
+def get_members(project_id):
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT memberid FROM Member where projectid = %s AND accepted = 1''', [project_id])
     rows = cursor.fetchall()
