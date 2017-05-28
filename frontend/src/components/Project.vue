@@ -38,7 +38,8 @@
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/user'
 
-  const GET_MEMBERS_URL = API_URL + '/getmembers';
+  const GET_MEMBERS_URL = API_URL + '/getmembers/';
+  const GET_PROJECT_DETAILS_URL = API_URL + '/getprojectdetails/';
 
   export default {
     name: 'project',
@@ -50,8 +51,7 @@
         activeUserList: [
 
         ],
-        isActive: false,
-        projectId: ""
+        isActive: false
       }
     },
     methods: {
@@ -68,6 +68,16 @@
           }
         }
 
+      },
+      getMembers() {
+        axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
+          let i = 0;
+
+          for (i; i<response.data.members.length; i++){
+            //the drawback here is that you cannot have usernames with space in it.. maybe we do not want it anyway
+            Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
+          }
+        });
       }
     },
     components:{
@@ -77,22 +87,22 @@
     },
     computed: {
       ...mapGetters({
-        project: 'project'
+        project: 'project',
+        project_selected: 'project_selected'
       })
     },
-    created() {
-      this.projectId = this.project.id
+    created () {
+      if (!this.project_selected) {
+        axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userAuth.addAuthHeader()).then( response => {
+          this.$store.dispatch('setProjectObject', response.data.project);
+          this.getMembers();
+        })
+      }
     },
-    mounted(){
-
-      axios.post(GET_MEMBERS_URL, {project_id: this.project.id}, userAuth.addAuthHeader()).then( response => {
-        let i = 0;
-
-        for (i; i<response.data.members.length; i++){
-          //the drawback here is that you cannot have usernames with space in it.. maybe we do not want it anyway
-          Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
-        }
-      });
+    mounted (){
+      if (this.project_selected) {
+        this.getMembers()
+      }
     },
     beforeDestroy() {
       this.$store.dispatch('clearProjectObject')

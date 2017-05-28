@@ -28,10 +28,9 @@ def add_members(members_ids, project_id):
     return False
 
 
-@app.route('/getmembers', methods=['POST'])
+@app.route('/getmembers/<project_id>', methods=['GET'])
 @jwt_required
-def get_members():
-    project_id = request.json.get('project_id', None)
+def get_members(project_id):
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT memberid FROM Member where projectid = %s AND accepted = 1''', [project_id])
     rows = cursor.fetchall()
@@ -54,17 +53,35 @@ def get_projects(accepted):
     rows = cursor.fetchall()
     projects = []
     for row in rows:
-        project = {}
         cursor.execute('''SELECT * FROM Project where id = %s''', [row[0]])
         project_row = cursor.fetchall()[0]
         # create neat project object instead of crazy db row
-        project['id'] = project_row[0]
-        project['admin'] = project_row[1]
-        project['name'] = project_row[2]
-        project['description'] = project_row[3]
+        project = {
+            'id': project_row[0],
+            'admin': project_row[1],
+            'name': project_row[2],
+            'description': project_row[3]
+        }
         projects.append(project)
 
     return jsonify({'projects': projects}), 200
+
+
+@app.route('/getprojectdetails/<project_id>', methods=['GET'])
+@jwt_required
+def get_project_details(project_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute('''SELECT * FROM Project where id = %s''', [project_id])
+    project_row = cursor.fetchall()[0]
+    # create neat project object
+    project = {
+        'id': project_row[0],
+        'admin': project_row[1],
+        'name': project_row[2],
+        'description': project_row[3]
+    }
+
+    return jsonify({'project': project}), 200
 
 
 @app.route('/addproject', methods=['POST'])
@@ -82,12 +99,22 @@ def add_project():
         cursor.execute('''INSERT INTO Project VALUES (0, %s, %s, %s)''',
                        (admin, project_name, project_description))
         cursor.execute('''SELECT max(id) FROM Project''')
-        row = cursor.fetchall()
-        project_id = row[0]
+        project_id = cursor.fetchall()[0]
+
         mysql.connection.commit()
 
-        members.append(admin)
+        cursor.execute('''SELECT id FROM User where username = %s''', [admin])
+        admin_id = cursor.fetchall()[0]
+        try:
+            cursor.execute('''INSERT INTO Member VALUES (0, %s, %s, 1)''', (project_id, admin_id))
+            mysql.connection.commit()
+        except:
+            mysql.connection.rollback()
+            response = {'message': 'Something went wrong, please try again.'}
+            return jsonify(response), 400
+
         members = list(set(members))
+        members.remove(admin)
         members_ids = validate_members(members)
         error = add_members(members_ids, project_id)
         if error:
