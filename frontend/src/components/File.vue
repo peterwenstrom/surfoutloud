@@ -43,7 +43,6 @@
     </form>
 
 
-
     <div id="wrapper" class="container">
       <modal v-if="showModal">
         <h3 slot="header" class="modal-title">
@@ -51,11 +50,11 @@
         </h3>
 
         <div slot="body">
-          <img v-bind:src="imgUrl">
+          <img v-bind:src="imgUrl" class="preview-image">
         </div>
 
         <div slot="footer">
-          <button type="button" class="btn btn-outline-info" v-on:click="closeModal()"> Close </button>
+          <button type="button" class="btn btn-outline-info point" v-on:click="closeModal()"> Close </button>
         </div>
       </modal>
     </div>
@@ -73,7 +72,7 @@
   import 'vue-awesome/icons/sticky-note-o'
   import 'vue-awesome/icons/cloud-download'
   import 'vue-awesome/icons/cloud-upload'
-  import Modal from './Modal';
+  import Modal from './Modal'
 
   export default {
     props: ['projectId'],
@@ -179,7 +178,7 @@
       },
       closeModal() {
         this.showModal = false;
-      },
+      }
 
     },
     mounted(){
@@ -235,15 +234,9 @@
   .hover:hover {
     color: darkorange;
   }
-
-  .center {
-    display: inline-block;
-  }
-
-  .parent {
-    width: 100%;
-
-    text-align: center;
+  .preview-image {
+    max-width: 570px;
+    max-height: 400px
   }
 
 </style>
