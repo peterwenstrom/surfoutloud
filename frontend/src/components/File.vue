@@ -42,15 +42,15 @@
       <input type="file" name="file" id="file" class="point" v-on:change="postFile">
     </form>
 
-     <modal name="preview"
-             :resizeable="true"
-             :width="500"
-             :height="500"
-      >
-        <div v-if="imgUrl" class="parent">
-          <img id="imgPreview" v-bind:src="imgUrl" class="image center">
-        </div>
-      </modal>
+    <modal name="preview"
+           :resizeable="true"
+           :width="500"
+           :height="500"
+    >
+      <div v-if="imgUrl" class="parent">
+        <img id="imgPreview" v-bind:src="imgUrl" class="image center">
+      </div>
+    </modal>
 
   </div>
 </template>
@@ -138,52 +138,10 @@
           }
 
         }).catch( error => {
-            this.error = error;
+          this.error = error;
           this.emptyList = 'The file list is empty, why not add a file? :)'
         });
       },
-
-//
-      /// funkar inte...
-
-      /*      downloadFile: function(fileName) {
-
-
-
-       axios.get('https://content.dropboxapi.com/2/files/download', {
-       headers: {
-       'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
-       'Dropbox-API-Arg': JSON.stringify({
-       path: this.projectFolder + fileName
-       })
-
-       }
-       }
-       ).then( response => {
-       //TODO: Save response to users computer!
-
-
-       let fileTag = fileName.split(".");
-       console.log("this.filename");
-       console.log(fileName);
-       console.log("response");
-       console.log(Object.values(response.headers)[1]);
-
-
-
-
-       let blob = new Blob([Object.values(response.headers)[1]], {type: "application/octet-stream"})
-       console.log("blob: ");
-       console.log(blob);
-
-       FileSaver.saveAs(blob, fileName, true);
-
-
-       });
-
-
-
-       },*/
       downloadFile: function(fileName, type) {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'arraybuffer';
@@ -198,9 +156,6 @@
               FileSaver.saveAs(blob, fileName, true);
             } else if(type === 'preview'){
               this.imgUrl = "data:"+xhr.getResponseHeader("Content-Type")+";base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
-              //console.log(this.imgUrl);
-
-
               this.$modal.show('preview');
 
             }
@@ -225,7 +180,7 @@
           this.getFiles()
         }, 1200);
       } else {
-          this.getFiles()
+        this.getFiles()
       }
 
     },
@@ -280,10 +235,5 @@
     margin-top: 17%;
     text-align: center;
   }
-
-
-
-
-
 
 </style>
