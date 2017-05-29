@@ -42,15 +42,20 @@
       <input type="file" name="file" id="file" class="point" v-on:change="postFile">
     </form>
 
-    <modal name="preview"
-           :resizeable="true"
-           :width="500"
-           :height="500"
-    >
-      <div v-if="imgUrl" class="parent">
-        <img id="imgPreview" v-bind:src="imgUrl" class="image center">
-      </div>
-    </modal>
+
+    <img id="imgPreviewFake" v-bind:src="imgUrl" style="display: none" class="image center">
+
+     <modal name="preview"
+             :resizeable="true"
+             :width="400"
+             :height="parseInt(modalHeight)"
+              @before-open="beforeOpen"
+      >
+        <div v-if="imgUrl" class="parent">
+          <img id="imgPreview" v-bind:src="imgUrl" class="image center">
+        </div>
+      </modal>
+
 
   </div>
 </template>
@@ -156,7 +161,32 @@
               FileSaver.saveAs(blob, fileName, true);
             } else if(type === 'preview'){
               this.imgUrl = "data:"+xhr.getResponseHeader("Content-Type")+";base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
-              this.$modal.show('preview');
+
+              //console.log(this.imgUrl);
+
+              setTimeout(function() {
+                this.modalWidth = document.getElementById('imgPreviewFake').clientWidth;
+                this.modalHeight = document.getElementById('imgPreviewFake').clientHeight;
+
+
+                              console.log("modalheight: ");
+                console.log(this.modalHeight);
+                console.log("modalwidth: ");
+                console.log(this.modalWidth);
+
+
+              this.$nextTick(() => {
+
+                this.$modal.show('preview');
+
+
+              });
+
+              }.bind(this),1000)
+
+
+
+
 
             }
           }else {
@@ -170,6 +200,9 @@
           path: this.projectFolder + fileName
         }));
         xhr.send();
+      },
+      beforeOpen: function() {
+
       }
 
     },
@@ -232,7 +265,7 @@
 
   .parent {
     width: 100%;
-    margin-top: 17%;
+
     text-align: center;
   }
 
