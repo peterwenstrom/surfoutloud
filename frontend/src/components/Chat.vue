@@ -1,32 +1,30 @@
 <template>
-  <div id = "chat">
-    <div class="container">
+  <div id="chat">
       <div class="row">
         <div class="col-md-12">
           <div class="panel panel-primary">
-            <div id="chatWindow" class="panel-body">
-              <ul class="chat">
-                <div id="newest" v-for="value in history">
-                  <span class = "bubble bubble-alt" v-if="value.who === 'me'">
-                    <div class="chat-body clearfix">
-                       {{ value.message }}
-                    </div>
-                    </span>
-                  <span class = "bubble" v-if="value.who === 'you'">
-                    <div class="chat-body clearfix">
-                        {{ value.message }}
-                    </div>
-                  </span>
-                </div>
-              </ul>
-            </div>
+            <ul id="chat-window" class="panel-body chat">
+              <li v-for="value in history">
+                <span class="bubble bubble-alt" v-if="value.who === 'me'">
+                  <div class="chat-body clearfix">
+                    {{ value.message }}
+                  </div>
+                </span>
+                <span class = "bubble" v-if="value.who === 'you'">
+                  <div class="chat-body clearfix">
+                    {{ value.message }}
+                  </div>
+                </span>
+              </li>
+            </ul>
+
             <div class="panel-footer">
               <div class="input-group">
                 <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
                 <span class="input-group-btn">
-                            <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
-                                Send</button>
-                        </span>
+                  <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
+                    Send</button>
+                </span>
               </div>
             </div>
           </div>
@@ -74,22 +72,28 @@
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
         this.socket.on('room_response', function(response) {
-          if(response.data.who === this.authUser.username){
+          let element = document.getElementById('chat-window');
+          const scroll = element.scrollHeight - element.scrollTop;
+          if (response.data.who === this.authUser.username){
             this.history.push({ who: 'me',message: response.data.msg});
-            //+ " /--/ sent in room " + response.room
-          }else{
+            setTimeout( () => {
+              element = document.getElementById('chat-window');
+              element.scrollTop = element.scrollHeight
+
+            }, 100)
+          } else {
             this.history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
-            //+ " /--/ sent in room " + response.room
+            setTimeout( () => {
+              if (scroll < 330) {
+                element = document.getElementById('chat-window');
+                element.scrollTop = element.scrollHeight
+              }
+            }, 100)
           }
 
         }.bind(this));
       },
       joinRoom: function() {
-        /* Right now you can join as many rooms as you like, but not leave them.
-         * There is no sign of how many rooms, or which, you are active in.
-         * Todo: probably add something visual soon, or it gets pretty messy
-         * see todo on "connect".
-         * Had some idea of having room 0 as active users, not perfect though */
         this.socket.emit('join', {who: this.authUser.username, room: this.roomNo});
       },
       joinRoomResponse: function() {
@@ -182,27 +186,17 @@
 </script>
 
 <style scoped>
-  #sendMessage {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  #chat-window {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    transition: transform 1s;
   }
+
   .send-btn {
     background-color: #35495E;
     color: #fff;
     cursor: pointer;
   }
-  /*.messageWin{
-    overflow: scroll;
-    height: 200px;
-    border-style: dashed;
-  }*/
-
-  /*copied css v*/
-
 
   /** page structure **/
   .container {
@@ -224,6 +218,7 @@
   /** ios1-ios6 bubbles **/
   .bubble {
     box-sizing: border-box;
+    margin: 5px 5px 5px 5px;
     float: left;
     width: auto;
     max-width: 80%;
@@ -309,32 +304,7 @@
   .chat
   {
     list-style: none;
-    margin: 8px;
     padding: 0;
-  }
-
-  .chat li
-  {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px dotted #B3A9A9;
-  }
-
-  .chat li.left .chat-body
-  {
-    margin-left: 60px;
-  }
-
-  .chat li.right .chat-body
-  {
-    margin-right: 60px;
-  }
-
-
-  .chat li .chat-body p
-  {
-    margin: 0;
-    color: #777777;
   }
 
   .panel .slidedown .glyphicon, .chat .glyphicon
@@ -344,31 +314,9 @@
 
   .panel-body
   {
+    overflow-x: hidden;
     overflow-y: scroll;
-    height: 250px;
+    height: 330px;
+    margin-bottom: 5px;
   }
-
-
-  ::-webkit-scrollbar-track
-  {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: #F5F5F5;
-  }
-
-  ::-webkit-scrollbar
-  {
-    width: 12px;
-    background-color: #F5F5F5;
-  }
-
-  ::-webkit-scrollbar-thumb
-  {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color: #555;
-  }
-
-
-
-
-
 </style>
