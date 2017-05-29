@@ -43,25 +43,28 @@
     </form>
 
 
-    <img id="imgPreviewFake" v-bind:src="imgUrl" style="display: none" class="image center">
 
-     <modal name="preview"
-             :resizeable="true"
-             :width="400"
-             :height="parseInt(modalHeight)"
-              @before-open="beforeOpen"
-      >
-        <div v-if="imgUrl" class="parent">
-          <img id="imgPreview" v-bind:src="imgUrl" class="image center">
+    <div id="wrapper" class="container">
+      <modal v-if="showModal">
+        <h3 slot="header" class="modal-title">
+          Preview
+        </h3>
+
+        <div slot="body">
+          <img v-bind:src="imgUrl">
+        </div>
+
+        <div slot="footer">
+          <button type="button" class="btn btn-outline-info" v-on:click="closeModal()"> Close </button>
         </div>
       </modal>
+    </div>
 
 
   </div>
 </template>
 
 <script>
-  import Vue from 'vue'
   import axios from 'axios'
   import FileSaver from 'file-saver'
   import Icon from 'vue-awesome/components/Icon'
@@ -69,9 +72,8 @@
   import 'vue-awesome/icons/picture-o'
   import 'vue-awesome/icons/sticky-note-o'
   import 'vue-awesome/icons/cloud-download'
-  import vmodal from 'vue-js-modal'
-  Vue.use(vmodal)
   import 'vue-awesome/icons/cloud-upload'
+  import Modal from './Modal';
 
   export default {
     props: ['projectId'],
@@ -161,33 +163,7 @@
               FileSaver.saveAs(blob, fileName, true);
             } else if(type === 'preview'){
               this.imgUrl = "data:"+xhr.getResponseHeader("Content-Type")+";base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
-
-              //console.log(this.imgUrl);
-
-              setTimeout(function() {
-                this.modalWidth = document.getElementById('imgPreviewFake').clientWidth;
-                this.modalHeight = document.getElementById('imgPreviewFake').clientHeight;
-
-
-                              console.log("modalheight: ");
-                console.log(this.modalHeight);
-                console.log("modalwidth: ");
-                console.log(this.modalWidth);
-
-
-              this.$nextTick(() => {
-
-                this.$modal.show('preview');
-
-
-              });
-
-              }.bind(this),1000)
-
-
-
-
-
+              this.showModal = true;
             }
           }else {
             let errorMessage = xhr.response || 'Unable to download file';
@@ -201,9 +177,9 @@
         }));
         xhr.send();
       },
-      beforeOpen: function() {
-
-      }
+      closeModal() {
+        this.showModal = false;
+      },
 
     },
     mounted(){
@@ -219,6 +195,7 @@
     },
     components: {
       Icon,
+      Modal
     }
   }
 </script>
