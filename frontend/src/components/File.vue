@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-on:keyup.esc="closeModal">
     <h5>All files in project</h5>
 
     {{ emptyList }}
@@ -48,7 +48,9 @@
         <h3 slot="header" class="modal-title">
           Preview
         </h3>
-
+        <div slot="header" v-on:click="closeModal">
+          <icon name="window-close-o" class="point"></icon>
+        </div>
         <div slot="body">
           <img v-bind:src="imgUrl" class="preview-image">
         </div>
@@ -72,6 +74,7 @@
   import 'vue-awesome/icons/sticky-note-o'
   import 'vue-awesome/icons/cloud-download'
   import 'vue-awesome/icons/cloud-upload'
+  import 'vue-awesome/icons/window-close-o'
   import Modal from './Modal'
 
   export default {
