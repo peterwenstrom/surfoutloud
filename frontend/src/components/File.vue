@@ -109,7 +109,7 @@
             if (fileEnd[1] === 'docx'){
               console.log(fileEnd[1]);
               this.fileTypeArray.push('docx');
-            }else if (fileEnd[1] === 'jpeg' || 'png' || 'jpg' ){
+            }else if (fileEnd[1] === 'jpeg' || fileEnd[1] ==='png' || fileEnd[1] ==='jpg' ){
               console.log(fileEnd[1]);
               this.fileTypeArray.push('img');
             } else {
