@@ -23,12 +23,12 @@
       </table>
     </div>
 
-    <div class="col-md-6 border-right">
+    <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
       <chat v-bind:projectId="project.id" @active="onActiveUserUpdate" @member_join="newMember"></chat>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
       <h3>Files</h3>
       <file v-bind:projectId="project.id"></file>
     </div>

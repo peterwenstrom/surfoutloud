@@ -11,22 +11,28 @@
         <th>File type</th>
         <th>File name</th>
         <th>Download</th>
+        <th>Preview</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="(item,index) in fileArray">
         <td>
-
-          <button v-on:click="downloadFile(item, 'preview')">Preview</button>
-          <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="thumbnail"></icon></div>
-          <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="thumbnail"></icon></div>
-          <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="thumbnail"></icon></div>
+          <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="icon"></icon></div>
+          <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="icon"></icon></div>
+          <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="icon"></icon></div>
         </td>
         <td>
           <p>{{ item }}</p>
         </td>
         <td>
-          <div v-on:click="downloadFile(item, 'download')"><icon  name="cloud-download" class="thumbnail point hover"></icon></div>
+          <div v-on:click="downloadFile(item, 'download')">
+            <icon name="cloud-download" class="icon pointer download"></icon>
+          </div>
+        </td>
+        <td>
+          <div v-on:click="downloadFile(item, 'preview')">
+            <icon name="eye" class="icon pointer preview"></icon>
+          </div>
         </td>
       </tr>
       </tbody>
@@ -35,11 +41,11 @@
     <form>
       <div>
         <label class="upload" for="file">
-          <icon name="cloud-upload" class="thumbnail"></icon>
+          <icon name="cloud-upload" class="icon pointer"></icon>
           <a>Choose a file to upload</a>
         </label>
       </div>
-      <input type="file" name="file" id="file" class="point" v-on:change="postFile">
+      <input type="file" name="file" id="file" v-on:change="postFile">
     </form>
 
 
@@ -49,14 +55,14 @@
           Preview
         </h3>
         <div slot="header" v-on:click="closeModal">
-          <icon name="window-close-o" class="point"></icon>
+          <icon name="window-close-o" class="pointer"></icon>
         </div>
         <div slot="body">
           <img v-bind:src="imgUrl" class="preview-image">
         </div>
 
         <div slot="footer">
-          <button type="button" class="btn btn-outline-info point" v-on:click="closeModal()"> Close </button>
+          <button class="btn btn-outline-info pointer" v-on:click="closeModal()"> Close </button>
         </div>
       </modal>
     </div>
@@ -75,6 +81,7 @@
   import 'vue-awesome/icons/cloud-download'
   import 'vue-awesome/icons/cloud-upload'
   import 'vue-awesome/icons/window-close-o'
+  import 'vue-awesome/icons/eye'
   import Modal from './Modal'
 
   export default {
@@ -88,11 +95,8 @@
         fileTypeArray: [],
         fileToBeDownloaded: '',
         fileName: '',
-        thumbNail: '',
         emptyList: '',
         imgUrl: '',
-        modalWidth: '',
-        modalHeight: '',
         showModal: false
       }
     },
@@ -206,6 +210,14 @@
   th {
     text-align: center;
   }
+  td {
+    vertical-align: middle;
+  }
+  td * {
+    vertical-align: middle;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
   .upload {
     cursor: pointer;
     border: 1px solid #878787;
@@ -224,18 +236,19 @@
   #file {
     display: none;
   }
-  .thumbnail {
+  .icon {
     width: 20px;
     height: 20px;
     margin: 5px;
   }
-
-  .point {
+  .pointer {
     cursor: pointer;
   }
-
-  .hover:hover {
+  .download:hover {
     color: darkorange;
+  }
+  .preview:hover {
+    color: #2973b7;
   }
   .preview-image {
     max-width: 570px;
