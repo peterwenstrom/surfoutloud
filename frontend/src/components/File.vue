@@ -4,7 +4,9 @@
 
     {{ emptyList }}
 
+
     <table class="table table-striped">
+
 
       <thead>
       <tr>
@@ -16,6 +18,8 @@
       <tbody>
       <tr v-for="(item,index) in fileArray">
         <td>
+
+          <button v-on:click="downloadFile(item, 'preview')">Preview</button>
           <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="thumbnail"></icon></div>
           <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="thumbnail"></icon></div>
           <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="thumbnail"></icon></div>
@@ -24,7 +28,7 @@
           <p>{{ item }}</p>
         </td>
         <td>
-          <div v-on:click="downloadFile(item)"><icon  name="cloud-download" class="thumbnail point hover"></icon></div>
+          <div v-on:click="downloadFile(item, 'download')"><icon  name="cloud-download" class="thumbnail point hover"></icon></div>
         </td>
       </tr>
       </tbody>
@@ -34,10 +38,22 @@
 
       <input type="file" name="file" id="file" class="point" v-on:change="postFile">
     </form>
+
+     <modal name="preview"
+             :resizeable="true"
+             :width="500"
+             :height="500"
+      >
+        <div v-if="imgUrl" class="parent">
+          <img id="imgPreview" v-bind:src="imgUrl" class="image center">
+        </div>
+      </modal>
+
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
   import axios from 'axios'
   import FileSaver from 'file-saver'
   import Icon from 'vue-awesome/components/Icon'
@@ -45,6 +61,8 @@
   import 'vue-awesome/icons/picture-o'
   import 'vue-awesome/icons/sticky-note-o'
   import 'vue-awesome/icons/cloud-download'
+  import vmodal from 'vue-js-modal'
+  Vue.use(vmodal)
   export default {
     props: ['projectId'],
     data(){
@@ -57,7 +75,11 @@
         fileToBeDownloaded: '',
         fileName: '',
         thumbNail: '',
-        emptyList: ''
+        emptyList: '',
+        imgUrl: '',
+        modalWidth: '',
+        modalHeight: '',
+        showModal: false
       }
     },
     methods: {
@@ -97,6 +119,7 @@
             }
           }
         ).then( response => {
+            console.log(response);
           this.fileArray = [];
           for(let i = 0; i < response.data.contents.length; i++){
             let filePath = response.data.contents[i].path;
@@ -104,22 +127,15 @@
             this.fileArray.push(this.fileName[2]);
 
             let fileEnd = this.fileName[2].split(".");
-            console.log(fileEnd[1]);
 
             if (fileEnd[1] === 'docx'){
-              console.log(fileEnd[1]);
               this.fileTypeArray.push('docx');
             }else if (fileEnd[1] === 'jpeg' || fileEnd[1] ==='png' || fileEnd[1] ==='jpg' ){
-              console.log(fileEnd[1]);
               this.fileTypeArray.push('img');
             } else {
               this.fileTypeArray.push('default');
             }
-
-
           }
-
-          console.log(response.data);
 
         }).catch( error => {
             this.error = error;
@@ -168,21 +184,30 @@
 
 
        },*/
-      downloadFile: function(fileName) {
+      downloadFile: function(fileName, type) {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'arraybuffer';
 
         xhr.onload = function() {
           if (xhr.status === 200) {
-            let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
-            console.log("xhrresponse");
             console.log(xhr.response);
-            FileSaver.saveAs(blob, fileName, true);
-          }
-          else {
+            if(type==='download'){
+              let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
+              console.log("xhrresponse");
+              console.log(xhr.response);
+              FileSaver.saveAs(blob, fileName, true);
+            } else if(type === 'preview'){
+              this.imgUrl = "data:"+xhr.getResponseHeader("Content-Type")+";base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
+              //console.log(this.imgUrl);
+
+
+              this.$modal.show('preview');
+
+            }
+          }else {
             let errorMessage = xhr.response || 'Unable to download file';
           }
-        };
+        }.bind(this);
 
         xhr.open('POST', 'https://content.dropboxapi.com/2/files/download');
         xhr.setRequestHeader('Authorization', 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk');
@@ -190,8 +215,7 @@
           path: this.projectFolder + fileName
         }));
         xhr.send();
-      },
-
+      }
 
     },
     created(){
@@ -221,4 +245,20 @@
   .hover:hover {
     color: darkorange;
   }
+
+  .center {
+    display: inline-block;
+  }
+
+  .parent {
+    width: 100%;
+    margin-top: 17%;
+    text-align: center;
+  }
+
+
+
+
+
+
 </style>
