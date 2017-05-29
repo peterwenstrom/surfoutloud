@@ -1,6 +1,7 @@
-from config import app, mysql
+from config import app, mysql, socketio
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
 
 
 def validate_members(members):
@@ -38,7 +39,6 @@ def get_members(project_id):
     for row in rows:
         cursor.execute('''SELECT username FROM User where id = %s''', [row])
         members.append(cursor.fetchall()[0])
-
     return jsonify({'members': members}), 200
 
 
@@ -144,6 +144,9 @@ def answer_project_invite():
             cursor.execute('''UPDATE Member SET accepted = 1 WHERE memberid = %s AND projectid = %s''',
                            (user_id, project_id))
             mysql.connection.commit()
+
+
+
             return jsonify({'message': 'Invite was accepted'}), 200
         except:
             mysql.connection.rollback()
@@ -159,3 +162,13 @@ def answer_project_invite():
             mysql.connection.rollback()
             return jsonify({'message': 'Something went wrong, please try again.'}), 400
 
+
+# @socketio.on('newMember')
+# def send_room(message):
+#     # session['receive_count'] = session.get('receive_count', 0) + 1
+#     print("debuuug: ")
+#     print(message['data'])
+#     print(message['room'])
+#     emit('member_join_response',
+#          {'data': message['data'], 'room': message['room']},
+#          room=message['room'])

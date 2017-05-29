@@ -26,7 +26,7 @@
     <div class="col-md-6 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" @active="onActiveUserUpdate"></chat>
+      <chat v-bind:projectId="project.id" @active="onActiveUserUpdate" @member_join="newMember"></chat>
     </div>
     <div class="col-md-4">
       <h3>Files</h3>
@@ -87,6 +87,8 @@
             Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
           }
         });
+      },    newMember (member){
+        this.memberList.push(member);
       }
     },
     components:{

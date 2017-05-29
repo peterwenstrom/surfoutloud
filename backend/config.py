@@ -36,4 +36,3 @@ JWTManager(app)
 mysql = MySQL(app)
 socketio = SocketIO(app)
 bcrypt = Bcrypt(app)
-
