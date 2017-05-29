@@ -81,6 +81,7 @@
   .login-btn {
     background-color: #41B883;
     color: #fff;
+    cursor: pointer;
   }
   .loading {
     text-align:center;
