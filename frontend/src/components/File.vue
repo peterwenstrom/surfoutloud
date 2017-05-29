@@ -70,8 +70,6 @@
     methods: {
       postFile: function (e){
         //TODO: make validation on file upload so that users cannot upload files with non utf-8 chars
-        console.log(e.target.files[0]);
-
         const dropbox_api_arg = JSON.stringify({
           path: this.projectFolder +  e.target.files[0].name,
           mode: 'add',
@@ -86,11 +84,9 @@
               'Dropbox-API-Arg': dropbox_api_arg
             }
           }
-        ).then( response => {
-          console.log(response);
-
-          this.getFiles();
-
+        ).then( () => {
+          this.emptyList = '';
+          this.getFiles()
         }).catch( error => {
           console.log(error);
           this.error = error
@@ -111,13 +107,10 @@
             this.fileArray.push(this.fileName[2]);
 
             let fileEnd = this.fileName[2].split(".");
-            console.log(fileEnd[1]);
 
             if (fileEnd[1] === 'docx'){
-              console.log(fileEnd[1]);
               this.fileTypeArray.push('docx');
             }else if (fileEnd[1] === 'jpeg' || 'png' || 'jpg' ){
-              console.log(fileEnd[1]);
               this.fileTypeArray.push('img');
             } else {
               this.fileTypeArray.push('default');
@@ -201,8 +194,16 @@
 
 
     },
-    created(){
-      this.getFiles();
+    mounted(){
+      if (!this.projectId) {
+        setTimeout( () => {
+          this.projectFolder = '/' + this.projectId + '/';
+          this.getFiles()
+        }, 1200);
+      } else {
+          this.getFiles()
+      }
+
     },
     components: {
       Icon,
