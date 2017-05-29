@@ -31,7 +31,12 @@
     </table>
 
     <form>
-
+      <div>
+        <label class="upload" for="file">
+          <icon name="cloud-upload" class="thumbnail"></icon>
+          <a>Choose a file to upload</a>
+        </label>
+      </div>
       <input type="file" name="file" id="file" class="point" v-on:change="postFile">
     </form>
   </div>
@@ -45,6 +50,8 @@
   import 'vue-awesome/icons/picture-o'
   import 'vue-awesome/icons/sticky-note-o'
   import 'vue-awesome/icons/cloud-download'
+  import 'vue-awesome/icons/cloud-upload'
+
   export default {
     props: ['projectId'],
     data(){
@@ -207,7 +214,24 @@
   th {
     text-align: center;
   }
-
+  .upload {
+    cursor: pointer;
+    border: 1px solid #878787;
+    border-radius: 20px;
+    padding: 5px 10px 5px 10px;
+  }
+  .upload:hover svg {
+    color: #41B883;
+  }
+  .upload svg {
+    margin: 0px 10px 0px 0px;
+  }
+  .upload * {
+    vertical-align: middle;
+  }
+  #file {
+    display: none;
+  }
   .thumbnail {
     width: 20px;
     height: 20px;
