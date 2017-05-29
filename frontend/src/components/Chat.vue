@@ -24,7 +24,7 @@
               <div class="input-group">
                 <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
                 <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
+                            <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
                                 Send</button>
                         </span>
               </div>
@@ -180,6 +180,7 @@
   .send-btn {
     background-color: #35495E;
     color: #fff;
+    cursor: pointer;
   }
   /*.messageWin{
     overflow: scroll;
@@ -225,7 +226,7 @@
     background-image: linear-gradient(bottom, #bee2ff 15%, #95c2fd 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#95c2fd', endColorstr='#bee2ff');
 
-    border: solid 1px rgba(0,0,0,0.5);
+    border: solid 1px rgba(0,0,0,0.1);
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
