@@ -66,6 +66,8 @@
     methods: {
       sendInRoom: function () {
         this.chatmessage.who = this.authUser.username;
+        console.log("thisroom no:");
+        console.log(this.roomNo);
         this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
         this.chatmessage.msg = '';
       },
@@ -135,6 +137,16 @@
 
         }.bind(this));
       },
+      newMemberJoin: function () {
+        this.socket.on('member_join_response', function(response) {
+
+            console.log("member_joinresponse: ");
+            console.log(response);
+            this.$emit('member_join', response.data);
+
+
+        }.bind(this));
+      },
       handleClose() {
         this.leaveRoom();
         return null
@@ -158,6 +170,7 @@
       this.leaveRoomResponse();
       this.pingUser();
       this.pongUser();
+      this.newMemberJoin();
     },
     beforeDestroy() {
       this.leaveRoom();

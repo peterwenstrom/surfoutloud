@@ -24,6 +24,7 @@
 <script>
   import axios from 'axios'
   import authUser from '../user/userAuth'
+  import '../flask-socketio.js'
 
   const GET_INVITES_URL = API_URL + '/getprojects/0';
   const ANSWER_INVITE_URL = API_URL + '/answerprojectinvite';
@@ -34,7 +35,7 @@
         projects: [],
         response_index: '',
         response_message: '',
-        error: ''
+        error: '',
       }
     },
     props: ['username'],
@@ -52,6 +53,9 @@
         axios.post(ANSWER_INVITE_URL, answer_object, authUser.addAuthHeader()).then( response => {
           this.response_message = response.data.message;
           this.response_index = index;
+
+          this.broadcastMemberJoin(id);
+
           setTimeout( () => {
             this.response_message = '';
             this.response_index = '';
@@ -64,6 +68,10 @@
             this.error = 'Something went wrong, please check your connection and try again.'
           }
         })
+      },
+      broadcastMemberJoin: function (projectid){
+        let socket = io.connect(API_URL);
+        socket.emit('newMember', {data: this.username, room: projectid.toString()});
       }
     }
   }

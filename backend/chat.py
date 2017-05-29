@@ -40,4 +40,11 @@ def leave(message):
 def my_ping(message):
     emit('my_pong', {'data': message['start'], 'active_users': active_users})
 
+@socketio.on('newMember')
+def send_room(message):
+    # session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('member_join_response',
+         {'data': message['data'], 'room': message['room']},
+         room=message['room'])
+
 
