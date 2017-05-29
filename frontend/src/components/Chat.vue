@@ -1,12 +1,11 @@
 <template>
   <div id = "chat">
-    <div class="container">
       <div class="row">
         <div class="col-md-12">
           <div class="panel panel-primary">
-            <div id="chatWindow" class="panel-body">
+            <div id="chat-window" class="panel-body">
               <ul class="chat">
-                <div id="newest" v-for="value in history">
+                <li v-for="value in history">
                   <span class = "bubble bubble-alt" v-if="value.who === 'me'">
                     <div class="chat-body clearfix">
                        {{ value.message }}
@@ -17,7 +16,7 @@
                         {{ value.message }}
                     </div>
                   </span>
-                </div>
+                </li>
               </ul>
             </div>
             <div class="panel-footer">
@@ -182,27 +181,16 @@
 </script>
 
 <style scoped>
-  #sendMessage {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  #chat-window {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
   }
+
   .send-btn {
     background-color: #35495E;
     color: #fff;
     cursor: pointer;
   }
-  /*.messageWin{
-    overflow: scroll;
-    height: 200px;
-    border-style: dashed;
-  }*/
-
-  /*copied css v*/
-
 
   /** page structure **/
   .container {
@@ -313,30 +301,6 @@
     padding: 0;
   }
 
-  .chat li
-  {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px dotted #B3A9A9;
-  }
-
-  .chat li.left .chat-body
-  {
-    margin-left: 60px;
-  }
-
-  .chat li.right .chat-body
-  {
-    margin-right: 60px;
-  }
-
-
-  .chat li .chat-body p
-  {
-    margin: 0;
-    color: #777777;
-  }
-
   .panel .slidedown .glyphicon, .chat .glyphicon
   {
     margin-right: 5px;
@@ -345,7 +309,8 @@
   .panel-body
   {
     overflow-y: scroll;
-    height: 250px;
+    height: 330px;
+    margin-bottom: 5px;
   }
 
 
@@ -366,9 +331,4 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #555;
   }
-
-
-
-
-
 </style>
