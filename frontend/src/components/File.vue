@@ -44,10 +44,13 @@
       <input type="file" name="file" id="file" class="point" v-on:change="postFile">
     </form>
 
+    <img id="imgPreviewFake" v-bind:src="imgUrl" style="display: none" class="image center">
+
      <modal name="preview"
              :resizeable="true"
-             :width="500"
-             :height="500"
+             :width="400"
+             :height="parseInt(modalHeight)"
+              @before-open="beforeOpen"
       >
         <div v-if="imgUrl" class="parent">
           <img id="imgPreview" v-bind:src="imgUrl" class="image center">
@@ -207,8 +210,28 @@
               this.imgUrl = "data:"+xhr.getResponseHeader("Content-Type")+";base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
               //console.log(this.imgUrl);
 
+              setTimeout(function() {
+                this.modalWidth = document.getElementById('imgPreviewFake').clientWidth;
+                this.modalHeight = document.getElementById('imgPreviewFake').clientHeight;
 
-              this.$modal.show('preview');
+
+                              console.log("modalheight: ");
+                console.log(this.modalHeight);
+                console.log("modalwidth: ");
+                console.log(this.modalWidth);
+
+
+              this.$nextTick(() => {
+
+                this.$modal.show('preview');
+
+
+              });
+
+              }.bind(this),1000)
+
+
+
 
             }
           }else {
@@ -222,6 +245,9 @@
           path: this.projectFolder + fileName
         }));
         xhr.send();
+      },
+      beforeOpen: function() {
+
       }
 
     },
@@ -276,8 +302,12 @@
 
   .parent {
     width: 100%;
-    margin-top: 17%;
+
     text-align: center;
+  }
+
+  .changeWidth {
+    width: 300px;
   }
 
 
