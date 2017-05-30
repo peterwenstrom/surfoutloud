@@ -6,7 +6,35 @@
         accept invitations you've received to existing projects</p>
       <hr class="small">
     </div>
-    <div class="col-md-5">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-6 col-sm-3" style="text-align: left">
+          <label for="username"><strong>Username:</strong></label>
+        </div>
+        <div class="col-6 col-sm-2">
+          <div class="row">
+            <div class="col-md-12 col-4" v-if="!allowEditUsername">
+              <div class="icon-div" v-on:click="enableEditUsername(true)">
+                <icon name="pencil-square-o"></icon>
+              </div>
+            </div>
+            <div class="col-md-6 col-2" v-if="allowEditUsername && !usernameLoading">
+              <div class="icon-div" v-on:click="editUsername">
+                <icon id="submit" name="check-square-o"></icon>
+              </div>
+            </div>
+            <div class="col-md-6 col-2" v-if="allowEditUsername && !usernameLoading">
+              <div class="icon-div" v-on:click="enableEditUsername(false)">
+                <icon id="cancel" name="window-close-o"></icon>
+              </div>
+            </div>
+            <div class="col-md-12" v-if="usernameLoading">
+              <pulse-loader class="loading" :loading="usernameLoading" :size="size"></pulse-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="form-group">
         <input
           id="username"
@@ -17,34 +45,39 @@
           v-on:keyup.enter="editUsername"
           disabled>
       </div>
-      <div class="alert alert-danger" v-if="username_error">
-        <p>{{ username_error }}</p>
-      </div>
-    </div>
-    <div class="col-md-1">
-      <div class="row">
-        <div class="col-md-12" v-if="!edit_username">
-          <div class="icon-div" v-on:click="enableEditUsername(true)">
-            <icon name="pencil-square-o"></icon>
-          </div>
-        </div>
-        <div class="col-md-6 col-2" v-if="edit_username && !username_loading">
-          <div class="icon-div" v-on:click="editUsername">
-            <icon id="submit" name="check-square-o"></icon>
-          </div>
-        </div>
-        <div class="col-md-6 col-2" v-if="edit_username && !username_loading">
-          <div class="icon-div" v-on:click="enableEditUsername(false)">
-            <icon id="cancel" name="window-close-o"></icon>
-          </div>
-        </div>
-        <div class="col-md-12" v-if="username_loading">
-          <pulse-loader class="loading" :loading="username_loading" :size="size"></pulse-loader>
-        </div>
+      <div class="alert alert-danger" v-if="usernameError">
+        <p>{{ usernameError }}</p>
       </div>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-6 col-sm-3" style="text-align: left">
+          <label for="password"><strong>Password:</strong></label>
+        </div>
+        <div class="col-6 col-sm-2">
+          <div class="row">
+            <div class="col-md-12 col-4" v-if="!allowEditPassword">
+              <div class="icon-div" v-on:click="enableEditPassword(true)">
+                <icon name="pencil-square-o"></icon>
+              </div>
+            </div>
+            <div class="col-md-6 col-2" v-if="allowEditPassword && !passwordLoading">
+              <div class="icon-div" v-on:click="editPassword">
+                <icon id="submit" name="check-square-o"></icon>
+              </div>
+            </div>
+            <div class="col-md-6 col-2" v-if="allowEditPassword && !passwordLoading">
+              <div class="icon-div" v-on:click="enableEditPassword(false)">
+                <icon id="cancel" name="window-close-o"></icon>
+              </div>
+            </div>
+            <div class="col-md-12" v-if="passwordLoading">
+              <pulse-loader class="loading" :loading="passwordLoading" :size="size"></pulse-loader>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <input
           id="password"
@@ -61,36 +94,15 @@
           type="password"
           class="form-control profile-form"
           placeholder="Repeat new password"
-          v-model="credentials.repeat_password"
+          v-model="credentials.repeatPassword"
           v-on:keyup.enter="editPassword"
           disabled>
       </div>
-      <div class="alert alert-danger" v-if="password_error">
-        <p>{{ password_error }}</p>
+      <div class="alert alert-danger" v-if="passwordError">
+        <p>{{ passwordError }}</p>
       </div>
     </div>
-    <div class="col-md-1">
-      <div class="row">
-        <div class="col-md-12" v-if="!edit_password">
-          <div class="icon-div" v-on:click="enableEditPassword(true)">
-            <icon name="pencil-square-o"></icon>
-          </div>
-        </div>
-        <div class="col-md-6 col-2" v-if="edit_password && !password_loading">
-          <div class="icon-div" v-on:click="password_error='hejsan'">
-            <icon id="submit" name="check-square-o"></icon>
-          </div>
-        </div>
-        <div class="col-md-6 col-2" v-if="edit_password && !password_loading">
-          <div class="icon-div" v-on:click="enableEditPassword(false)">
-            <icon id="cancel" name="window-close-o"></icon>
-          </div>
-        </div>
-        <div class="col-md-12" v-if="password_loading">
-          <pulse-loader class="loading" :loading="password_loading" :size="size"></pulse-loader>
-        </div>
-      </div>
-    </div>
+
     <project-invites v-bind:username="this.authUser.username"></project-invites>
   </div>
 </template>
@@ -117,68 +129,68 @@
         credentials: {
           username: '',
           password: 'password',
-          repeat_password: 'password'
+          repeatPassword: 'password'
         },
-        edit_username: false,
-        edit_password: false,
-        username_error: '',
-        password_error: '',
+        allowEditUsername: false,
+        allowEditPassword: false,
+        usernameError: '',
+        passwordError: '',
         size: '10px',
-        username_loading: false,
-        password_loading: false
+        usernameLoading: false,
+        passwordLoading: false
       }
     },
     methods: {
       enableEditUsername (option) {
         document.getElementById('username').disabled = !option;
-        this.edit_username = option;
+        this.allowEditUsername = option;
       },
       enableEditPassword (option) {
         document.getElementById('password').disabled = !option;
         document.getElementById('repeat-password').disabled = !option;
         if (option) {
           this.credentials.password = '';
-          this.credentials.repeat_password = '';
+          this.credentials.repeatPassword = '';
         } else {
           this.credentials.password = 'password';
-          this.credentials.repeat_password = 'password';
+          this.credentials.repeatPassword = 'password';
         }
-        this.edit_password = option;
+        this.allowEditPassword = option;
       },
       editUsername () {
         if (this.authUser.username === this.credentials.username) {
           this.enableEditUsername(false);
-          this.username_error = '';
+          this.usernameError = '';
         } else {
-          this.username_loading = true;
+          this.usernameLoading = true;
           axios.post(EDIT_USERNAME_URL,
             {username: this.credentials.username},
             userAuth.addAuthHeader()).then( response => {
             userAuth.refreshUser(response.data);
             this.enableEditUsername(false);
-            this.username_error = '';
-            this.username_loading = false;
+            this.usernameError = '';
+            this.usernameLoading = false;
           }).catch( error => {
-            this.username_error = error.response.data.message;
-            this.username_loading = false;
+            this.usernameError = error.response.data.message;
+            this.usernameLoading = false;
           })
         }
       },
       editPassword () {
-        if (this.credentials.password === this.credentials.repeat_password) {
-          this.password_loading = true;
+        if (this.credentials.password === this.credentials.repeatPassword) {
+          this.passwordLoading = true;
           axios.post(EDIT_PASSWORD_URL,
-            {password: this.credentials.password, repeat_password: this.credentials.repeat_password},
+            {password: this.credentials.password, repeat_password: this.credentials.repeatPassword},
             userAuth.addAuthHeader()).then( () => {
             this.enableEditPassword(false);
-            this.password_error = '';
-            this.password_loading = false;
+            this.passwordError = '';
+            this.passwordLoading = false;
           }).catch( error => {
-            this.password_loading = false;
-            this.password_error = error.response.data.message
+            this.passwordLoading = false;
+            this.passwordError = error.response.data.message
           })
         } else {
-          this.password_error = 'The passwords are not identical, please try again'
+          this.passwordError = 'The passwords are not identical, please try again'
         }
       }
     },
@@ -189,7 +201,7 @@
 
     },
     created () {
-        this.credentials.username = this.authUser.username;
+      this.credentials.username = this.authUser.username;
     },
     components: {
       Icon,
