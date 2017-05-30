@@ -1,37 +1,53 @@
 <template>
   <div id="chat">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="panel panel-primary">
-            <ul id="chat-window" class="panel-body chat">
-              <li v-for="value in history">
+
+    <b-tabs>
+
+      <b-tab title="Room" active>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-primary">
+              <ul id="chat-window" class="panel-body chat">
+                <li v-for="value in history">
                 <span class="bubble bubble-alt" v-if="value.who === 'me'">
                   <div class="chat-body clearfix">
                     {{ value.message }}
                   </div>
                 </span>
-                <span class = "bubble" v-if="value.who === 'you'">
+                  <span class = "bubble" v-if="value.who === 'you'">
                   <div class="chat-body clearfix">
                     {{ value.message }}
                   </div>
                 </span>
-              </li>
-            </ul>
+                </li>
+              </ul>
 
-            <div class="panel-footer">
-              <div class="input-group">
-                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
-                <span class="input-group-btn">
+              <div class="panel-footer">
+                <div class="input-group">
+                  <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
+                  <span class="input-group-btn">
                   <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
                     Send</button>
                 </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </b-tab>
+
+      <template v-for="item in openChatarray">
+        <b-tab :title="item">
+
+        </b-tab>
+      </template>
+
+
+    </b-tabs>
+
+
   </div>
+
 </template>
 
 <script>
@@ -40,7 +56,7 @@
 
   export default {
     name: 'Chat',
-    props: ['projectId'],
+    props: ['projectId', 'openChatarray'],
     data() {
       return {
         msg: "",
@@ -134,9 +150,9 @@
       newMemberJoin: function () {
         this.socket.on('member_join_response', function(response) {
 
-            console.log("member_joinresponse: ");
-            console.log(response);
-            this.$emit('member_join', response.data);
+          console.log("member_joinresponse: ");
+          console.log(response);
+          this.$emit('member_join', response.data);
 
 
         }.bind(this));
@@ -164,7 +180,7 @@
       this.newMemberJoin();
     },
     mounted () {
-      this.username = this.authUser.username
+      this.username = this.authUser.username;
     },
     beforeDestroy() {
       this.leaveRoom();

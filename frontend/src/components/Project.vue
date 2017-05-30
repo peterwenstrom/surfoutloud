@@ -10,13 +10,17 @@
       <hr class="small">
       <table class="table table-striped">
         <tbody>
-        <tr v-for="member in members">
+        <tr v-for="(member,index) in members">
           <td>
-            <p>{{ member }}</p>
+            <p v-on:click="openChat(member)" class="point">{{ member }}</p>
           </td>
           <td>
             <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
+
+            <div v-if="ifUserIsOpen(member)" v-on:click="closeChat(member)">
+              <icon name="minus" class="point"></icon>
+            </div>
           </td>
         </tr>
         </tbody>
@@ -26,7 +30,7 @@
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" @active="updateActiveMembers" @member_join="newMember"></chat>
+      <chat v-bind:projectId="project.id" v-bind:openChatarray="openChatarray" @active="updateActiveMembers" @member_join="newMember"></chat>
     </div>
     <div class="col-md-5">
       <h3>Files</h3>
@@ -45,6 +49,7 @@
 
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/user'
+  import 'vue-awesome/icons/minus'
 
   const GET_MEMBERS_URL = API_URL + '/getmembers/';
   const GET_PROJECT_DETAILS_URL = API_URL + '/getprojectdetails/';
@@ -55,7 +60,8 @@
       return {
         members: [],
         activeMembers: [],
-        isActive: false
+        isActive: false,
+        openChatarray: []
       }
     },
     methods: {
@@ -71,13 +77,35 @@
         }
 
       },
+      ifUserIsOpen (user) {
+        if (this.openChatarray.indexOf(user) > -1) {
+          return true;
+        } else {
+          return false;
+        }
+
+      },
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
           this.members = response.data.members
         });
       },
       newMember (member){
-        this.members.push(member)
+        this.members.push(member);
+      },
+      openChat: function (member){
+
+          //TODO: fix so you can't open several chat windows with same person
+          //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
+        this.openChatarray.push(member);
+        console.log(this.openChatarray);
+      },
+      closeChat: function(member){
+        console.log(member);
+        let index = this.openChatarray.indexOf(member);
+
+        this.openChatarray.splice(index, 1);
+        console.log(this.openChatarray);
       }
     },
     components:{
@@ -141,6 +169,9 @@
   }
   .border-right {
     border-right: 1px solid #eceeef;
+  }
+  .point {
+    cursor: pointer;
   }
 
 </style>
