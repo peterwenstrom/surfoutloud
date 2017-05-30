@@ -1,23 +1,41 @@
 <template>
-  <div class="portfolio-item">
-    <transition name="fade">
-      <a class="project-link" v-if="show" v-on:click="selectProject">
-        <p>{{project.name}}</p>
-        <img class="img-portfolio img-responsive project" src="../assets/portfolio-2.jpg">
-      </a>
-    </transition>
+  <transition name="fade">
+    <div class="widget"v-on:click="selectProject" v-bind:style="{height: widgetHeight + 'px'}">
 
-  </div>
+      <a class="project-link" v-if="show">
+        <p><strong>{{project.name}}</strong></p>
+        <p>Admin: {{project.admin}}</p>
+        <icon name="diamond"></icon>
+      </a>
+
+
+    </div>
+  </transition>
 </template>
 
 <script>
+  import Icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/plus-circle'
+  import 'vue-awesome/icons/window-close-o'
+  import 'vue-awesome/icons/superpowers'
+  import 'vue-awesome/icons/snowflake-o'
+  import 'vue-awesome/icons/anchor'
+  import 'vue-awesome/icons/heart'
+  import 'vue-awesome/icons/diamond'
+  import 'vue-awesome/icons/hand-spock-o'
+  import 'vue-awesome/icons/globe'
+  import 'vue-awesome/icons/star'
+  import 'vue-awesome/icons/paw'
+  import 'vue-awesome/icons/glass'
+
   export default {
     data () {
       return {
-        show: false
+        show: false,
+        size: '100px'
       }
     },
-    props: ['project'],
+    props: ['project', 'widgetHeight'],
     methods: {
       selectProject() {
         this.$store.dispatch('setProjectObject', this.project);
@@ -25,18 +43,21 @@
       }
     },
     mounted() {
-      this.show = true;
+      this.show = true
+    },
+    components: {
+      Icon
     }
   }
 </script>
 
 <style scoped>
-  .portfolio-item {
+  .widget {
     margin-bottom: 10px;
-  }
-  .project {
-    width: 80%;
-    height: 80%;
+    border: 1px solid #c6c6c6;
+    border-radius: 20px;
+    padding: 10px;
+    cursor: pointer;
   }
   .project-link {
     color: #35495E;
@@ -47,7 +68,8 @@
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0
   }
-  a {
-    cursor: pointer;
+  .fa-icon {
+    width: 20%;
+    height: auto;
   }
 </style>
