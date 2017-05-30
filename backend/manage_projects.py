@@ -61,7 +61,9 @@ def get_projects(accepted):
             'id': project_row[0],
             'admin': project_row[1],
             'name': project_row[2],
-            'description': project_row[3]
+            'description': project_row[3],
+            'icon': project_row[4],
+            'color': project_row[5]
         }
         projects.append(project)
 
@@ -79,7 +81,9 @@ def get_project_details(project_id):
         'id': project_row[0],
         'admin': project_row[1],
         'name': project_row[2],
-        'description': project_row[3]
+        'description': project_row[3],
+        'icon': project_row[4],
+        'color': project_row[5]
     }
 
     return jsonify({'project': project}), 200
@@ -89,16 +93,18 @@ def get_project_details(project_id):
 @jwt_required
 def add_project():
     admin = request.json.get('admin', None)
-    members = request.json.get('new_members', None)
+    members = request.json.get('members', None)
     project_name = request.json.get('name', None)
     project_description = request.json.get('description', None)
+    project_icon = request.json.get('icon', None)
+    project_color = request.json.get('color')
     if not project_description or not project_name:
         return jsonify({'message': 'Please enter a project name and description'}), 400
 
     cursor = mysql.connection.cursor()
     try:
-        cursor.execute('''INSERT INTO Project VALUES (0, %s, %s, %s)''',
-                       (admin, project_name, project_description))
+        cursor.execute('''INSERT INTO Project VALUES (0, %s, %s, %s, %s, %s)''',
+                       (admin, project_name, project_description, project_icon, project_color))
         cursor.execute('''SELECT max(id) FROM Project''')
         project_id = cursor.fetchall()[0]
 
