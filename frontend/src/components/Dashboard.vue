@@ -5,7 +5,7 @@
       <h2>Dashboard</h2>
       <hr class="small">
       <div v-if="!loading" class="row">
-        <div class="col-md-3 col-sm-6">
+        <div class="col-lg-3 col-md-4 col-sm-6">
           <div id="create-widget">
             <router-link class="create" to="/createnewproject">
               <p><strong>Create new project</strong></p>
@@ -14,7 +14,7 @@
           </div>
         </div>
 
-        <div v-for="project in projects" class="col-md-3 col-sm-6">
+        <div v-for="project in projects" class="col-lg-3 col-md-4 col-sm-6">
           <project-widget v-bind:project="project" v-bind:widgetHeight="widgetHeight"></project-widget>
         </div>
       </div>
