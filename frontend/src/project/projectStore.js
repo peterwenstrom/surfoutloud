@@ -6,7 +6,8 @@ const state = {
     admin: '',
     description: ''
   },
-  project_selected: false
+  project_selected: false,
+  update_projects: false
 };
 
 const getters = {
@@ -15,6 +16,9 @@ const getters = {
   },
   project_selected(state) {
     return state.project_selected
+  },
+  update_projects(state) {
+    return state.update_projects
   }
 };
 
@@ -31,6 +35,9 @@ const mutations = {
       description: ''
     };
     state.project_selected = false
+  },
+  SET_UPDATE_PROJECTS (state, update) {
+    state.update_projects = update
   }
 };
 
@@ -40,6 +47,9 @@ const actions = {
   },
   clearProjectObject: ({commit}) => {
     commit('CLEAR_PROJECT')
+  },
+  setUpdateProjects: ({commit}, update) => {
+    commit('SET_UPDATE_PROJECTS', update)
   }
 };
 

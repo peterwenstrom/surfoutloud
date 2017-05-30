@@ -52,8 +52,17 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        authUser: 'authUser',
+        update_projects: 'update_projects'
       })
+    },
+    watch: {
+      update_projects: function(update) {
+        if (update) {
+          this.updateDashboard()
+        }
+        this.$store.dispatch('setUpdateProjects', false)
+      }
     },
     methods: {
       updateDashboard() {

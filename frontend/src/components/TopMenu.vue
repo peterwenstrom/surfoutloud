@@ -10,7 +10,7 @@
           <b-nav is-nav-bar class="ml-auto">
             <router-link tag="b-nav-item" v-if="!authorized" to="/login">Log in</router-link>
             <router-link tag="b-nav-item" v-if="!authorized" to="/register">Register</router-link>
-            <router-link tag="b-nav-item" v-if="authorized" to="/dashboard">Dashboard</router-link>
+            <b-nav-item v-if="authorized" v-on:click="linkToDashboard">Dashboard</b-nav-item>
             <b-nav-item-dropdown v-if="authorized" right-alignment>
               <template slot="text">
                 <span class="menu-name">{{authUser.username}}</span>
@@ -40,7 +40,7 @@
       },
       linkToDashboard() {
         if (window.location.hash === '#/dashboard') {
-
+          this.$store.dispatch('setUpdateProjects', true)
         } else {
           this.$router.push('dashboard')
         }
