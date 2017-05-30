@@ -54,8 +54,7 @@
         chatmessage: {
           msg: "",
           who: ""
-        },
-        activeUser: []
+        }
       }
     },
     methods: {
@@ -152,9 +151,6 @@
         authUser: 'authUser'
       })
     },
-    mounted () {
-      this.username = this.authUser.username
-    },
     created () {
 
       window.addEventListener('beforeunload', this.handleClose);
@@ -166,6 +162,9 @@
       this.pingUser();
       this.pongUser();
       this.newMemberJoin();
+    },
+    mounted () {
+      this.username = this.authUser.username
     },
     beforeDestroy() {
       this.leaveRoom();

@@ -10,12 +10,12 @@
       <hr class="small">
       <table class="table table-striped">
         <tbody>
-        <tr v-for="(item, index) in memberList">
+        <tr v-for="member in members">
           <td>
-            <p>{{ item }}</p>
+            <p>{{ member }}</p>
           </td>
           <td>
-            <icon v-if="activeUserList[index] === 'true'" class="green" name="user"></icon>
+            <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
           </td>
         </tr>
@@ -26,7 +26,7 @@
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" @active="onActiveUserUpdate" @member_join="newMember"></chat>
+      <chat v-bind:projectId="project.id" @active="updateActiveMembers" @member_join="newMember"></chat>
     </div>
     <div class="col-md-5">
       <h3>Files</h3>
@@ -36,7 +36,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import {mapGetters} from 'vuex'
   import axios from 'axios'
   import userAuth from '../user/userAuth'
@@ -54,41 +53,31 @@
     name: 'project',
     data () {
       return {
-        memberList: [
-
-        ],
-        activeUserList: [
-
-        ],
+        members: [],
+        activeMembers: [],
         isActive: false
       }
     },
     methods: {
-      onActiveUserUpdate (value) {
-        let i = 0;
+      updateActiveMembers (updatedActiveMembers) {
+        this.activeMembers = updatedActiveMembers
 
-        for (i; i<this.memberList.length; i++){
-
-          if (value.indexOf(this.memberList[i]) > -1 ){
-            this.activeUserList.splice(i, 1, 'true');
-
-          } else {
-            this.activeUserList.splice(i, 1, 'false');
-          }
+      },
+      ifUserIsActive (user) {
+        if (this.activeMembers.indexOf(user) > -1) {
+          return true;
+        } else {
+          return false;
         }
 
       },
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
-          let i = 0;
-
-          for (i; i<response.data.members.length; i++){
-            //the drawback here is that you cannot have usernames with space in it.. maybe we do not want it anyway
-            Vue.set(this.memberList, i, JSON.stringify(response.data.members[i]).replace(/[^a-zA-Z]+/g, ''));
-          }
+          this.members = response.data.members
         });
-      },    newMember (member){
-        this.memberList.push(member);
+      },
+      newMember (member){
+        this.members.push(member)
       }
     },
     components:{
@@ -106,7 +95,7 @@
       if (!this.project_selected) {
         axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userAuth.addAuthHeader()).then( response => {
           this.$store.dispatch('setProjectObject', response.data.project);
-          this.getMembers();
+          this.getMembers()
         })
       }
     },
@@ -141,6 +130,11 @@
   }
   td p {
     text-align: left;
+  }
+  td * {
+    vertical-align: middle;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   .green {
     color: #41B883;

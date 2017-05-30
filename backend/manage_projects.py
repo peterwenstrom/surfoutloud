@@ -38,7 +38,8 @@ def get_members(project_id):
     members = []
     for row in rows:
         cursor.execute('''SELECT username FROM User where id = %s''', [row])
-        members.append(cursor.fetchall()[0])
+        user_row = cursor.fetchall()[0]
+        members.append(user_row[0])
     return jsonify({'members': members}), 200
 
 
