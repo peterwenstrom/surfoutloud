@@ -1,6 +1,5 @@
 <template>
   <div v-on:keyup.esc="closeModal">
-    <h5>All files in project</h5>
 
     {{ emptyList }}
 
@@ -12,6 +11,7 @@
         <th>File name</th>
         <th>Download</th>
         <th>Preview</th>
+        <th>Delete</th>
       </tr>
       </thead>
       <tbody>
@@ -34,10 +34,14 @@
             <icon name="eye" class="icon pointer preview"></icon>
           </div>
         </td>
+        <td>
+          <div v-on:click="deleteFile(item)">
+            <icon name="trash-o" class="icon pointer trash-o red"></icon>
+          </div>
+        </td>
       </tr>
       </tbody>
     </table>
-
     <form>
       <div>
         <label class="upload" for="file">
@@ -82,6 +86,7 @@
   import 'vue-awesome/icons/cloud-upload'
   import 'vue-awesome/icons/window-close-o'
   import 'vue-awesome/icons/eye'
+  import 'vue-awesome/icons/trash-o'
   import Modal from './Modal'
 
   export default {
@@ -183,6 +188,32 @@
         }));
         xhr.send();
       },
+      deleteFile: function (fileName){
+        console.log("PATHPATHPATH: ");
+        console.log(this.projectFolder + fileName);
+
+        const dropbox_api_arg = JSON.stringify({
+          path: this.projectFolder + fileName,
+        });
+
+
+        axios.post('https://api.dropboxapi.com/2/files/delete',dropbox_api_arg, {
+            headers: {
+              'Authorization': 'Bearer ' + '6iPEx2do24gAAAAAAAAD02_spJoubKwILe3QSh2w-W7PZntnbepMw7Dgov3lD7Nk',
+              'Content-Type': 'application/json'
+            }
+          }
+        ).then( () => {
+          console.log("done?");
+          this.getFiles()
+
+        }).catch( error => {
+          console.log(error);
+          this.error = error
+        });
+
+
+      },
       closeModal() {
         this.showModal = false;
       }
@@ -253,6 +284,9 @@
   .preview-image {
     max-width: 570px;
     max-height: 400px
+  }
+  .red {
+    color:red;
   }
 
 </style>
