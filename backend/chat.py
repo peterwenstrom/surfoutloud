@@ -21,15 +21,11 @@ def join(message):
     users_in_room = active_users.get(room)
     if users_in_room:
         # room is not empty
-        if user in users_in_room:
-            # user already active in room, shouldn't happen
-            print("user already active")
-        else:
-            # user added to active users in room
-            print("user set to active in existing room")
+        if user not in users_in_room:
+            # user added to active users in existing room
             active_users.get(room).append(user)
     else:
-        print("room created in dict and user set to active")
+        # room created in dict and user set to active
         active_users[room] = [user]
 
     emit('join_room_response',
@@ -49,7 +45,7 @@ def leave(message):
 
     users_in_room = active_users.get(room)
     if not users_in_room:
-        print("remove room from dict if empty after user has left")
+        # remove room from dict if empty after user has left
         del active_users[room]
 
     disconnect()
