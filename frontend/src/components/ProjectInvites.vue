@@ -7,17 +7,20 @@
     </div>
     <transition-group name="fade">
       <div class="col-md-5 project" v-for="(project, index) in projects" v-bind:key="project">
-        <div v-if="response_index !== index">
+        <div v-if="responseIndex !== index">
           <div><p><strong>Project name:</strong> <br> {{project.name}}</p></div>
           <div><p><strong>Invited by:</strong> {{project.admin}}</p></div>
           <button class="btn btn-accept" v-on:click="answerInvite(project.id, 'accept', index)">Accept</button>
           <button class="btn btn-decline" v-on:click="answerInvite(project.id, 'decline', index)">Decline</button>
         </div>
-        <div class="alert alert-success alert-response" v-if="response_index === index">
-          <p>{{ response_message }}</p>
+        <div class="alert alert-success alert-response" v-if="responseIndex === index">
+          <p>{{ responseMessage }}</p>
         </div>
       </div>
     </transition-group>
+    <div class="alert alert-info" v-if="noProjectMessage">
+      <p>{{ noProjectMessage }}</p>
+    </div>
   </div>
 </template>
 
@@ -33,15 +36,22 @@
     data () {
       return {
         projects: [],
-        response_index: '',
-        response_message: '',
-        error: '',
+        responseIndex: '',
+        responseMessage: '',
+        noProjectMessage: '',
+        error: ''
       }
     },
     props: ['username'],
     created () {
       axios.get(GET_INVITES_URL, authUser.addAuthHeader()).then( response => {
-        this.projects = response.data.projects
+        if (response.data.projects.length > 0) {
+          this.noProjectMessage = '';
+          this.projects = response.data.projects
+        } else {
+          this.noProjectMessage = 'You currently have no pending invites to any projects'
+        }
+
       })
     },
     methods: {
@@ -51,14 +61,14 @@
           answer: answer
         };
         axios.post(ANSWER_INVITE_URL, answer_object, authUser.addAuthHeader()).then( response => {
-          this.response_message = response.data.message;
-          this.response_index = index;
+          this.responseMessage = response.data.message;
+          this.responseIndex = index;
 
           this.broadcastMemberJoin(id);
 
           setTimeout( () => {
-            this.response_message = '';
-            this.response_index = '';
+            this.responseMessage = '';
+            this.responseIndex = '';
             this.projects.splice(index, 1)
           }, 1600)
         }).catch( error => {
@@ -80,7 +90,7 @@
 <style scoped>
   .project {
     display: inline-block;
-    border: 1px solid #eceeef;
+    border: 1px solid #878787;
     border-radius: 25px;
     margin: 10px 10px 10px 10px;
     padding: 10px 3px 10px 3px;
