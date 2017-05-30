@@ -39,10 +39,6 @@ export default {
     });
   },
 
-  checkAuth () {
-    return store.getters.authorized
-  },
-
   checkServerAuth (callback) {
     const user = JSON.parse(localStorage.getItem('authUser'));
     if(!user) {

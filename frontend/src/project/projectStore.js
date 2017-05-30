@@ -4,7 +4,9 @@ const state = {
     name: '',
     id: '',
     admin: '',
-    description: ''
+    description: '',
+    icon: '',
+    color: ''
   },
   project_selected: false,
   update_projects: false
@@ -32,7 +34,9 @@ const mutations = {
       name: '',
       id: '',
       admin: '',
-      description: ''
+      description: '',
+      icon: '',
+      color: ''
     };
     state.project_selected = false
   },

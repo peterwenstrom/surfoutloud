@@ -9,6 +9,7 @@ import Project from '@/components/Project'
 import CreateNewProject from '@/components/CreateNewProject'
 
 import user from './user/userAuth'
+import store from './store'
 
 Vue.use(Router);
 
@@ -73,14 +74,14 @@ router.beforeEach((to, from, next) => {
   } else {
     localStorage.removeItem('second_time');
     if (to.meta.requiresAuth) {
-      if (user.checkAuth()) {
+      if (store.getters.authorized) {
         next();
       }
       else {
         next('/login');
       }
     } else if (!to.meta.requiresAuth) {
-      if (!user.checkAuth()) {
+      if (!store.getters.authorized) {
         next();
       }
       else {
