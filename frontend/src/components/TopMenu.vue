@@ -3,7 +3,7 @@
     <b-navbar class="navbar-fixed-top navbar-sol" toggleable>
       <div class="container">
         <b-nav-toggle target="nav_collapse"></b-nav-toggle>
-        <div>
+        <div v-on:click="linkToDashboard">
           <img class="logo" src="../assets/LogoFull.png"/>
         </div>
         <b-collapse is-nav id="nav_collapse">
@@ -33,9 +33,17 @@
     data() {
       return {
       }
-    },methods: {
+    },
+    methods: {
       logout() {
         userAuth.logout();
+      },
+      linkToDashboard() {
+        if (window.location.hash === '#/dashboard') {
+
+        } else {
+          this.$router.push('dashboard')
+        }
       }
     },
     computed: {
@@ -52,6 +60,7 @@
   .logo {
     height: 45px;
     padding-top: 5px;
+    cursor: pointer;
   }
   .navbar-sol {
     background-color: #c6c6c6;

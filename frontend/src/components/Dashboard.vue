@@ -56,6 +56,14 @@
       })
     },
     methods: {
+      updateDashboard() {
+        this.loading = true;
+
+        axios.get(GET_PROJECT_URL, userAuth.addAuthHeader() ).then( response => {
+          this.projects = response.data.projects;
+          this.loading = false;
+        });
+      }
     },
     components: {
       Icon,
@@ -63,13 +71,7 @@
       RingLoader
     },
     mounted () {
-      this.loading = true;
-
-      axios.get(GET_PROJECT_URL, userAuth.addAuthHeader() ).then( response => {
-        this.projects = response.data.projects;
-        this.loading = false;
-      });
-
+      this.updateDashboard()
     }
   };
 
