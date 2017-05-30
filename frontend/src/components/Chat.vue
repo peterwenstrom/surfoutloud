@@ -55,10 +55,7 @@
           msg: "",
           who: ""
         },
-        activeUsers: [
-
-        ]
-
+        activeUser: []
       }
     },
     methods: {
@@ -98,9 +95,8 @@
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
-          let res = response.data.split(",");
-          console.log("resTot: " + res);
-          console.log("joined room: " + this.roomNo);
+
+          this.$emit('active', response.active_users);
         }.bind(this));
       },
       leaveRoom: function() {
@@ -108,9 +104,8 @@
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
-          let res = response.data.split(",");
-          console.log("resTot: " + res);
-          console.log("left room no: " + this.roomNo);
+
+          this.$emit('active', response.active_users);
         }.bind(this));
       },
       pingUser: function() {
@@ -134,10 +129,6 @@
           for (let i = 0; i < ping_pong_times.length; i++)
             sum += ping_pong_times[i];
           console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
-
-          this.activeUsers = response.active_users;
-          this.$emit('active', response.active_users);
-
 
         }.bind(this));
       },

@@ -1,14 +1,12 @@
 from config import socketio
-from flask import jsonify, session, request
 from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
 
-active_users = []
+
+active_users = {}
+
 
 @socketio.on('sendInRoom')
 def send_room_message(message):
-    # session['receive_count'] = session.get('receive_count', 0) + 1
-    print("request.sid!: ")
-    print(request.sid)
     emit('room_response',
          {'data': message['data'], 'room': message['room']},
          room=message['room'])
@@ -16,33 +14,57 @@ def send_room_message(message):
 
 @socketio.on('join')
 def join(message):
-    join_room(message['room'])
-    # session['receive_count'] = session.get('receive_count', 0) + 1
-    print("Joined ROOM!")
-    print(message['who'])
-    active_users.append(message['who'])
+    user = message['who']
+    room = message['room']
+    join_room(room)
+
+    users_in_room = active_users.get(room)
+    if users_in_room:
+        # room is not empty
+        if user in users_in_room:
+            # user already active in room, shouldn't happen
+            print("user already active")
+        else:
+            # user added to active users in room
+            print("user set to active in existing room")
+            active_users.get(room).append(user)
+    else:
+        print("room created in dict and user set to active")
+        active_users[room] = [user]
+
     emit('join_room_response',
-         {'data': ",".join(rooms())})
+         {'active_users': active_users[room]},
+         room=room)
+
 
 @socketio.on('leave')
 def leave(message):
-    leave_room(message['room'])
-    # session['receive_count'] = session.get('receive_count', 0) + 1
-    print("LEEEFT ROOM!")
-    print(message['who'])
-    print(message['room'])
-    active_users.remove(message['who'])
+    user = message['who']
+    room = message['room']
+    leave_room(room)
+
+    if active_users.get(room):
+        # check if room exists, should definitely exist
+        active_users.get(room).remove(user)
+
+    users_in_room = active_users.get(room)
+    if not users_in_room:
+        print("remove room from dict if empty after user has left")
+        del active_users[room]
+
     disconnect()
     emit('leave_room_response',
-         {'data': ",".join(rooms())})
+         {'active_users': active_users.get(room)},
+         room=room)
+
 
 @socketio.on('my_ping')
 def my_ping(message):
-    emit('my_pong', {'data': message['start'], 'active_users': active_users})
+    emit('my_pong', {'data': message['start']})
+
 
 @socketio.on('newMember')
 def send_room(message):
-    # session['receive_count'] = session.get('receive_count', 0) + 1
     emit('member_join_response',
          {'data': message['data'], 'room': message['room']},
          room=message['room'])
