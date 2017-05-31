@@ -3,42 +3,78 @@
 
     <b-tabs>
 
-      <b-tab title="Room" active>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="panel panel-primary">
-              <ul id="chat-window" class="panel-body chat">
-                <li v-for="value in history">
+      <!--      <b-tab title="Room" active>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="panel panel-primary">
+                    <ul id="chat-window" class="panel-body chat">
+                      <li v-for="value in history">
+                      <span class="bubble bubble-alt" v-if="value.who === 'me'">
+                        <div class="chat-body clearfix">
+                          {{ value.message }}
+                        </div>
+                      </span>
+                        <span class = "bubble" v-if="value.who === 'you'">
+                        <div class="chat-body clearfix">
+                          {{ value.message }}
+                        </div>
+                      </span>
+                      </li>
+                    </ul>
+
+                    <div class="panel-footer">
+                      <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
+                        <span class="input-group-btn">
+                        <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
+                          Send</button>
+                      </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </b-tab>-->
+
+      <template v-for="(item,index) in openChatarray">
+        <b-tab :title="item" @click="openRoom(item)">
+
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-primary">
+
+                <ul id="chat-window" class="panel-body chat">
+                  <div v-show="!(item === 'room')">
+                    <b-btn size="sm" variant="danger" class="float-right" @click="closeRoom(item)">Close chat</b-btn>
+                  </div>
+                  <li v-for="value in chatArray[index].history">
+
                 <span class="bubble bubble-alt" v-if="value.who === 'me'">
                   <div class="chat-body clearfix">
                     {{ value.message }}
                   </div>
                 </span>
-                  <span class = "bubble" v-if="value.who === 'you'">
+                    <span class = "bubble" v-if="value.who === 'you'">
                   <div class="chat-body clearfix">
                     {{ value.message }}
                   </div>
                 </span>
-                </li>
-              </ul>
+                  </li>
+                </ul>
 
-              <div class="panel-footer">
-                <div class="input-group">
-                  <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
-                  <span class="input-group-btn">
+                <div class="panel-footer">
+                  <div class="input-group">
+                    <input id="btn-input" type="text" v-on:focus="openRoom(item)" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
+                    <span class="input-group-btn">
                   <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
                     Send</button>
                 </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </b-tab>
-
-      <template v-for="item in openChatarray">
-        <b-tab :title="item">
-
         </b-tab>
       </template>
 
@@ -56,29 +92,25 @@
 
   export default {
     name: 'Chat',
-    props: ['projectId', 'openChatarray'],
+    props: ['projectId', 'openChatarray', 'chatArray'],
     data() {
       return {
         msg: "",
         roomNo: this.projectId.toString(),
-        selectedRoomNo: [],
-        history: [
-          { who: "", message: "" }
-        ],
         socket: io.connect(API_URL),
         username: '',
         chatmessage: {
           msg: "",
           who: ""
-        }
+        },
+        roomNoExt:'room',
+        activeChats: ['room']
       }
     },
     methods: {
       sendInRoom: function () {
         this.chatmessage.who = this.authUser.username;
-        console.log("thisroom no:");
-        console.log(this.roomNo);
-        this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNo});
+        this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNoExt});
         this.chatmessage.msg = '';
       },
       sendInRoomResponse: function() {
@@ -87,14 +119,17 @@
           let element = document.getElementById('chat-window');
           const scroll = element.scrollHeight - element.scrollTop;
           if (response.data.who === this.authUser.username){
-            this.history.push({ who: 'me',message: response.data.msg});
+            let index = this.activeChats.indexOf(response.room);
+            this.chatArray[index].history.push({ who: 'me', message: response.data.msg});
             setTimeout( () => {
               element = document.getElementById('chat-window');
               element.scrollTop = element.scrollHeight
-
             }, 100)
           } else {
-            this.history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
+            let index = this.activeChats.indexOf(response.room);
+            console.log("recieved number: ");
+            console.log(index);
+            this.chatArray[index].history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
             setTimeout( () => {
               if (scroll < 330) {
                 element = document.getElementById('chat-window');
@@ -106,7 +141,7 @@
         }.bind(this));
       },
       joinRoom: function() {
-        this.socket.emit('join', {who: this.authUser.username, room: this.roomNo});
+        this.socket.emit('join', {who: this.authUser.username, room: this.roomNoExt});
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -115,7 +150,7 @@
         }.bind(this));
       },
       leaveRoom: function() {
-        this.socket.emit('leave', {who: this.username, room: this.roomNo});
+        this.socket.emit('leave', {who: this.username, room: this.roomNoExt});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -143,24 +178,45 @@
           let sum = 0;
           for (let i = 0; i < ping_pong_times.length; i++)
             sum += ping_pong_times[i];
-          console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
-
+          //console.log(Math.round(10 * sum / ping_pong_times.length) / 10);
         }.bind(this));
       },
       newMemberJoin: function () {
         this.socket.on('member_join_response', function(response) {
-
           console.log("member_joinresponse: ");
           console.log(response);
           this.$emit('member_join', response.data);
-
-
         }.bind(this));
       },
       handleClose() {
         this.leaveRoom();
         return null
+      },
+      openRoom(member){
+        if (member === 'room'){
+          this.roomNoExt = 'room';
+        }else {
+          let array = [this.authUser.username, member]
+          array.sort();
+          this.roomNoExt = this.roomNo + '.' + array[0] + array[1];
+          if (this.activeChats.indexOf(this.roomNoExt) === -1) {
+            this.activeChats.push(this.roomNoExt);
+          }
+        }
+        this.joinRoom();
+
+      },
+      closeRoom(member){
+        let array= [this.authUser.username, member];
+        array.sort();
+        this.roomNoExt = this.roomNo + '.' + array[0] + array[1];
+        let index = this.activeChats.indexOf(this.roomNoExt);
+        this.activeChats.splice(index,1);
+        //TODO: Add the functionality to leave room so online members is shown properly
+        //this.leaveRoom();
+        this.$emit('closeRoom', member);
       }
+
     },
     computed: {
       ...mapGetters({

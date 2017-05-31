@@ -18,9 +18,9 @@
             <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
 
-            <div v-if="ifUserIsOpen(member)" v-on:click="closeChat(member)">
+            <!--<div v-if="ifUserIsOpen(member)" v-on:click="closeChat(member)">
               <icon name="minus" class="point"></icon>
-            </div>
+            </div>-->
           </td>
         </tr>
         </tbody>
@@ -30,7 +30,7 @@
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" v-bind:openChatarray="openChatarray" @active="updateActiveMembers" @member_join="newMember"></chat>
+      <chat v-bind:projectId="project.id" v-bind:openChatarray="openChatarray" v-bind:chatArray="chatArray" @active="updateActiveMembers" @member_join="newMember" @closeRoom="closeChat"></chat>
     </div>
     <div class="col-md-5">
       <h3>Files</h3>
@@ -61,7 +61,14 @@
         members: [],
         activeMembers: [],
         isActive: false,
-        openChatarray: [],
+        openChatarray: ['room'],
+        chatArray:[
+          {
+            history: [
+              { who: "", message: "" }
+            ]
+          }
+        ],
       }
     },
     methods: {
@@ -87,7 +94,7 @@
       },
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
-          this.members = response.data.members
+          this.members = response.data.members;
         });
       },
       newMember (member){
@@ -95,21 +102,26 @@
       },
       openChat: function (member){
 
-          //TODO: fix so you can't open several chat windows with same person
-          //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
+        //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
 
         if (this.openChatarray.indexOf(member) === -1) {
           this.openChatarray.push(member);
+          this.chatArray.push({history: [{ who: "", message: "" }]});
         }
-        
+
         console.log(this.openChatarray);
       },
       closeChat: function(member){
-        console.log(member);
+
         let index = this.openChatarray.indexOf(member);
 
+
+        this.chatArray.splice(index,1);
+
+
+
         this.openChatarray.splice(index, 1);
-        console.log(this.openChatarray);
+
       }
     },
     components:{
