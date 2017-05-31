@@ -61,7 +61,7 @@
         members: [],
         activeMembers: [],
         isActive: false,
-        openChatarray: []
+        openChatarray: [],
       }
     },
     methods: {
@@ -97,7 +97,11 @@
 
           //TODO: fix so you can't open several chat windows with same person
           //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
-        this.openChatarray.push(member);
+
+        if (this.openChatarray.indexOf(member) === -1) {
+          this.openChatarray.push(member);
+        }
+        
         console.log(this.openChatarray);
       },
       closeChat: function(member){
