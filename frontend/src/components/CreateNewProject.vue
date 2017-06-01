@@ -154,7 +154,6 @@
           icon: 'superpowers',
           color: '#0D47A1'
         },
-        msg: '',
         member: '',
         colors: {hex: '#0D47A1'},
         error: '',

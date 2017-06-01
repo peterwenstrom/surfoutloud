@@ -42,7 +42,7 @@
         if (window.location.hash === '#/dashboard') {
           this.$store.dispatch('setUpdateProjects', true)
         } else {
-          this.$router.push('dashboard')
+          this.$router.push('/dashboard')
         }
       }
     },
