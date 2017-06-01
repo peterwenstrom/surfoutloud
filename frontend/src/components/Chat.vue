@@ -85,15 +85,15 @@
           const scroll = element.scrollHeight - element.scrollTop;
           if (response.data.who === this.user.username){
             let index = this.activeChats.indexOf(response.room);
-            this.chatArray[index].history.push({ who: 'me', message: response.data.msg});
+            this.chatArray[index].history.push({ who: 'me', message: response.data.message});
             setTimeout( () => {
               element = document.getElementById('chat-window');
               element.scrollTop = element.scrollHeight
             }, 100)
           } else {
             let index = this.activeChats.indexOf(response.room);
-
-            this.chatArray[index].history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
+            this.chatArray[index].history.push(
+                { who: 'you', message: response.data.who + ": " + response.data.message});
             setTimeout( () => {
               if (scroll < 330) {
                 element = document.getElementById('chat-window');
@@ -118,7 +118,8 @@
       leaveRoom: function() {
         const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
 
-        this.socket.emit('leave', {who: this.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
+        this.socket.emit('leave',
+          {who: this.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
