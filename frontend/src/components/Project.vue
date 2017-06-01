@@ -29,7 +29,8 @@
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms" v-bind:chatArray="chatArray" @active="updateActiveMembers" @member_join="newMember" @closeRoom="closeChat"></chat>
+      <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms" v-bind:chatArray="chatArray"
+            @active="updateActiveMembers" @member_join="newMember" @closeRoom="closeChat"></chat>
     </div>
     <div class="col-md-5">
       <h3>Files</h3>
@@ -59,7 +60,6 @@
       return {
         members: [],
         activeMembers: [],
-        isActive: false,
         openChatRooms: ['room'],
         chatArray:[
           {
@@ -107,13 +107,9 @@
         }
       },
       closeChat: function(member){
-
         let index = this.openChatRooms.indexOf(member);
 
-
         this.chatArray.splice(index,1);
-
-
 
         this.openChatRooms.splice(index, 1);
 
