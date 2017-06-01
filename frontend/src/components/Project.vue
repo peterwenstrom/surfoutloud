@@ -12,7 +12,9 @@
         <tbody>
         <tr v-for="(member,index) in members">
           <td>
-            <p v-on:click="openChat(member)" class="point">{{ member }}</p>
+            <p v-if="member !== authUser.username" v-on:click="openChat(member)" class="point">{{ member }}</p>
+            <p v-else>{{ member }}</p>
+
           </td>
           <td>
             <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
@@ -30,7 +32,7 @@
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" v-bind:openChatarray="openChatarray" v-bind:chatArray="chatArray" @active="updateActiveMembers" @member_join="newMember" @closeRoom="closeChat"></chat>
+      <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms" v-bind:chatArray="chatArray" @active="updateActiveMembers" @member_join="newMember" @closeRoom="closeChat"></chat>
     </div>
     <div class="col-md-5">
       <h3>Files</h3>
@@ -61,7 +63,7 @@
         members: [],
         activeMembers: [],
         isActive: false,
-        openChatarray: ['room'],
+        openChatRooms: ['room'],
         chatArray:[
           {
             history: [
@@ -85,7 +87,7 @@
 
       },
       ifUserIsOpen (user) {
-        if (this.openChatarray.indexOf(user) > -1) {
+        if (this.openChatRooms.indexOf(user) > -1) {
           return true;
         } else {
           return false;
@@ -104,23 +106,23 @@
 
         //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
 
-        if (this.openChatarray.indexOf(member) === -1) {
-          this.openChatarray.push(member);
+        if (this.openChatRooms.indexOf(member) === -1) {
+          this.openChatRooms.push(member);
           this.chatArray.push({history: [{ who: "", message: "" }]});
         }
 
-        console.log(this.openChatarray);
+        console.log(this.openChatRooms);
       },
       closeChat: function(member){
 
-        let index = this.openChatarray.indexOf(member);
+        let index = this.openChatRooms.indexOf(member);
 
 
         this.chatArray.splice(index,1);
 
 
 
-        this.openChatarray.splice(index, 1);
+        this.openChatRooms.splice(index, 1);
 
       }
     },
@@ -132,7 +134,8 @@
     computed: {
       ...mapGetters({
         project: 'project',
-        project_selected: 'project_selected'
+        project_selected: 'project_selected',
+        authUser: 'authUser'
       })
     },
     created () {
