@@ -192,11 +192,11 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        user: 'user'
       })
     },
     mounted () {
-      this.projectDetails.admin = this.authUser.username
+      this.projectDetails.admin = this.user.username
     },
     components: {
       Icon,
