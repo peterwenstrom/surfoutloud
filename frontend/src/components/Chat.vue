@@ -74,7 +74,7 @@
     },
     methods: {
       sendInRoom: function () {
-        this.chatMessage.who = this.authUser.username;
+        this.chatMessage.who = this.user.username;
         this.socket.emit('sendInRoom', {data: this.chatMessage, room: this.chatRoomNumber});
         this.chatMessage.message = '';
       },
@@ -83,7 +83,7 @@
         this.socket.on('room_response', function(response) {
           let element = document.getElementById('chat-window');
           const scroll = element.scrollHeight - element.scrollTop;
-          if (response.data.who === this.authUser.username){
+          if (response.data.who === this.user.username){
             let index = this.activeChats.indexOf(response.room);
             this.chatArray[index].history.push({ who: 'me', message: response.data.msg});
             setTimeout( () => {
@@ -107,7 +107,7 @@
       joinRoom: function() {
         const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
 
-        this.socket.emit('join', {who: this.authUser.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
+        this.socket.emit('join', {who: this.user.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -163,7 +163,7 @@
         if (member === 'room'){
           this.chatRoomNumber = this.roomNumber;
         } else {
-          let usersInDirectChat = [this.authUser.username, member];
+          let usersInDirectChat = [this.user.username, member];
           usersInDirectChat.sort();
           this.chatRoomNumber = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
           if (this.activeChats.indexOf(this.chatRoomNumber) === -1) {
@@ -174,7 +174,7 @@
 
       },
       closeRoom(member){
-        let usersInDirectChat = [this.authUser.username, member];
+        let usersInDirectChat = [this.user.username, member];
         usersInDirectChat.sort();
         this.chatRoomNumber = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
         let index = this.activeChats.indexOf(this.chatRoomNumber);
@@ -186,7 +186,7 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        user: 'user'
       })
     },
     created () {
@@ -201,7 +201,7 @@
       this.newMemberJoin();
     },
     mounted () {
-      this.username = this.authUser.username;
+      this.username = this.user.username;
     },
     beforeDestroy() {
       this.leaveRoom();

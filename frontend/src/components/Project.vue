@@ -12,7 +12,7 @@
         <tbody>
         <tr v-for="(member,index) in members">
           <td>
-            <p v-if="member !== authUser.username" v-on:click="openChat(member)" class="point">{{ member }}</p>
+            <p v-if="member !== user.username" v-on:click="openChat(member)" class="point">{{ member }}</p>
             <p v-else>{{ member }}</p>
 
           </td>
@@ -20,9 +20,6 @@
             <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
 
-            <!--<div v-if="ifUserIsOpen(member)" v-on:click="closeChat(member)">
-              <icon name="minus" class="point"></icon>
-            </div>-->
           </td>
         </tr>
         </tbody>
@@ -131,7 +128,7 @@
       ...mapGetters({
         project: 'project',
         project_selected: 'project_selected',
-        authUser: 'authUser'
+        user: 'user'
       })
     },
     created () {

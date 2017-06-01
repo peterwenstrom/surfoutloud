@@ -54,7 +54,6 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser',
         update_projects: 'update_projects'
       })
     },

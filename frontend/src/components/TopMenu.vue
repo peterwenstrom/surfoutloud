@@ -13,7 +13,7 @@
             <b-nav-item v-if="authorized" v-on:click="linkToDashboard">Dashboard</b-nav-item>
             <b-nav-item-dropdown v-if="authorized" right-alignment>
               <template slot="text">
-                <span class="menu-name">{{authUser.username}}</span>
+                <span class="menu-name">{{user.username}}</span>
               </template>
               <router-link tag="b-dropdown-item" to="/profile">Profile</router-link>
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
@@ -48,7 +48,7 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser',
+        user: 'user',
         authorized: 'authorized'
       })
     }
