@@ -117,13 +117,8 @@
         }.bind(this));
       },
       leaveRoom: function() {
-        const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
-        if (!isDirectChat) {
-            // Make sure to leave the correct room on exit
-            this.chatRoomNumber = this.roomNumber;
-        }
         this.socket.emit('leave',
-          {who: this.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
+          {who: this.username, room: this.roomNumber, direct_chat: false});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -159,6 +154,10 @@
           this.$emit('memberJoin', response.data);
         }.bind(this));
       },
+      leaveDirectChatRoom() {
+        this.socket.emit('leave',
+          {who: this.username, room: this.chatRoomNumber, direct_chat: true});
+      },
       openRoom(member){
         if (member === 'room'){
           this.chatRoomNumber = this.roomNumber;
@@ -177,8 +176,8 @@
         this.chatRoomNumber = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
         let index = this.activeChats.indexOf(this.chatRoomNumber);
         this.activeChats.splice(index, 1);
-        this.leaveRoom();
-        this.$emit('closeRoom', member);
+        this.leaveDirectChatRoom();
+        this.$emit('closeRoom', member)
       },
       closeChatHandler() {
         this.leaveRoom();
