@@ -104,14 +104,10 @@
       },
       openChat: function (member){
 
-        //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
-
         if (this.openChatRooms.indexOf(member) === -1) {
           this.openChatRooms.push(member);
           this.chatArray.push({history: [{ who: "", message: "" }]});
         }
-
-        console.log(this.openChatRooms);
       },
       closeChat: function(member){
 
