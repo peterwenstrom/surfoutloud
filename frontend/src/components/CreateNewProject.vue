@@ -163,8 +163,10 @@
     },
     methods: {
       addMember () {
-        this.projectDetails.members.push(this.member);
-        this.member = "";
+        if (this.member !== '') {
+          this.projectDetails.members.push(this.member);
+          this.member = '';
+        }
       },
       removeMember (user) {
         const index = this.projectDetails.members.indexOf(user);
