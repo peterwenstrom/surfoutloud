@@ -3,40 +3,7 @@
 
     <b-tabs>
 
-      <!--      <b-tab title="Room" active>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="panel panel-primary">
-                    <ul id="chat-window" class="panel-body chat">
-                      <li v-for="value in history">
-                      <span class="bubble bubble-alt" v-if="value.who === 'me'">
-                        <div class="chat-body clearfix">
-                          {{ value.message }}
-                        </div>
-                      </span>
-                        <span class = "bubble" v-if="value.who === 'you'">
-                        <div class="chat-body clearfix">
-                          {{ value.message }}
-                        </div>
-                      </span>
-                      </li>
-                    </ul>
-
-                    <div class="panel-footer">
-                      <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
-                        <span class="input-group-btn">
-                        <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
-                          Send</button>
-                      </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </b-tab>-->
-
-      <template v-for="(item,index) in openChatarray">
+      <template v-for="(item,index) in openChatRooms">
         <b-tab :title="item" @click="openRoom(item)">
 
 
@@ -78,9 +45,7 @@
         </b-tab>
       </template>
 
-
     </b-tabs>
-
 
   </div>
 
@@ -92,7 +57,7 @@
 
   export default {
     name: 'Chat',
-    props: ['projectId', 'openChatarray', 'chatArray'],
+    props: ['projectId', 'openChatRooms', 'chatArray'],
     data() {
       return {
         msg: "",
@@ -103,8 +68,8 @@
           msg: "",
           who: ""
         },
-        roomNoExt:'room',
-        activeChats: ['room']
+        roomNoExt: this.projectId.toString(),
+        activeChats: [this.projectId.toString()]
       }
     },
     methods: {
@@ -141,7 +106,9 @@
         }.bind(this));
       },
       joinRoom: function() {
-        this.socket.emit('join', {who: this.authUser.username, room: this.roomNoExt});
+        const isDirectChat = (this.roomNo !== this.roomNoExt);
+
+        this.socket.emit('join', {who: this.authUser.username, room: this.roomNoExt, direct_chat: isDirectChat});
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -150,7 +117,9 @@
         }.bind(this));
       },
       leaveRoom: function() {
-        this.socket.emit('leave', {who: this.username, room: this.roomNoExt});
+        const isDirectChat = (this.roomNo !== this.roomNoExt);
+
+        this.socket.emit('leave', {who: this.username, room: this.roomNoExt, direct_chat: isDirectChat});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -183,8 +152,7 @@
       },
       newMemberJoin: function () {
         this.socket.on('member_join_response', function(response) {
-          console.log("member_joinresponse: ");
-          console.log(response);
+
           this.$emit('member_join', response.data);
         }.bind(this));
       },
@@ -194,24 +162,24 @@
       },
       openRoom(member){
         if (member === 'room'){
-          this.roomNoExt = 'room';
-        }else {
-          let array = [this.authUser.username, member]
-          array.sort();
-          this.roomNoExt = this.roomNo + '.' + array[0] + array[1];
+          this.roomNoExt = this.roomNo;
+        } else {
+          let usersInDirectChat = [this.authUser.username, member];
+          usersInDirectChat.sort();
+          this.roomNoExt = this.roomNo + '.' + usersInDirectChat[0] + usersInDirectChat[1];
           if (this.activeChats.indexOf(this.roomNoExt) === -1) {
-            this.activeChats.push(this.roomNoExt);
+            this.activeChats.push(this.roomNoExt)
           }
         }
         this.joinRoom();
 
       },
       closeRoom(member){
-        let array= [this.authUser.username, member];
-        array.sort();
-        this.roomNoExt = this.roomNo + '.' + array[0] + array[1];
+        let usersInDirectChat = [this.authUser.username, member];
+        usersInDirectChat.sort();
+        this.roomNoExt = this.roomNo + '.' + usersInDirectChat[0] + usersInDirectChat[1];
         let index = this.activeChats.indexOf(this.roomNoExt);
-        this.activeChats.splice(index,1);
+        this.activeChats.splice(index, 1);
         //TODO: Add the functionality to leave room so online members is shown properly
         //this.leaveRoom();
         this.$emit('closeRoom', member);
@@ -224,7 +192,6 @@
       })
     },
     created () {
-
       window.addEventListener('beforeunload', this.handleClose);
 
       this.joinRoom();
