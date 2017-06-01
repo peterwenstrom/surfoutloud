@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <project-invites v-bind:username="this.authUser.username"></project-invites>
+    <project-invites v-bind:username="user.username"></project-invites>
   </div>
 </template>
 
@@ -158,7 +158,7 @@
         this.allowEditPassword = option;
       },
       editUsername () {
-        if (this.authUser.username === this.credentials.username) {
+        if (this.user.username === this.credentials.username) {
           this.enableEditUsername(false);
           this.usernameError = '';
         } else {
@@ -196,12 +196,12 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        user: 'user'
       })
 
     },
     created () {
-      this.credentials.username = this.authUser.username;
+      this.credentials.username = this.user.username;
     },
     components: {
       Icon,

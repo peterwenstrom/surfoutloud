@@ -32,9 +32,9 @@
 
                 <div class="panel-footer">
                   <div class="input-group">
-                    <input id="btn-input" type="text" v-on:focus="openRoom(item)" class="form-control input-sm" placeholder="Type your message here..." v-model="chatmessage.msg" v-on:keyup.enter="sendInRoom" />
+                    <input id="btn-input" type="text" v-on:focus="openRoom(item)" class="form-control input-sm" placeholder="Type your message here..." v-model="chatMessage.message" v-on:keyup.enter="sendInRoom" />
                     <span class="input-group-btn">
-                  <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatmessage.msg" v-on:click="sendInRoom">
+                  <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatMessage.message" v-on:click="sendInRoom">
                     Send</button>
                 </span>
                   </div>
@@ -60,30 +60,30 @@
     props: ['projectId', 'openChatRooms', 'chatArray'],
     data() {
       return {
-        msg: "",
-        roomNo: this.projectId.toString(),
+        message: "",
+        roomNumber: this.projectId.toString(),
         socket: io.connect(API_URL),
         username: '',
-        chatmessage: {
-          msg: "",
+        chatMessage: {
+          message: "",
           who: ""
         },
-        roomNoExt: this.projectId.toString(),
+        chatRoomNumber: this.projectId.toString(),
         activeChats: [this.projectId.toString()]
       }
     },
     methods: {
       sendInRoom: function () {
-        this.chatmessage.who = this.authUser.username;
-        this.socket.emit('sendInRoom', {data: this.chatmessage, room: this.roomNoExt});
-        this.chatmessage.msg = '';
+        this.chatMessage.who = this.user.username;
+        this.socket.emit('sendInRoom', {data: this.chatMessage, room: this.chatRoomNumber});
+        this.chatMessage.message = '';
       },
       sendInRoomResponse: function() {
         //recieving messages and pushing the messages to the history array
         this.socket.on('room_response', function(response) {
           let element = document.getElementById('chat-window');
           const scroll = element.scrollHeight - element.scrollTop;
-          if (response.data.who === this.authUser.username){
+          if (response.data.who === this.user.username){
             let index = this.activeChats.indexOf(response.room);
             this.chatArray[index].history.push({ who: 'me', message: response.data.msg});
             setTimeout( () => {
@@ -92,8 +92,7 @@
             }, 100)
           } else {
             let index = this.activeChats.indexOf(response.room);
-            console.log("recieved number: ");
-            console.log(index);
+
             this.chatArray[index].history.push({ who: 'you', message: response.data.who + ": " + response.data.msg});
             setTimeout( () => {
               if (scroll < 330) {
@@ -106,9 +105,9 @@
         }.bind(this));
       },
       joinRoom: function() {
-        const isDirectChat = (this.roomNo !== this.roomNoExt);
+        const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
 
-        this.socket.emit('join', {who: this.authUser.username, room: this.roomNoExt, direct_chat: isDirectChat});
+        this.socket.emit('join', {who: this.user.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
@@ -117,9 +116,9 @@
         }.bind(this));
       },
       leaveRoom: function() {
-        const isDirectChat = (this.roomNo !== this.roomNoExt);
+        const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
 
-        this.socket.emit('leave', {who: this.username, room: this.roomNoExt, direct_chat: isDirectChat});
+        this.socket.emit('leave', {who: this.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -162,33 +161,32 @@
       },
       openRoom(member){
         if (member === 'room'){
-          this.roomNoExt = this.roomNo;
+          this.chatRoomNumber = this.roomNumber;
         } else {
-          let usersInDirectChat = [this.authUser.username, member];
+          let usersInDirectChat = [this.user.username, member];
           usersInDirectChat.sort();
-          this.roomNoExt = this.roomNo + '.' + usersInDirectChat[0] + usersInDirectChat[1];
-          if (this.activeChats.indexOf(this.roomNoExt) === -1) {
-            this.activeChats.push(this.roomNoExt)
+          this.chatRoomNumber = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
+          if (this.activeChats.indexOf(this.chatRoomNumber) === -1) {
+            this.activeChats.push(this.chatRoomNumber)
           }
         }
         this.joinRoom();
 
       },
       closeRoom(member){
-        let usersInDirectChat = [this.authUser.username, member];
+        let usersInDirectChat = [this.user.username, member];
         usersInDirectChat.sort();
-        this.roomNoExt = this.roomNo + '.' + usersInDirectChat[0] + usersInDirectChat[1];
-        let index = this.activeChats.indexOf(this.roomNoExt);
+        this.chatRoomNumber = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
+        let index = this.activeChats.indexOf(this.chatRoomNumber);
         this.activeChats.splice(index, 1);
-        //TODO: Add the functionality to leave room so online members is shown properly
-        //this.leaveRoom();
+        this.leaveRoom();
         this.$emit('closeRoom', member);
       }
 
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        user: 'user'
       })
     },
     created () {
@@ -203,7 +201,7 @@
       this.newMemberJoin();
     },
     mounted () {
-      this.username = this.authUser.username;
+      this.username = this.user.username;
     },
     beforeDestroy() {
       this.leaveRoom();

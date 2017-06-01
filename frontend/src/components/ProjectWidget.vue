@@ -76,16 +76,15 @@
   }
   .widget-bottom {
     height: 30%;
-    overflow: hidden;
+    min-height: 50px;
     width: 100%;
+    overflow: hidden;
     background-color: #efefef;
     border-radius: 5px;
+    text-align: left;
     vertical-align: middle;
     margin: 0;
     padding: 5px 0 5px 0;
-  }
-  .widget-bottom p {
-    padding-top: 5px;
   }
   .project-link {
     color: #35495E;

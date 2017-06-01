@@ -12,7 +12,7 @@
         <tbody>
         <tr v-for="(member,index) in members">
           <td>
-            <p v-if="member !== authUser.username" v-on:click="openChat(member)" class="point">{{ member }}</p>
+            <p v-if="member !== user.username" v-on:click="openChat(member)" class="point">{{ member }}</p>
             <p v-else>{{ member }}</p>
 
           </td>
@@ -20,9 +20,6 @@
             <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
             <icon v-else name="user"></icon>
 
-            <!--<div v-if="ifUserIsOpen(member)" v-on:click="closeChat(member)">
-              <icon name="minus" class="point"></icon>
-            </div>-->
           </td>
         </tr>
         </tbody>
@@ -104,14 +101,10 @@
       },
       openChat: function (member){
 
-        //TODO: fix so you can't open a chat window with yourself? maybe maybe not, facebook messenger has this functionality
-
         if (this.openChatRooms.indexOf(member) === -1) {
           this.openChatRooms.push(member);
           this.chatArray.push({history: [{ who: "", message: "" }]});
         }
-
-        console.log(this.openChatRooms);
       },
       closeChat: function(member){
 
@@ -134,12 +127,12 @@
     computed: {
       ...mapGetters({
         project: 'project',
-        project_selected: 'project_selected',
-        authUser: 'authUser'
+        projectSelected: 'projectSelected',
+        user: 'user'
       })
     },
     created () {
-      if (!this.project_selected) {
+      if (!this.projectSelected) {
         axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userAuth.addAuthHeader()).then( response => {
           this.$store.dispatch('setProjectObject', response.data.project);
           this.getMembers()
@@ -147,7 +140,7 @@
       }
     },
     mounted (){
-      if (this.project_selected) {
+      if (this.projectSelected) {
         this.getMembers()
       }
     },

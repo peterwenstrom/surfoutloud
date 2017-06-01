@@ -54,12 +54,11 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser',
-        update_projects: 'update_projects'
+        updateProjects: 'updateProjects'
       })
     },
     watch: {
-      update_projects: function(update) {
+      updateProjects: function(update) {
         if (update) {
           this.updateDashboard()
         }

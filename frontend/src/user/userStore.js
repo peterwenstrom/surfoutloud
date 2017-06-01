@@ -5,7 +5,7 @@ const state = {
 };
 
 const getters = {
-  authUser(state) {
+  user(state) {
     return state.user;
   },
   authorized(state) {

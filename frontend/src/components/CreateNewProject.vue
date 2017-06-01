@@ -154,7 +154,6 @@
           icon: 'superpowers',
           color: '#0D47A1'
         },
-        msg: '',
         member: '',
         colors: {hex: '#0D47A1'},
         error: '',
@@ -163,8 +162,10 @@
     },
     methods: {
       addMember () {
-        this.projectDetails.members.push(this.member);
-        this.member = "";
+        if (this.member !== '') {
+          this.projectDetails.members.push(this.member);
+          this.member = '';
+        }
       },
       removeMember (user) {
         const index = this.projectDetails.members.indexOf(user);
@@ -190,11 +191,11 @@
     },
     computed: {
       ...mapGetters({
-        authUser: 'authUser'
+        user: 'user'
       })
     },
     mounted () {
-      this.projectDetails.admin = this.authUser.username
+      this.projectDetails.admin = this.user.username
     },
     components: {
       Icon,
