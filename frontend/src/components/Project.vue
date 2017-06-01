@@ -127,12 +127,12 @@
     computed: {
       ...mapGetters({
         project: 'project',
-        project_selected: 'project_selected',
+        projectSelected: 'projectSelected',
         user: 'user'
       })
     },
     created () {
-      if (!this.project_selected) {
+      if (!this.projectSelected) {
         axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userAuth.addAuthHeader()).then( response => {
           this.$store.dispatch('setProjectObject', response.data.project);
           this.getMembers()
@@ -140,7 +140,7 @@
       }
     },
     mounted (){
-      if (this.project_selected) {
+      if (this.projectSelected) {
         this.getMembers()
       }
     },

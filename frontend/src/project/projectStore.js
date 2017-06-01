@@ -8,26 +8,26 @@ const state = {
     icon: '',
     color: ''
   },
-  project_selected: false,
-  update_projects: false
+  projectSelected: false,
+  updateProjects: false
 };
 
 const getters = {
   project(state) {
     return state.project;
   },
-  project_selected(state) {
-    return state.project_selected
+  projectSelected(state) {
+    return state.projectSelected
   },
-  update_projects(state) {
-    return state.update_projects
+  updateProjects(state) {
+    return state.updateProjects
   }
 };
 
 const mutations = {
   SET_PROJECT (state, projectObject) {
     state.project = projectObject;
-    state.project_selected = true
+    state.projectSelected = true
   },
   CLEAR_PROJECT (state) {
     state.project = {
@@ -38,10 +38,10 @@ const mutations = {
       icon: '',
       color: ''
     };
-    state.project_selected = false
+    state.projectSelected = false
   },
   SET_UPDATE_PROJECTS (state, update) {
-    state.update_projects = update
+    state.updateProjects = update
   }
 };
 
