@@ -5,8 +5,6 @@
 
       <template v-for="(item,index) in openChatRooms">
         <b-tab :title="item" @click="openRoom(item)">
-
-
           <div class="row">
             <div class="col-md-12">
               <div class="panel panel-primary">
@@ -32,7 +30,13 @@
 
                 <div class="panel-footer">
                   <div class="input-group">
-                    <input id="btn-input" type="text" v-on:focus="openRoom(item)" class="form-control input-sm" placeholder="Type your message here..." v-model="chatMessage.message" v-on:keyup.enter="sendInRoom" />
+                    <input id="btn-input"
+                           class="form-control input-sm"
+                           type="text"
+                           placeholder="Type your message here..."
+                           v-model="chatMessage.message"
+                           v-on:focus="openRoom(item)"
+                           v-on:keyup.enter="sendInRoom" />
                     <span class="input-group-btn">
                   <button class="btn btn-sm send-btn" id="btn-chat" v-model="chatMessage.message" v-on:click="sendInRoom">
                     Send</button>
@@ -48,7 +52,6 @@
     </b-tabs>
 
   </div>
-
 </template>
 
 <script>
@@ -57,7 +60,7 @@
 
   export default {
     name: 'Chat',
-    props: ['projectId', 'openChatRooms', 'chatArray'],
+    props: ['projectId', 'openChatRooms', 'chatArray', 'newDirectChat'],
     data() {
       return {
         message: "",
@@ -79,7 +82,7 @@
         this.chatMessage.message = '';
       },
       sendInRoomResponse: function() {
-        //recieving messages and pushing the messages to the history array
+        //receiving messages and pushing the messages to the history array
         this.socket.on('room_response', function(response) {
           let element = document.getElementById('chat-window');
           const scroll = element.scrollHeight - element.scrollTop;
@@ -105,26 +108,27 @@
         }.bind(this));
       },
       joinRoom: function() {
-        const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
-
-        this.socket.emit('join', {who: this.user.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
+        this.socket.emit('join', {who: this.user.username, room: this.chatRoomNumber, direct_chat: false})
       },
       joinRoomResponse: function() {
         this.socket.on('join_room_response', function(response) {
 
-          this.$emit('active', response.active_users);
+          this.$emit('activeUpdate', response.active_users);
         }.bind(this));
       },
       leaveRoom: function() {
         const isDirectChat = (this.roomNumber !== this.chatRoomNumber);
-
+        if (!isDirectChat) {
+            // Make sure to leave the correct room on exit
+            this.chatRoomNumber = this.roomNumber;
+        }
         this.socket.emit('leave',
           {who: this.username, room: this.chatRoomNumber, direct_chat: isDirectChat});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
 
-          this.$emit('active', response.active_users);
+          this.$emit('activeUpdate', response.active_users);
         }.bind(this));
       },
       pingUser: function() {
@@ -135,7 +139,6 @@
         this.socket.emit('my_ping', {start: start_time});
 
         setTimeout(function(){ self.pingUser() }, 5000);
-
 
       },
       pongUser: function(){
@@ -153,12 +156,8 @@
       newMemberJoin: function () {
         this.socket.on('member_join_response', function(response) {
 
-          this.$emit('member_join', response.data);
+          this.$emit('memberJoin', response.data);
         }.bind(this));
-      },
-      handleClose() {
-        this.leaveRoom();
-        return null
       },
       openRoom(member){
         if (member === 'room'){
@@ -171,8 +170,6 @@
             this.activeChats.push(this.chatRoomNumber)
           }
         }
-        this.joinRoom();
-
       },
       closeRoom(member){
         let usersInDirectChat = [this.user.username, member];
@@ -182,16 +179,30 @@
         this.activeChats.splice(index, 1);
         this.leaveRoom();
         this.$emit('closeRoom', member);
+      },
+      closeChatHandler() {
+        this.leaveRoom();
+        return null
       }
-
     },
     computed: {
       ...mapGetters({
         user: 'user'
       })
     },
+    watch: {
+      newDirectChat: function(member) {
+        let usersInDirectChat = [this.user.username, member];
+        usersInDirectChat.sort();
+        const directChatRoom = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
+        this.socket.emit('join', {who: this.user.username, room: directChatRoom, direct_chat: true});
+        if (this.activeChats.indexOf(directChatRoom) === -1) {
+          this.activeChats.push(directChatRoom)
+        }
+      }
+    },
     created () {
-      window.addEventListener('beforeunload', this.handleClose);
+      window.addEventListener('beforeunload', this.closeChatHandler);
 
       this.joinRoom();
       this.sendInRoomResponse();
@@ -206,7 +217,7 @@
     },
     beforeDestroy() {
       this.leaveRoom();
-      window.removeEventListener('beforeunload', this.handleClose);
+      window.removeEventListener('beforeunload', this.closeChatHandler);
     }
   };
 

@@ -29,8 +29,9 @@
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
 
-      <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms" v-bind:chatArray="chatArray"
-            @active="updateActiveMembers" @member_join="newMember" @closeRoom="closeChat"></chat>
+      <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms"
+            v-bind:chatArray="chatArray" v-bind:newDirectChat="newDirectChat"
+            @activeUpdate="updateActiveMembers" @memberJoin="newMember" @closeRoom="closeChat"></chat>
     </div>
     <div class="col-md-5">
       <h3>Files</h3>
@@ -68,6 +69,7 @@
             ]
           }
         ],
+        newDirectChat: ''
       }
     },
     methods: {
@@ -81,15 +83,6 @@
         } else {
           return false;
         }
-
-      },
-      ifUserIsOpen (user) {
-        if (this.openChatRooms.indexOf(user) > -1) {
-          return true;
-        } else {
-          return false;
-        }
-
       },
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
@@ -100,19 +93,18 @@
         this.members.push(member);
       },
       openChat: function (member){
-
+        // Open chat when member is pressed, change on variables will propagate to Chat.vue
         if (this.openChatRooms.indexOf(member) === -1) {
           this.openChatRooms.push(member);
           this.chatArray.push({history: [{ who: "", message: "" }]});
+          this.newDirectChat = member
         }
       },
       closeChat: function(member){
+        // Close chat is emitted from Chat.vue when user presses close button
         let index = this.openChatRooms.indexOf(member);
-
         this.chatArray.splice(index,1);
-
         this.openChatRooms.splice(index, 1);
-
       }
     },
     components:{
