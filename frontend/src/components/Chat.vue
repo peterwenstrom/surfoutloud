@@ -189,12 +189,14 @@
     },
     watch: {
       newDirectChat: function(member) {
-        let usersInDirectChat = [this.user.username, member];
-        usersInDirectChat.sort();
-        const directChatRoom = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
-        this.socket.emit('join', {who: this.user.username, room: directChatRoom, direct_chat: true});
-        if (this.activeChats.indexOf(directChatRoom) === -1) {
-          this.activeChats.push(directChatRoom)
+        if (member) {
+          let usersInDirectChat = [this.user.username, member];
+          usersInDirectChat.sort();
+          const directChatRoom = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
+          this.socket.emit('join', {who: this.user.username, room: directChatRoom, direct_chat: true});
+          if (this.activeChats.indexOf(directChatRoom) === -1) {
+            this.activeChats.push(directChatRoom)
+          }
         }
       }
     },

@@ -105,6 +105,7 @@
         let index = this.openChatRooms.indexOf(member);
         this.chatArray.splice(index,1);
         this.openChatRooms.splice(index, 1);
+        this.newDirectChat = ''
       }
     },
     components:{
