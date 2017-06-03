@@ -73,6 +73,26 @@
         activeChats: [this.projectId.toString()]
       }
     },
+    computed: {
+      ...mapGetters({
+        user: 'user'
+      })
+    },
+    watch: {
+      newDirectChat: function(member) {
+        // Watch if prop newDirectChat changes, if it does a name has been clicked in parent component
+        // and we add to activeChats. If parameter member is empty a window has been closed.
+        if (member) {
+          let usersInDirectChat = [this.user.username, member];
+          usersInDirectChat.sort();
+          const directChatRoom = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
+          this.socket.emit('join', {who: this.user.username, room: directChatRoom, direct_chat: true});
+          if (this.activeChats.indexOf(directChatRoom) === -1) {
+            this.activeChats.push(directChatRoom)
+          }
+        }
+      }
+    },
     methods: {
       sendInRoom: function () {
         this.chatMessage.who = this.user.username;
@@ -80,7 +100,8 @@
         this.chatMessage.message = '';
       },
       sendInRoomResponse: function() {
-        //receiving messages and pushing the messages to the history array
+        // Receiving messages and pushing the messages to the history array, handles the scrollbar
+        // depending on who sent the message and the look of the current scroll
         this.socket.on('room_response', function(response) {
           let element = document.getElementById('chat-window');
           const scroll = element.scrollHeight - element.scrollTop;
@@ -157,15 +178,14 @@
           {who: this.user.username, room: this.chatRoomNumber, direct_chat: true});
       },
       openRoom(member){
-        if (member === 'room'){
+        // When tab is clicked set the chatRoomNumber to the correct value so that messages
+        // can be sent in the right room
+        if (member === 'room') {
           this.chatRoomNumber = this.roomNumber;
         } else {
           let usersInDirectChat = [this.user.username, member];
           usersInDirectChat.sort();
           this.chatRoomNumber = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
-          if (this.activeChats.indexOf(this.chatRoomNumber) === -1) {
-            this.activeChats.push(this.chatRoomNumber)
-          }
         }
       },
       closeRoom(member){
@@ -182,24 +202,6 @@
         return null
       }
     },
-    computed: {
-      ...mapGetters({
-        user: 'user'
-      })
-    },
-    watch: {
-      newDirectChat: function(member) {
-        if (member) {
-          let usersInDirectChat = [this.user.username, member];
-          usersInDirectChat.sort();
-          const directChatRoom = this.roomNumber + '.' + usersInDirectChat[0] + usersInDirectChat[1];
-          this.socket.emit('join', {who: this.user.username, room: directChatRoom, direct_chat: true});
-          if (this.activeChats.indexOf(directChatRoom) === -1) {
-            this.activeChats.push(directChatRoom)
-          }
-        }
-      }
-    },
     created () {
       window.addEventListener('beforeunload', this.closeChatHandler);
 
@@ -212,6 +214,7 @@
       this.newMemberJoin();
     },
     beforeDestroy() {
+      // Make sure to leave the room on server by calling leaveRoom and remove event listener
       this.leaveRoom();
       window.removeEventListener('beforeunload', this.closeChatHandler);
     }
