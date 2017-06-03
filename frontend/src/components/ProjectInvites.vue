@@ -43,17 +43,6 @@
       }
     },
     props: ['username'],
-    created () {
-      axios.get(GET_INVITES_URL, authUser.addAuthHeader()).then( response => {
-        if (response.data.projects.length > 0) {
-          this.noProjectMessage = '';
-          this.projects = response.data.projects
-        } else {
-          this.noProjectMessage = 'You currently have no pending invites to any projects'
-        }
-
-      })
-    },
     methods: {
       answerInvite (id, answer, index) {
         let answer_object = {
@@ -80,9 +69,21 @@
         })
       },
       broadcastMemberJoin: function (projectid){
+        // When an invite is accepted, send a socket event so that member list can be updated in project
         let socket = io.connect(API_URL);
         socket.emit('newMember', {data: this.username, room: projectid.toString()});
       }
+    },
+    created () {
+      // When component is created check for project invites
+      axios.get(GET_INVITES_URL, authUser.addAuthHeader()).then( response => {
+        if (response.data.projects.length > 0) {
+          this.noProjectMessage = '';
+          this.projects = response.data.projects
+        } else {
+          this.noProjectMessage = 'You currently have no pending invites to any projects'
+        }
+      })
     }
   }
 </script>
