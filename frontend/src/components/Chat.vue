@@ -63,10 +63,8 @@
     props: ['projectId', 'openChatRooms', 'chatArray', 'newDirectChat'],
     data() {
       return {
-        message: "",
         roomNumber: this.projectId.toString(),
         socket: io.connect(API_URL),
-        username: '',
         chatMessage: {
           message: "",
           who: ""
@@ -118,7 +116,7 @@
       },
       leaveRoom: function() {
         this.socket.emit('leave',
-          {who: this.username, room: this.roomNumber, direct_chat: false});
+          {who: this.user.username, room: this.roomNumber, direct_chat: false});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -156,7 +154,7 @@
       },
       leaveDirectChatRoom() {
         this.socket.emit('leave',
-          {who: this.username, room: this.chatRoomNumber, direct_chat: true});
+          {who: this.user.username, room: this.chatRoomNumber, direct_chat: true});
       },
       openRoom(member){
         if (member === 'room'){
@@ -210,9 +208,6 @@
       this.pingUser();
       this.pongUser();
       this.newMemberJoin();
-    },
-    mounted () {
-      this.username = this.user.username;
     },
     beforeDestroy() {
       this.leaveRoom();
