@@ -39,6 +39,8 @@
         userAuth.logout();
       },
       linkToDashboard() {
+        // Somewhat customised routing to enable reload of page if dashboard or logo is
+        // clicked even though you currently are on the dashboard.
         if (window.location.hash === '#/dashboard') {
           this.$store.dispatch('setUpdateProjects', true)
         } else {

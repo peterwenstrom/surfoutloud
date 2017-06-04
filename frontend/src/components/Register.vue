@@ -15,7 +15,7 @@
             class="form-control"
             placeholder="Enter your username"
             v-model="credentials.username"
-            v-on:keyup.enter="submit"
+            v-on:keyup.enter="register"
           >
         </div>
         <div class="form-group">
@@ -25,7 +25,7 @@
             class="form-control"
             placeholder="Enter your password"
             v-model="credentials.password"
-            v-on:keyup.enter="submit"
+            v-on:keyup.enter="register"
           >
         </div>
         <div class="form-group">
@@ -35,10 +35,10 @@
             class="form-control"
             placeholder="Repeat your password"
             v-model="credentials.repeat_password"
-            v-on:keyup.enter="submit"
+            v-on:keyup.enter="register"
           >
         </div>
-        <button class="register-btn btn" v-on:click="submit">Register</button>
+        <button class="register-btn btn" v-on:click="register">Register</button>
       </div>
       <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
@@ -67,7 +67,7 @@
       }
     },
     methods: {
-      submit() {
+      register() {
         let credentials = {
           username: this.credentials.username,
           password: this.credentials.password,

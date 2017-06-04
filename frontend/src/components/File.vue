@@ -52,7 +52,6 @@
       <input type="file" name="file" id="file" v-on:change="postFile">
     </form>
 
-
     <div id="wrapper" class="container">
       <modal v-if="showModal">
         <h3 slot="header" class="modal-title">
@@ -66,7 +65,7 @@
         </div>
 
         <div slot="footer">
-          <button class="btn btn-outline-info pointer" v-on:click="closeModal()"> Close </button>
+          <button class="btn btn-outline-info pointer" v-on:click="closeModal"> Close </button>
         </div>
       </modal>
     </div>
@@ -102,12 +101,12 @@
         fileName: '',
         emptyList: '',
         imgUrl: '',
-        showModal: false
+        showModal: false,
+        error: ''
       }
     },
     methods: {
       postFile: function (e){
-        //TODO: make validation on file upload so that users cannot upload files with non utf-8 chars
         const dropbox_api_arg = JSON.stringify({
           path: this.projectFolder +  e.target.files[0].name,
           mode: 'add',
@@ -126,7 +125,6 @@
           this.emptyList = '';
           this.getFiles()
         }).catch( error => {
-          console.log(error);
           this.error = error
         });
 
@@ -166,18 +164,15 @@
 
         xhr.onload = function() {
           if (xhr.status === 200) {
-            console.log(xhr.response);
             if(type==='download'){
               let blob = new Blob([xhr.response], {type: 'application/octet-stream'});
-              console.log("xhrresponse");
-              console.log(xhr.response);
               FileSaver.saveAs(blob, fileName, true);
             } else if(type === 'preview'){
               this.imgUrl = "data:"+xhr.getResponseHeader("Content-Type")+";base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response)));
               this.showModal = true;
             }
-          }else {
-            let errorMessage = xhr.response || 'Unable to download file';
+          } else {
+            this.error = xhr.response || 'Unable to download file';
           }
         }.bind(this);
 
@@ -189,13 +184,9 @@
         xhr.send();
       },
       deleteFile: function (fileName){
-        console.log("PATHPATHPATH: ");
-        console.log(this.projectFolder + fileName);
-
         const dropbox_api_arg = JSON.stringify({
           path: this.projectFolder + fileName,
         });
-
 
         axios.post('https://api.dropboxapi.com/2/files/delete',dropbox_api_arg, {
             headers: {
@@ -204,22 +195,18 @@
             }
           }
         ).then( () => {
-          console.log("done?");
           this.getFiles()
 
         }).catch( error => {
-          console.log(error);
           this.error = error
         });
-
-
       },
       closeModal() {
         this.showModal = false;
       }
-
     },
     mounted(){
+      // Let property receive value before running getFiles function
       if (!this.projectId) {
         setTimeout( () => {
           this.projectFolder = '/' + this.projectId + '/';
@@ -228,7 +215,6 @@
       } else {
         this.getFiles()
       }
-
     },
     components: {
       Icon,
