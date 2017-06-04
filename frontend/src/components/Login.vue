@@ -15,7 +15,7 @@
             class="form-control"
             placeholder="Enter your username"
             v-model="credentials.username"
-            v-on:keyup.enter="submit"
+            v-on:keyup.enter="login"
           >
         </div>
         <div class="form-group">
@@ -24,10 +24,10 @@
             class="form-control"
             placeholder="Enter your password"
             v-model="credentials.password"
-            v-on:keyup.enter="submit"
+            v-on:keyup.enter="login"
           >
         </div>
-        <button class="login-btn btn" v-on:click="submit">Log in</button>
+        <button class="login-btn btn" v-on:click="login">Log in</button>
       </div>
       <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
@@ -55,7 +55,7 @@
       }
     },
     methods: {
-      submit() {
+      login() {
         let credentials = {
           username: this.credentials.username,
           password: this.credentials.password

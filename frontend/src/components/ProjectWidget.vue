@@ -46,6 +46,7 @@
     props: ['project', 'widgetHeight'],
     methods: {
       selectProject() {
+        // If widget is clicked pass project details to store and push to the specified project page
         this.$store.dispatch('setProjectObject', this.project);
         this.$router.push('project/' + this.project.id)
       }
