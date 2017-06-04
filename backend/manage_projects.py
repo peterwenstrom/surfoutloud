@@ -151,9 +151,6 @@ def answer_project_invite():
             cursor.execute('''UPDATE Member SET accepted = 1 WHERE memberid = %s AND projectid = %s''',
                            (user_id, project_id))
             mysql.connection.commit()
-
-
-
             return jsonify({'message': 'Invite was accepted'}), 200
         except:
             mysql.connection.rollback()
@@ -168,14 +165,3 @@ def answer_project_invite():
         except:
             mysql.connection.rollback()
             return jsonify({'message': 'Something went wrong, please try again.'}), 400
-
-
-# @socketio.on('newMember')
-# def send_room(message):
-#     # session['receive_count'] = session.get('receive_count', 0) + 1
-#     print("debuuug: ")
-#     print(message['data'])
-#     print(message['room'])
-#     emit('member_join_response',
-#          {'data': message['data'], 'room': message['room']},
-#          room=message['room'])
