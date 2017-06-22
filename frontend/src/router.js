@@ -8,7 +8,7 @@ import Profile from '@/components/Profile'
 import Project from '@/components/Project'
 import CreateNewProject from '@/components/CreateNewProject'
 
-import user from './store/user/userAuth'
+import user from './store/user/userService'
 import store from './store/index'
 
 Vue.use(Router);

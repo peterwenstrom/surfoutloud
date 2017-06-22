@@ -29,7 +29,7 @@
 <script>
   import axios from 'axios'
   import {mapGetters} from 'vuex'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
 
   import ProjectWidget from './ProjectWidget.vue'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
@@ -69,7 +69,7 @@
       updateDashboard() {
         this.loading = true;
 
-        axios.get(GET_PROJECT_URL, userAuth.addAuthHeader() ).then( response => {
+        axios.get(GET_PROJECT_URL, userService.addAuthHeader() ).then(response => {
           this.projects = response.data.projects;
           this.loading = false
         });

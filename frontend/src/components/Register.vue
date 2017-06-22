@@ -48,7 +48,7 @@
 <script>
   import axios from 'axios'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
 
   export default {
     data() {
@@ -75,7 +75,7 @@
         };
         if (credentials.password === credentials.repeat_password) {
           this.loading = true;
-          userAuth.register(credentials, error => {
+          userService.register(credentials, error => {
             if (error) {
               this.error = error;
             } else {

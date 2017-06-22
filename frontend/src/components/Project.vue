@@ -43,7 +43,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import axios from 'axios'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
 
   import Chat from './Chat'
   import File from './File'
@@ -85,7 +85,7 @@
         }
       },
       getMembers() {
-        axios.get(GET_MEMBERS_URL + this.project.id, userAuth.addAuthHeader()).then( response => {
+        axios.get(GET_MEMBERS_URL + this.project.id, userService.addAuthHeader()).then(response => {
           this.members = response.data.members;
         });
       },
@@ -122,7 +122,7 @@
     },
     created () {
       if (!this.projectSelected) {
-        axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userAuth.addAuthHeader()).then( response => {
+        axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userService.addAuthHeader()).then(response => {
           this.$store.dispatch('setProjectObject', response.data.project);
           this.getMembers()
         })

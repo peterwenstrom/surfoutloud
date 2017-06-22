@@ -110,7 +110,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import axios from 'axios'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
 
   import ProjectInvites from './ProjectInvites.vue'
 
@@ -165,8 +165,8 @@
           this.usernameLoading = true;
           axios.post(EDIT_USERNAME_URL,
             {username: this.credentials.username},
-            userAuth.addAuthHeader()).then( response => {
-            userAuth.refreshUser(response.data);
+            userService.addAuthHeader()).then( response => {
+            userService.refreshUser(response.data);
             this.enableEditUsername(false);
             this.usernameError = '';
             this.usernameLoading = false;
@@ -181,7 +181,7 @@
           this.passwordLoading = true;
           axios.post(EDIT_PASSWORD_URL,
             {password: this.credentials.password, repeat_password: this.credentials.repeatPassword},
-            userAuth.addAuthHeader()).then( () => {
+            userService.addAuthHeader()).then( () => {
             this.enableEditPassword(false);
             this.passwordError = '';
             this.passwordLoading = false;

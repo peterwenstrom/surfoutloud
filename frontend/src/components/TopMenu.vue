@@ -27,7 +27,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
 
   export default {
     data() {
@@ -36,7 +36,7 @@
     },
     methods: {
       logout() {
-        userAuth.logout();
+        userService.logout();
       },
       linkToDashboard() {
         // Somewhat customised routing to enable reload of page if dashboard or logo is

@@ -26,7 +26,7 @@
 
 <script>
   import axios from 'axios'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
   import '../flask-socketio.js'
 
   const GET_INVITES_URL = API_URL + '/getprojects/0';
@@ -49,7 +49,7 @@
           project_id: id,
           answer: answer
         };
-        axios.post(ANSWER_INVITE_URL, answer_object, userAuth.addAuthHeader()).then( response => {
+        axios.post(ANSWER_INVITE_URL, answer_object, userService.addAuthHeader()).then( response => {
           this.responseMessage = response.data.message;
           this.responseIndex = index;
 
@@ -76,7 +76,7 @@
     },
     created () {
       // When component is created check for project invites
-      axios.get(GET_INVITES_URL, userAuth.addAuthHeader()).then( response => {
+      axios.get(GET_INVITES_URL, userService.addAuthHeader()).then( response => {
         if (response.data.projects.length > 0) {
           this.noProjectMessage = '';
           this.projects = response.data.projects

@@ -122,7 +122,7 @@
 <script>
   import axios from 'axios'
   import { mapGetters } from 'vuex'
-  import userAuth from '../store/user/userAuth'
+  import userService from '../store/user/userService'
 
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   import { Swatches } from 'vue-color'
@@ -176,7 +176,7 @@
       createProject () {
         this.loading = true;
         let project_details = this.projectDetails;
-        axios.post(ADD_PROJECT_URL, project_details, userAuth.addAuthHeader()).then(response => {
+        axios.post(ADD_PROJECT_URL, project_details, userService.addAuthHeader()).then(response => {
           this.loading = false;
           this.$store.dispatch('setProjectObject', response.data);
           this.$router.push('project/' + response.data.id)

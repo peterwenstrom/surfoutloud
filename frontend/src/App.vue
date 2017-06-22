@@ -10,7 +10,6 @@
 <script>
   import TopMenu from './components/TopMenu.vue'
   import axios from 'axios'
-  import userAuth from './store/user/userAuth'
 
   export default {
     components: {
