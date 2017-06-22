@@ -27,7 +27,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import userAuth from '../user/userAuth'
+  import userAuth from '../store/user/userAuth'
 
   export default {
     data() {

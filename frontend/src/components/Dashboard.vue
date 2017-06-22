@@ -29,7 +29,7 @@
 <script>
   import axios from 'axios'
   import {mapGetters} from 'vuex'
-  import userAuth from '../user/userAuth'
+  import userAuth from '../store/user/userAuth'
 
   import ProjectWidget from './ProjectWidget.vue'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'

@@ -43,7 +43,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import axios from 'axios'
-  import userAuth from '../user/userAuth'
+  import userAuth from '../store/user/userAuth'
 
   import Chat from './Chat'
   import File from './File'

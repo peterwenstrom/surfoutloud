@@ -48,7 +48,7 @@
 <script>
   import axios from 'axios'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
-  import userAuth from '../user/userAuth'
+  import userAuth from '../store/user/userAuth'
 
   export default {
     data() {

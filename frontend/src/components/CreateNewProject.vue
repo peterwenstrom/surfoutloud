@@ -122,7 +122,7 @@
 <script>
   import axios from 'axios'
   import { mapGetters } from 'vuex'
-  import userAuth from '../user/userAuth'
+  import userAuth from '../store/user/userAuth'
 
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
   import { Swatches } from 'vue-color'

@@ -1,4 +1,4 @@
-import store from '../store'
+import store from '../index'
 import axios from 'axios'
 
 const LOGIN_URL = API_URL + '/login';

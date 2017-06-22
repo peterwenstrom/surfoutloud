@@ -26,7 +26,7 @@
 
 <script>
   import axios from 'axios'
-  import authUser from '../user/userAuth'
+  import userAuth from '../store/user/userAuth'
   import '../flask-socketio.js'
 
   const GET_INVITES_URL = API_URL + '/getprojects/0';
@@ -49,7 +49,7 @@
           project_id: id,
           answer: answer
         };
-        axios.post(ANSWER_INVITE_URL, answer_object, authUser.addAuthHeader()).then( response => {
+        axios.post(ANSWER_INVITE_URL, answer_object, userAuth.addAuthHeader()).then( response => {
           this.responseMessage = response.data.message;
           this.responseIndex = index;
 
@@ -68,15 +68,15 @@
           }
         })
       },
-      broadcastMemberJoin: function (projectid){
+      broadcastMemberJoin: function (projectId){
         // When an invite is accepted, send a socket event so that member list can be updated in project
         let socket = io.connect(API_URL);
-        socket.emit('newMember', {data: this.username, room: projectid.toString()});
+        socket.emit('newMember', {data: this.username, room: projectId.toString()});
       }
     },
     created () {
       // When component is created check for project invites
-      axios.get(GET_INVITES_URL, authUser.addAuthHeader()).then( response => {
+      axios.get(GET_INVITES_URL, userAuth.addAuthHeader()).then( response => {
         if (response.data.projects.length > 0) {
           this.noProjectMessage = '';
           this.projects = response.data.projects
