@@ -6,7 +6,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import App from './App'
 import router from './router/index'
 import axios from 'axios'
-
+import socket from './socket/flask-socketio'
 import store from './store/index'
 
 Vue.use(BootstrapVue);
@@ -18,6 +18,7 @@ new Vue({
   el: '#app',
   router,
   axios,
+  socket,
   store,
   template: '<App/>',
   components: { App }

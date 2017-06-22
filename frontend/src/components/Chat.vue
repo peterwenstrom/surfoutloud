@@ -55,7 +55,6 @@
 </template>
 
 <script>
-  import '../flask-socketio.js'
   import {mapGetters} from 'vuex'
 
   export default {

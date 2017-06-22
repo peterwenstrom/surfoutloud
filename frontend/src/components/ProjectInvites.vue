@@ -27,7 +27,6 @@
 <script>
   import axios from 'axios'
   import userService from '../store/user/userService'
-  import '../flask-socketio.js'
 
   const GET_INVITES_URL = API_URL + '/getprojects/0';
   const ANSWER_INVITE_URL = API_URL + '/answerprojectinvite';
