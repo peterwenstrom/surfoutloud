@@ -72,6 +72,8 @@
         axios.get(GET_PROJECT_URL, userService.addAuthHeader() ).then(response => {
           this.projects = response.data.projects;
           this.loading = false
+        }).catch(error => {
+          this.loading = false;
         });
       },
       setWidgetHeight() {
