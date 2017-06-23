@@ -240,7 +240,7 @@
   .upload {
     cursor: pointer;
     border: 1px solid #878787;
-    border-radius: 20px;
+    border-radius: 5px;
     padding: 5px 10px 5px 10px;
   }
   .upload:hover svg {

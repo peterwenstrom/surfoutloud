@@ -119,7 +119,7 @@
   }
   #create-widget {
     border: 1px solid #c6c6c6;
-    border-radius: 20px;
+    border-radius: 5px;
     margin-bottom: 10px;
     padding-top: 10px;
   }

@@ -64,7 +64,7 @@
   .widget {
     margin-bottom: 10px;
     border: 1px solid #c6c6c6;
-    border-radius: 20px;
+    border-radius: 5px;
     padding: 10px;
     cursor: pointer;
   }

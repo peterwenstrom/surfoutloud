@@ -29,7 +29,7 @@
   }
   .main-content {
     background-color: #fff;
-    border-radius: 25px;
+    border-radius: 5px;
     margin-top: 60px;
     margin-bottom: 60px;
   }
