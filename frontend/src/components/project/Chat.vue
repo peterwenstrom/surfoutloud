@@ -15,7 +15,7 @@
                   </div>
                   <li v-for="value in chatArray[index].history">
 
-                <span class="bubble bubble-alt" v-if="value.who === 'me'">
+                <span class="bubble bubble-alt yellow" v-if="value.who === 'me'">
                   <div class="chat-body clearfix">
                     {{ value.message }}
                   </div>
@@ -62,6 +62,7 @@
     props: ['projectId', 'openChatRooms', 'chatArray', 'newDirectChat'],
     data() {
       return {
+        username: '',
         roomNumber: this.projectId.toString(),
         socket: io.connect(API_URL),
         chatMessage: {
@@ -136,7 +137,7 @@
       },
       leaveRoom: function() {
         this.socket.emit('leave',
-          {who: this.user.username, room: this.roomNumber, direct_chat: false});
+          {who: this.username, room: this.roomNumber, direct_chat: false});
       },
       leaveRoomResponse: function() {
         this.socket.on('leave_room_response', function(response) {
@@ -204,6 +205,8 @@
     created () {
       window.addEventListener('beforeunload', this.closeChatHandler);
 
+      this.username = this.user.username;
+
       this.joinRoom();
       this.sendInRoomResponse();
       this.joinRoomResponse();
@@ -219,7 +222,6 @@
     }
   };
 
-
 </script>
 
 <style scoped>
@@ -234,23 +236,6 @@
     color: #fff;
     cursor: pointer;
   }
-
-  /** page structure **/
-  .container {
-    padding: 40px 20px;
-    margin: 0 auto;
-  }
-
-
-  .datestamp {
-    display: block;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #8b91a0;
-    text-shadow: 1px 1px 0 rgba(255,255,255,0.6);
-  }
-
 
   /** ios1-ios6 bubbles **/
   .bubble {

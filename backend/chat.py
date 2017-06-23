@@ -1,5 +1,5 @@
 from config import socketio
-from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
+from flask_socketio import emit, join_room, leave_room, disconnect
 
 
 active_users = {}
@@ -51,10 +51,10 @@ def leave(message):
             # check if room exists, should definitely exist
             active_users.get(room).remove(user)
 
-        users_in_room = active_users.get(room)
-        if not users_in_room:
-            # remove room from dict if empty after user has left
-            del active_users[room]
+            users_in_room = active_users.get(room)
+            if not users_in_room:
+                # remove room from dict if empty after user has left
+                del active_users[room]
 
         disconnect()
         emit('leave_room_response',
