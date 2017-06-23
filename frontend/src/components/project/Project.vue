@@ -1,30 +1,14 @@
 <template>
-  <div class="hello row">
+  <div class="row">
+
     <div class="col-md-12">
       <h2>Project name: <i>{{project.name}}</i></h2>
       <p><strong>Project description: </strong><i>{{project.description}}</i></p>
       <hr class="small">
     </div>
-    <div class="col-md-2 border-right">
-      <h3>Members</h3>
-      <hr class="small">
-      <table class="table table-striped">
-        <tbody>
-        <tr v-for="(member,index) in members">
-          <td>
-            <p v-if="member !== user.username" v-on:click="openChat(member)" class="point">{{ member }}</p>
-            <p v-else>{{ member }}</p>
 
-          </td>
-          <td>
-            <icon v-if="ifUserIsActive(member)" class="green" name="user"></icon>
-            <icon v-else name="user"></icon>
-
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <member v-bind:username="user.username" v-bind:members="members"
+            v-bind:activeMembers="activeMembers" @memberClick="openChat"></member>
 
     <div class="col-md-5 border-right">
       <h3>Chat</h3>
@@ -33,10 +17,12 @@
             v-bind:chatArray="chatArray" v-bind:newDirectChat="newDirectChat"
             @activeUpdate="updateActiveMembers" @memberJoin="newMember" @closeRoom="closeChat"></chat>
     </div>
+
     <div class="col-md-5">
       <h3>Files</h3>
       <file v-bind:projectId="project.id"></file>
     </div>
+
   </div>
 </template>
 
@@ -45,11 +31,11 @@
   import axios from 'axios'
   import userService from '../../store/user/userService'
 
+  import Member from './Member.vue'
   import Chat from './Chat.vue'
   import File from './File.vue'
 
   import Icon from 'vue-awesome/components/Icon'
-  import 'vue-awesome/icons/user'
   import 'vue-awesome/icons/minus'
 
   const GET_MEMBERS_URL = API_URL + '/getmembers/';
@@ -77,13 +63,6 @@
         this.activeMembers = updatedActiveMembers
 
       },
-      ifUserIsActive (user) {
-        if (this.activeMembers.indexOf(user) > -1) {
-          return true;
-        } else {
-          return false;
-        }
-      },
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userService.addAuthHeader()).then(response => {
           this.members = response.data.members;
@@ -109,9 +88,10 @@
       }
     },
     components:{
+      Member,
       Chat,
-      Icon,
-      File
+      File,
+      Icon
     },
     computed: {
       ...mapGetters({
@@ -154,25 +134,8 @@
     margin: 0 10px;
   }
 
-  a {
-    color: #42b983;
-  }
-  td p {
-    text-align: left;
-  }
-  td * {
-    vertical-align: middle;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  .green {
-    color: #41B883;
-  }
   .border-right {
     border-right: 1px solid #eceeef;
-  }
-  .point {
-    cursor: pointer;
   }
 
 </style>
