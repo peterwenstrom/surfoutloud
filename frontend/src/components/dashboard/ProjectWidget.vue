@@ -87,6 +87,9 @@
     margin: 0;
     padding: 5px 0 5px 0;
   }
+  .widget-bottom div {
+    height: 100%;
+  }
   .project-link {
     color: #35495E;
   }
