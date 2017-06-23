@@ -58,52 +58,22 @@
       <div class="row">
         <div class="col-md-12">
           <p><strong>Select Project Icon:</strong></p>
-          <div class="project-icon">
-            <label for="one"><icon v-bind:style="{color: projectDetails.color}" name="superpowers"></icon></label>
-            <input type="radio" id="one" value="superpowers" v-model="projectDetails.icon">
+
+          <div class="project-icon" v-for="icon in icons">
+            <label v-bind:for="icon">
+              <icon v-bind:style="{color: projectDetails.color}" v-bind:name="icon"></icon>
+            </label>
+            <input type="radio" v-bind:id="icon" v-bind:value="icon" v-model="projectDetails.icon">
           </div>
-          <div class="project-icon">
-            <label for="two"><icon v-bind:style="{color: projectDetails.color}" name="snowflake-o"></icon></label>
-            <input type="radio" id="two" value="snowflake-o" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="three"><icon v-bind:style="{color: projectDetails.color}" name="anchor"></icon></label>
-            <input type="radio" id="three" value="anchor" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="four"><icon v-bind:style="{color: projectDetails.color}" name="heart"></icon></label>
-            <input type="radio" id="four" value="heart" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="five"><icon v-bind:style="{color: projectDetails.color}" name="diamond"></icon></label>
-            <input type="radio" id="five" value="diamond" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="six"><icon v-bind:style="{color: projectDetails.color}" name="hand-spock-o"></icon></label>
-            <input type="radio" id="six" value="hand-spock-o" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="seven"><icon v-bind:style="{color: projectDetails.color}" name="star"></icon></label>
-            <input type="radio" id="seven" value="star" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="eight"><icon v-bind:style="{color: projectDetails.color}" name="paw"></icon></label>
-            <input type="radio" id="eight" value="paw" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="nine"><icon v-bind:style="{color: projectDetails.color}" name="glass"></icon></label>
-            <input type="radio" id="nine" value="glass" v-model="projectDetails.icon">
-          </div>
-          <div class="project-icon">
-            <label for="ten"><icon v-bind:style="{color: projectDetails.color}" name="globe"></icon></label>
-            <input type="radio" id="ten" value="globe" v-model="projectDetails.icon">
-          </div>
+
           <hr class="small">
         </div>
+
         <div class="col-md-12">
           <p><strong>Select Project Color Theme:</strong></p>
           <swatches class="color-picker" v-model="colors" @input="updateSelectedColor"></swatches>
         </div>
+
       </div>
     </div>
 
@@ -152,10 +122,13 @@
           description: '',
           admin: '',
           icon: 'superpowers',
-          color: '#0D47A1'
+          color: '#0D47A1',
+          test: 'paw'
         },
         member: '',
         colors: {hex: '#0D47A1'},
+        icons: ['superpowers', 'snowflake-o', 'anchor', 'heart', 'diamond',
+                'hand-spock-o', 'globe', 'star', 'paw', 'glass'],
         error: '',
         loading: false
       }
