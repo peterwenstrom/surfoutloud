@@ -7,7 +7,7 @@
       <div v-if="!loading" class="row">
         <div class="col-lg-3 col-md-4 col-sm-6">
           <div id="create-widget">
-            <router-link class="create" to="/createnewproject">
+            <router-link class="create" to="/createproject">
               <p><strong>Create new project</strong></p>
               <icon name="plus-circle"></icon>
             </router-link>
@@ -29,9 +29,10 @@
 <script>
   import axios from 'axios'
   import {mapGetters} from 'vuex'
-  import userService from '../store/user/userService'
+  import userService from '../../store/user/userService'
 
   import ProjectWidget from './ProjectWidget.vue'
+
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/plus-circle'

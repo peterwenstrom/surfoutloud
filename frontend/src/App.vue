@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import TopMenu from './components/TopMenu.vue'
+  import TopMenu from './components/shared_components/TopMenu.vue'
   import axios from 'axios'
 
   export default {

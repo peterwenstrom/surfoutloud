@@ -1,11 +1,11 @@
 <template>
   <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-lg-4 col-sm-2"></div>
+    <div class="col-lg-4 col-sm-8">
       <div v-if="!loading">
-        <img class="logo" src="../assets/LogoText.png"/>
-        <h2>Register</h2>
-        <p>Register here if you don't have an account</p>
+        <img class="logo" src="../../assets/LogoText.png"/>
+        <h2>Log in</h2>
+        <p>Log in if you already have an account</p>
         <div class="alert alert-danger" v-if="error">
           <p>{{ error }}</p>
         </div>
@@ -15,30 +15,19 @@
             class="form-control"
             placeholder="Enter your username"
             v-model="credentials.username"
-            v-on:keyup.enter="register"
+            v-on:keyup.enter="login"
           >
         </div>
         <div class="form-group">
           <input
-            id="password"
             type="password"
             class="form-control"
             placeholder="Enter your password"
             v-model="credentials.password"
-            v-on:keyup.enter="register"
+            v-on:keyup.enter="login"
           >
         </div>
-        <div class="form-group">
-          <input
-            id="repeat-password"
-            type="password"
-            class="form-control"
-            placeholder="Repeat your password"
-            v-model="credentials.repeat_password"
-            v-on:keyup.enter="register"
-          >
-        </div>
-        <button class="register-btn btn" v-on:click="register">Register</button>
+        <button class="login-btn btn" v-on:click="login">Log in</button>
       </div>
       <ring-loader class="loading" v-if="loading" :loading="loading" :color="color" :size="size"></ring-loader>
     </div>
@@ -48,15 +37,14 @@
 <script>
   import axios from 'axios'
   import RingLoader from 'vue-spinner/src/RingLoader.vue'
-  import userService from '../store/user/userService'
+  import userService from '../../store/user/userService'
 
   export default {
     data() {
       return {
         credentials: {
           username: '',
-          password: '',
-          repeat_password: ''
+          password: ''
         },
         error: '',
         loading: false,
@@ -67,36 +55,30 @@
       }
     },
     methods: {
-      register() {
+      login() {
         let credentials = {
           username: this.credentials.username,
-          password: this.credentials.password,
-          repeat_password: this.credentials.repeat_password
+          password: this.credentials.password
         };
-        if (credentials.password === credentials.repeat_password) {
-          this.loading = true;
-          userService.register(credentials, error => {
-            if (error) {
-              this.error = error;
-            } else {
-              this.$router.push('dashboard');
-            }
-            this.loading = false;
-          });
-        } else {
-          this.error = 'The passwords are not identical, please try again'
-        }
+        this.loading = true;
+        userService.login(credentials, error => {
+          if(error) {
+            this.error = error;
+          } else {
+            this.$router.push('dashboard');
+          }
+          this.loading = false;
+        });
       }
     },
     components: {
       RingLoader
     }
-
   }
 </script>
 
 <style scoped>
-  .register-btn {
+  .login-btn {
     background-color: #41B883;
     color: #fff;
     cursor: pointer;

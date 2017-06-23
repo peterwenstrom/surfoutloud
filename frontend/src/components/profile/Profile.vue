@@ -110,7 +110,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import axios from 'axios'
-  import userService from '../store/user/userService'
+  import userService from '../../store/user/userService'
 
   import ProjectInvites from './ProjectInvites.vue'
 

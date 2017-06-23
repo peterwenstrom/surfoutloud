@@ -4,7 +4,7 @@
       <div class="container">
         <b-nav-toggle target="nav_collapse"></b-nav-toggle>
         <div v-on:click="linkToDashboard">
-          <img class="logo" src="../assets/LogoFull.png"/>
+          <img class="logo" src="../../assets/LogoFull.png"/>
         </div>
         <b-collapse is-nav id="nav_collapse">
           <b-nav is-nav-bar class="ml-auto">
@@ -27,7 +27,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import userService from '../store/user/userService'
+  import userService from '../../store/user/userService'
 
   export default {
     data() {

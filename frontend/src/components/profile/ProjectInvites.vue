@@ -26,7 +26,7 @@
 
 <script>
   import axios from 'axios'
-  import userService from '../store/user/userService'
+  import userService from '../../store/user/userService'
 
   const GET_INVITES_URL = API_URL + '/getprojects/0';
   const ANSWER_INVITE_URL = API_URL + '/answerprojectinvite';

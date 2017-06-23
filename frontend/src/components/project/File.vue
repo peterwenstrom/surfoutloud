@@ -76,6 +76,9 @@
 
 <script>
   import axios from 'axios'
+
+  import Modal from '../shared_components/Modal.vue'
+
   import FileSaver from 'file-saver'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/file-word-o'
@@ -86,7 +89,6 @@
   import 'vue-awesome/icons/window-close-o'
   import 'vue-awesome/icons/eye'
   import 'vue-awesome/icons/trash-o'
-  import Modal from './Modal'
 
   export default {
     props: ['projectId'],

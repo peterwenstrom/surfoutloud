@@ -43,10 +43,10 @@
 <script>
   import {mapGetters} from 'vuex'
   import axios from 'axios'
-  import userService from '../store/user/userService'
+  import userService from '../../store/user/userService'
 
-  import Chat from './Chat'
-  import File from './File'
+  import Chat from './Chat.vue'
+  import File from './File.vue'
 
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/user'

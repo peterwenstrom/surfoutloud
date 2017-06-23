@@ -1,9 +1,9 @@
-import Dashboard from '@/components/Dashboard'
-import Login from '@/components/Login'
-import Register from '@/components/Register'
-import Profile from '@/components/Profile'
-import Project from '@/components/Project'
-import CreateNewProject from '@/components/CreateNewProject'
+import Dashboard from '../components/dashboard/Dashboard.vue'
+import Login from '../components/login/Login.vue'
+import Register from '../components/register/Register.vue'
+import Profile from '../components/profile/Profile.vue'
+import Project from '../components/project/Project.vue'
+import CreateProject from '../components/create_project/CreateProject.vue'
 
 
 const routes = [
@@ -43,9 +43,9 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/createnewproject',
-    name: 'CreateNewProject',
-    component: CreateNewProject,
+    path: '/createproject',
+    name: 'CreateProject',
+    component: CreateProject,
     meta: {requiresAuth: true}
   }
 ];
