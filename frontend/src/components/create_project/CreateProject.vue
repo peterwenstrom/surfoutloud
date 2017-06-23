@@ -122,8 +122,7 @@
           description: '',
           admin: '',
           icon: 'superpowers',
-          color: '#0D47A1',
-          test: 'paw'
+          color: '#0D47A1'
         },
         member: '',
         colors: {hex: '#0D47A1'},
