@@ -74,18 +74,22 @@ def get_projects(accepted):
 def get_project_details(project_id):
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT * FROM Project where id = %s''', [project_id])
-    project_row = cursor.fetchall()[0]
-    # create neat project object
-    project = {
-        'id': project_row[0],
-        'admin': project_row[1],
-        'name': project_row[2],
-        'description': project_row[3],
-        'icon': project_row[4],
-        'color': project_row[5]
-    }
-
-    return jsonify({'project': project}), 200
+    query = cursor.fetchall()
+    if query:
+        project_row = query[0]
+        # create neat project object
+        project = {
+            'id': project_row[0],
+            'admin': project_row[1],
+            'name': project_row[2],
+            'description': project_row[3],
+            'icon': project_row[4],
+            'color': project_row[5]
+        }
+        return jsonify({'project': project}), 200
+    else:
+        response = {'message': 'The project specified could not be found'}
+        return jsonify(response), 400
 
 
 @app.route('/addproject', methods=['POST'])

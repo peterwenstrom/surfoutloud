@@ -1,28 +1,33 @@
 <template>
-  <div class="row">
-
-    <div class="col-md-12">
-      <h2>Project name: <i>{{project.name}}</i></h2>
-      <p><strong>Project description: </strong><i>{{project.description}}</i></p>
-      <hr class="small">
+  <div>
+    <div class="alert alert-danger" v-if="error">
+      <h2>{{error}}</h2>
     </div>
+    <div class="row" v-if="!error">
 
-    <member v-bind:username="user.username" v-bind:members="members"
-            v-bind:activeMembers="activeMembers" @memberClick="openChat"></member>
+      <div class="col-md-12">
+        <h2>Project name: <i>{{project.name}}</i></h2>
+        <p><strong>Project description: </strong><i>{{project.description}}</i></p>
+        <hr class="small">
+      </div>
 
-    <div class="col-md-5 border-right">
-      <h3>Chat</h3>
+      <member v-bind:username="user.username" v-bind:members="members"
+              v-bind:activeMembers="activeMembers" @memberClick="openChat"></member>
 
-      <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms"
-            v-bind:chatArray="chatArray" v-bind:newDirectChat="newDirectChat"
-            @activeUpdate="updateActiveMembers" @memberJoin="newMember" @closeRoom="closeChat"></chat>
+      <div class="col-md-5 border-right">
+        <h3>Chat</h3>
+
+        <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms"
+              v-bind:chatArray="chatArray" v-bind:newDirectChat="newDirectChat"
+              @activeUpdate="updateActiveMembers" @memberJoin="newMember" @closeRoom="closeChat"></chat>
+      </div>
+
+      <div class="col-md-5">
+        <h3>Files</h3>
+        <file v-bind:projectId="project.id"></file>
+      </div>
+
     </div>
-
-    <div class="col-md-5">
-      <h3>Files</h3>
-      <file v-bind:projectId="project.id"></file>
-    </div>
-
   </div>
 </template>
 
@@ -55,7 +60,8 @@
             ]
           }
         ],
-        newDirectChat: ''
+        newDirectChat: '',
+        error: ''
       }
     },
     methods: {
@@ -105,11 +111,14 @@
         axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userService.addAuthHeader()).then(response => {
           this.$store.dispatch('setProjectObject', response.data.project);
           this.getMembers()
+        }).catch(error => {
+          if (error.response) {
+            this.error = error.response.data.message
+          } else {
+            this.error = 'Error when retrieving project details'
+          }
         })
-      }
-    },
-    mounted (){
-      if (this.projectSelected) {
+      } else {
         this.getMembers()
       }
     },
