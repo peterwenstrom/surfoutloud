@@ -31,6 +31,7 @@ def add_members(members_ids, project_id):
 @app.route('/getmembers/<project_id>', methods=['GET'])
 @jwt_required
 def get_members(project_id):
+    user = get_jwt_identity()
     cursor = mysql.connection.cursor()
     cursor.execute('''SELECT memberid FROM Member where projectid = %s AND accepted = 1''', [project_id])
     rows = cursor.fetchall()
@@ -39,7 +40,11 @@ def get_members(project_id):
         cursor.execute('''SELECT username FROM User where id = %s''', [row])
         user_row = cursor.fetchall()[0]
         members.append(user_row[0])
-    return jsonify({'members': members}), 200
+    if user in members:
+        return jsonify({'members': members}), 200
+    else:
+        response = {'message': 'You are not a member of the specified project'}
+        return jsonify(response), 401
 
 
 @app.route('/getprojects/<accepted>', methods=['GET'])

@@ -72,7 +72,13 @@
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userService.addAuthHeader()).then(response => {
           this.members = response.data.members;
-        });
+        }).catch(error => {
+          if (error.response) {
+            this.error = error.response.data.message
+          } else {
+            this.error = 'Error when retrieving project members, please try again'
+          }
+        })
       },
       newMember (member){
         this.members.push(member);
@@ -115,7 +121,7 @@
           if (error.response) {
             this.error = error.response.data.message
           } else {
-            this.error = 'Error when retrieving project details'
+            this.error = 'Error when retrieving project details, please try again'
           }
         })
       } else {
