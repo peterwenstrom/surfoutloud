@@ -14,13 +14,8 @@
       <member v-bind:username="user.username" v-bind:members="members"
               v-bind:activeMembers="activeMembers" @memberClick="openChat"></member>
 
-      <div class="col-md-5 border-right">
-        <h3>Chat</h3>
-
-        <chat v-bind:projectId="project.id" v-bind:openChatRooms="openChatRooms"
-              v-bind:chatArray="chatArray" v-bind:newDirectChat="newDirectChat"
-              @activeUpdate="updateActiveMembers" @memberJoin="newMember" @closeRoom="closeChat"></chat>
-      </div>
+      <chat v-bind:projectId="project.id" v-bind:user="user" v-bind:members="members"
+            @activeUpdate="updateActiveMembers" @memberJoin="newMember" ></chat>
 
       <div class="col-md-5">
         <h3>Files</h3>
@@ -52,17 +47,16 @@
       return {
         members: [],
         activeMembers: [],
-        openChatRooms: ['room'],
-        chatArray:[
-          {
-            history: [
-              { who: "", message: "" }
-            ]
-          }
-        ],
-        newDirectChat: '',
+        openChatRooms: [],
         error: ''
       }
+    },
+    computed: {
+      ...mapGetters({
+        project: 'project',
+        projectSelected: 'projectSelected',
+        user: 'user'
+      })
     },
     methods: {
       updateActiveMembers (updatedActiveMembers) {
@@ -87,16 +81,12 @@
         // Open chat when member is pressed, change on variables will propagate to Chat.vue
         if (this.openChatRooms.indexOf(member) === -1) {
           this.openChatRooms.push(member);
-          this.chatArray.push({history: [{ who: "", message: "" }]});
-          this.newDirectChat = member
         }
       },
       closeChat: function(member){
         // Close chat is emitted from Chat.vue when user presses close button
         let index = this.openChatRooms.indexOf(member);
-        this.chatArray.splice(index,1);
         this.openChatRooms.splice(index, 1);
-        this.newDirectChat = ''
       }
     },
     components:{
@@ -104,13 +94,6 @@
       Chat,
       File,
       Icon
-    },
-    computed: {
-      ...mapGetters({
-        project: 'project',
-        projectSelected: 'projectSelected',
-        user: 'user'
-      })
     },
     created () {
       if (!this.projectSelected) {
