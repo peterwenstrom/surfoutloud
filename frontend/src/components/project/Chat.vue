@@ -80,5 +80,7 @@
 
 
 <style scoped>
-
+  .border-right {
+    border-right: 1px solid #eceeef;
+  }
 </style>

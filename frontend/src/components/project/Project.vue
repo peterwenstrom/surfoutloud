@@ -132,8 +132,4 @@
     margin: 0 10px;
   }
 
-  .border-right {
-    border-right: 1px solid #eceeef;
-  }
-
 </style>
