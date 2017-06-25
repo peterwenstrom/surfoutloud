@@ -32,7 +32,7 @@
   import userService from '../../store/user/userService'
 
   import Member from './Member.vue'
-  import Chat from './Chat.vue'
+  import Chat from './chat/Chat.vue'
   import File from './File.vue'
 
   import Icon from 'vue-awesome/components/Icon'
