@@ -52,7 +52,7 @@
     },
     computed: {
       room () {
-        if (this.member) {
+        if (this.member !== 'room') {
           let usersInDirectChat = [this.username, this.member];
           usersInDirectChat.sort();
           return this.roomNumber + usersInDirectChat[0] + usersInDirectChat[1];
@@ -63,7 +63,7 @@
     },
     methods: {
       joinRoom () {
-        const isPrivateRoom = (!!this.member);
+        const isPrivateRoom = (this.member !== 'room');
         this.socket.emit('join_room', {user: this.username, room: this.room, private_room: isPrivateRoom})
       },
       messageRoom () {
@@ -75,6 +75,14 @@
         this.socket.on('message_room_response', response => {
           if (response.room === this.room) {
             this.roomMessages.push(response.data);
+
+            let element = document.getElementById('chat-window');
+            const scroll = element.scrollHeight - element.scrollTop;
+            if (response.data.user === this.username || scroll < 330) {
+              setTimeout( () => {
+                element.scrollTop = element.scrollHeight
+              }, 100)
+            }
           }
         });
       }
@@ -91,7 +99,9 @@
 <style scoped>
   #chat-window {
     border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.25rem;
+    border-top: none;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
     transition: transform 1s;
   }
 

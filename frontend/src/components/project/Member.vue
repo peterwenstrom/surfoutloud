@@ -2,6 +2,7 @@
   <div class="col-md-2 border-right">
     <h3>Members</h3>
     <hr class="small">
+    <p><small><i>Click on a person to start a private conversation</i></small></p>
     <table class="table table-striped">
       <tbody>
       <tr v-for="(member,index) in members">

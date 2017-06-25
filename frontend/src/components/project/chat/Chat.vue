@@ -1,22 +1,19 @@
 <template>
   <div class="col-md-5 border-right">
     <h3>Chat</h3>
-    <div>
       <b-tabs>
         <b-tab title="room">
           <room v-bind:username="username" v-bind:socket="socket"
-                v-bind:roomNumber="roomNumber" member=""></room>
+                v-bind:roomNumber="roomNumber" member="room"></room>
         </b-tab>
-
-        <template v-for="member in members">
-          <b-tab v-if="member !== username" :title="member">
-            <room v-bind:username="username" v-bind:socket="socket"
-                  v-bind:roomNumber="roomNumber" v-bind:member="member"></room>
+        <template v-for="member in privateRooms">
+          <b-tab :headHtml="showRoom(member)" :title="member">
+              <room v-bind:username="username" v-bind:socket="socket"
+                    v-bind:roomNumber="roomNumber" v-bind:member="member"></room>
           </b-tab>
         </template>
 
       </b-tabs>
-    </div>
   </div>
 
 </template>
@@ -26,7 +23,7 @@
 
   export default {
     name: 'chat',
-    props: ['user', 'projectId', 'members'],
+    props: ['user', 'projectId', 'members', 'openRooms'],
     data() {
       return {
         username: this.user.username,
@@ -34,10 +31,30 @@
         socket: io.connect(API_URL)
       }
     },
+    computed: {
+      privateRooms () {
+        let rooms = [];
+        this.members.forEach(member => {
+          if (member !== this.username) {
+            rooms.push(member)
+          }
+        });
+        return rooms;
+      }
+    },
     components: {
       Room
     },
     methods: {
+      showRoom (member) {
+        if (this.openRooms.indexOf(member) > -1) {
+          // Show room
+          return '';
+        } else {
+          // Do not show room
+          return ' ';
+        }
+      },
       joinRoomResponse () {
         this.socket.on('join_room_response', response => {
 

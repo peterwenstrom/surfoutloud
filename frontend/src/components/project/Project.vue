@@ -15,7 +15,7 @@
               v-bind:activeMembers="activeMembers" @memberClick="openChat"></member>
 
       <chat v-bind:projectId="project.id" v-bind:user="user" v-bind:members="members"
-            @activeUpdate="updateActiveMembers" @memberJoin="newMember" ></chat>
+            v-bind:openRooms="openRooms" @activeUpdate="updateActiveMembers" @memberJoin="newMember" ></chat>
 
       <div class="col-md-5">
         <h3>Files</h3>
@@ -47,7 +47,7 @@
       return {
         members: [],
         activeMembers: [],
-        openChatRooms: [],
+        openRooms: [],
         error: ''
       }
     },
@@ -79,14 +79,14 @@
       },
       openChat: function (member){
         // Open chat when member is pressed, change on variables will propagate to Chat.vue
-        if (this.openChatRooms.indexOf(member) === -1) {
-          this.openChatRooms.push(member);
+        if (this.openRooms.indexOf(member) === -1) {
+          this.openRooms.push(member);
         }
       },
       closeChat: function(member){
         // Close chat is emitted from Chat.vue when user presses close button
-        let index = this.openChatRooms.indexOf(member);
-        this.openChatRooms.splice(index, 1);
+        let index = this.openRooms.indexOf(member);
+        this.openRooms.splice(index, 1);
       }
     },
     components:{
