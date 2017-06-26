@@ -103,6 +103,7 @@
     border-bottom-left-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     transition: transform 1s;
+    padding-top: 20px;
   }
 
   .send-btn {

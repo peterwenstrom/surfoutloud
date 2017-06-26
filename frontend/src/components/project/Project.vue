@@ -18,10 +18,7 @@
             v-bind:openRooms="openRooms" @closeRoom="closeRoom"
             @activeUpdate="updateActiveMembers" @memberJoin="newMember" ></chat>
 
-      <div class="col-md-5">
-        <h3>Files</h3>
-        <file v-bind:projectId="project.id"></file>
-      </div>
+      <file v-bind:projectId="project.id"></file>
 
     </div>
   </div>
@@ -35,9 +32,6 @@
   import Member from './Member.vue'
   import Chat from './chat/Chat.vue'
   import File from './File.vue'
-
-  import Icon from 'vue-awesome/components/Icon'
-  import 'vue-awesome/icons/minus'
 
   const GET_MEMBERS_URL = API_URL + '/getmembers/';
   const GET_PROJECT_DETAILS_URL = API_URL + '/getprojectdetails/';
@@ -93,8 +87,7 @@
     components:{
       Member,
       Chat,
-      File,
-      Icon
+      File
     },
     created () {
       if (!this.projectSelected) {

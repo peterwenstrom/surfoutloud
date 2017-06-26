@@ -1,76 +1,78 @@
 <template>
-  <div v-on:keyup.esc="closeModal">
+  <div class="col-md-5">
+    <h3>Files</h3>
+    <div v-on:keyup.esc="closeModal">
 
-    {{ emptyList }}
+      {{ emptyList }}
 
-    <table class="table table-striped">
+      <table class="table table-striped">
 
-      <thead>
-      <tr>
-        <th>File type</th>
-        <th>File name</th>
-        <th>Download</th>
-        <th>Preview</th>
-        <th>Delete</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(item,index) in fileArray">
-        <td>
-          <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="icon"></icon></div>
-          <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="icon"></icon></div>
-          <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="icon"></icon></div>
-        </td>
-        <td>
-          <p>{{ item }}</p>
-        </td>
-        <td>
-          <div v-on:click="downloadFile(item, 'download')">
-            <icon name="cloud-download" class="icon pointer download"></icon>
+        <thead>
+        <tr>
+          <th>File type</th>
+          <th>File name</th>
+          <th>Download</th>
+          <th>Preview</th>
+          <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item,index) in fileArray">
+          <td>
+            <div v-if="fileTypeArray[index] === 'docx'"><icon name="file-word-o" class="icon"></icon></div>
+            <div v-else-if="fileTypeArray[index] === 'img'"><icon name="picture-o" class="icon"></icon></div>
+            <div v-else-if="fileTypeArray[index] === 'default'"><icon name="sticky-note-o" class="icon"></icon></div>
+          </td>
+          <td>
+            <p>{{ item }}</p>
+          </td>
+          <td>
+            <div v-on:click="downloadFile(item, 'download')">
+              <icon name="cloud-download" class="icon pointer download"></icon>
+            </div>
+          </td>
+          <td>
+            <div v-on:click="downloadFile(item, 'preview')">
+              <icon name="eye" class="icon pointer preview"></icon>
+            </div>
+          </td>
+          <td>
+            <div v-on:click="deleteFile(item)">
+              <icon name="trash-o" class="icon pointer trash-o red"></icon>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <form>
+        <div>
+          <label class="upload" for="file">
+            <icon name="cloud-upload" class="icon pointer"></icon>
+            <a>Choose a file to upload</a>
+          </label>
+        </div>
+        <input type="file" name="file" id="file" v-on:change="postFile">
+      </form>
+
+      <div id="wrapper" class="container">
+        <modal v-if="showModal">
+          <h3 slot="header" class="modal-title">
+            Preview
+          </h3>
+          <div slot="header" v-on:click="closeModal">
+            <icon name="window-close-o" class="pointer"></icon>
           </div>
-        </td>
-        <td>
-          <div v-on:click="downloadFile(item, 'preview')">
-            <icon name="eye" class="icon pointer preview"></icon>
+          <div slot="body">
+            <img v-bind:src="imgUrl" class="preview-image">
           </div>
-        </td>
-        <td>
-          <div v-on:click="deleteFile(item)">
-            <icon name="trash-o" class="icon pointer trash-o red"></icon>
+
+          <div slot="footer">
+            <button class="btn btn-outline-info pointer" v-on:click="closeModal"> Close </button>
           </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <form>
-      <div>
-        <label class="upload" for="file">
-          <icon name="cloud-upload" class="icon pointer"></icon>
-          <a>Choose a file to upload</a>
-        </label>
+        </modal>
       </div>
-      <input type="file" name="file" id="file" v-on:change="postFile">
-    </form>
 
-    <div id="wrapper" class="container">
-      <modal v-if="showModal">
-        <h3 slot="header" class="modal-title">
-          Preview
-        </h3>
-        <div slot="header" v-on:click="closeModal">
-          <icon name="window-close-o" class="pointer"></icon>
-        </div>
-        <div slot="body">
-          <img v-bind:src="imgUrl" class="preview-image">
-        </div>
-
-        <div slot="footer">
-          <button class="btn btn-outline-info pointer" v-on:click="closeModal"> Close </button>
-        </div>
-      </modal>
     </div>
-
-
   </div>
 </template>
 
@@ -274,7 +276,7 @@
     max-height: 400px
   }
   .red {
-    color:red;
+    color: #f66;
   }
 
 </style>
