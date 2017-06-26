@@ -15,7 +15,8 @@
               v-bind:activeMembers="activeMembers" @memberClick="openChat"></member>
 
       <chat v-bind:projectId="project.id" v-bind:user="user" v-bind:members="members"
-            v-bind:openRooms="openRooms" @activeUpdate="updateActiveMembers" @memberJoin="newMember" ></chat>
+            v-bind:openRooms="openRooms" @closeRoom="closeRoom"
+            @activeUpdate="updateActiveMembers" @memberJoin="newMember" ></chat>
 
       <div class="col-md-5">
         <h3>Files</h3>
@@ -83,7 +84,7 @@
           this.openRooms.push(member);
         }
       },
-      closeChat: function(member){
+      closeRoom: function(member){
         // Close chat is emitted from Chat.vue when user presses close button
         let index = this.openRooms.indexOf(member);
         this.openRooms.splice(index, 1);
