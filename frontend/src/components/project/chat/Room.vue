@@ -26,7 +26,7 @@
                    type="text"
                    placeholder="Type your message here..."
                    v-model="newMessage.text"
-                   v-on:keyup.enter="messageRoom" />
+                   v-on:keyup.enter="messageRoom"/>
             <span class="input-group-btn">
               <button class="btn btn-sm send-btn" id="btn-chat" v-on:click="messageRoom">
                 Send
@@ -67,9 +67,11 @@
         this.socket.emit('join_room', {user: this.username, room: this.room, private_room: isPrivateRoom})
       },
       messageRoom () {
-        this.newMessage.user = this.username;
-        this.socket.emit('message_room', {data: this.newMessage, room: this.room});
-        this.newMessage.text = '';
+        if (this.newMessage.text) {
+          this.newMessage.user = this.username;
+          this.socket.emit('message_room', {data: this.newMessage, room: this.room});
+          this.newMessage.text = '';
+        }
       },
       messageRoomResponse () {
         this.socket.on('message_room_response', response => {
