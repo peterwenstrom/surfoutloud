@@ -53,10 +53,26 @@
         user: 'user'
       })
     },
+    watch: {
+        '$route' () {
+          this.$router.go('')
+        }
+    },
     methods: {
       updateActiveMembers (updatedActiveMembers) {
         this.activeMembers = updatedActiveMembers
-
+      },
+      getProjectDetails () {
+        axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userService.addAuthHeader()).then(response => {
+          this.$store.dispatch('setProjectObject', response.data.project);
+          this.getMembers()
+        }).catch(error => {
+          if (error.response) {
+            this.error = error.response.data.message
+          } else {
+            this.error = 'Error when retrieving project details, please try again'
+          }
+        })
       },
       getMembers() {
         axios.get(GET_MEMBERS_URL + this.project.id, userService.addAuthHeader()).then(response => {
@@ -73,7 +89,7 @@
         this.members.push(member);
       },
       openChat: function (member){
-        // Open chat when member is pressed, change on variables will propagate to Chat.vue
+        // Open chat when member is pressed, change on variable will propagate to Chat.vue
         if (this.openRooms.indexOf(member) === -1) {
           this.openRooms.push(member);
         }
@@ -91,22 +107,13 @@
     },
     created () {
       if (!this.projectSelected) {
-        axios.get(GET_PROJECT_DETAILS_URL + this.$route.params.project_id, userService.addAuthHeader()).then(response => {
-          this.$store.dispatch('setProjectObject', response.data.project);
-          this.getMembers()
-        }).catch(error => {
-          if (error.response) {
-            this.error = error.response.data.message
-          } else {
-            this.error = 'Error when retrieving project details, please try again'
-          }
-        })
+        this.getProjectDetails();
       } else {
-        this.getMembers()
+        this.getMembers();
       }
     },
     beforeDestroy() {
-      this.$store.dispatch('clearProjectObject')
+      this.$store.dispatch('clearProjectObject');
     }
   }
 </script>
