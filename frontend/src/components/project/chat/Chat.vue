@@ -10,7 +10,7 @@
           <b-tab :headHtml="showRoom(member)" :title="member">
 
             <div class="icon-container" v-on:click="hideRoom(member)">
-              <icon name="window-close-o" class="hej"></icon>
+              <icon name="window-close-o"></icon>
             </div>
 
             <room v-bind:username="username" v-bind:socket="socket"
