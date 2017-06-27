@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "deploy": "git subtree push — prefix frontend/dist heroku master"
+    "deploy-client": "git push heroku `git subtree split --prefix=frontend/dist master`:master --force",
+    "deploy-server": "git push herokuserver `git subtree split --prefix=backend master`:master --force"
   },
   "dependencies": {
     "axios": "^0.16.1",
